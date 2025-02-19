@@ -8,7 +8,7 @@ FIGURE OUT THE GRAPH
 
 ![Anigram-api-schema]
 
-[Anigram-api-schema]: ./static/Screenshot%202025-02-19%20at%2011.26.04 AM.png
+[Anigram-api-schema]: ./static/Screenshot%202025-02-19%20at%2011.47.57 AM.png
 
 ## API Documentation
 
