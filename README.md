@@ -1,12 +1,10 @@
 # Anigram
 
-# Batmanhood 
-
 ## Database Schema Design
 
 ![Anigram-api-schema]
 
-[Anigram-api-schema]: ./static/Screenshot%202025-02-19%20at%2011.47.57 AM.png
+[Anigram-api-schema]: ./static/Screenshot%202025-02-19%20at%206.07.26 PM.png
 
 ## API Documentation
 
@@ -241,17 +239,17 @@ user's information.
     }
     ```
 
-## PORTFOLIO
+## Follows
 
-### Get all investments owned by the current user
+### Get the current user's followers
 
-Returns all the investments of the current user.
+Returns the current user's followers list.
 
 - Require Authentication: true
 - Request
 
   - Method: GET
-  - Route path: /api/:userId/stocks
+  - Route path: /api/:userId/followers
   - Body: none
 
 - Successful Response
@@ -263,38 +261,37 @@ Returns all the investments of the current user.
 
     ```json
     {
-      "Investments": [
+      "User":{
+         "id": 1,
+         "username": "demo"
+      },
+      "Followers": [
         {
           "id": 1,
-          "ownerId": 1,
-          "shares": 35.34,
-          "symbol": "AAPL",
-          "regularMarketPrice": 192.58,
-          "profit/loss": 300.00
+          "username": "Demo",
         },
         {
           "id": 1,
-          "ownerId": 1,
-          "shares": 35.34,
-          "symbol": "AAPL",
-          "regularMarketPrice": 192.58,
-          "profit/loss": 300.00
+          "username": "marnie",
+        },
+        {
+          "id": 1,
+          "username": "bobbie",
         },
       ],
-      "portfolio_value": 0,
-      "buying_power": 7000
     }
     ```
 
-### Get all Stocks
 
-Returns all the stocks (paginated). The user starts typing a letter and results start showing up for the stocks until one is chosen. => MAX 5 at a time
+### GET the current users following list
+
+Returns the current user's following list.
 
 - Require Authentication: true
 - Request
 
   - Method: GET
-  - Route path: /api/stocks
+  - Route path: /api/:userId/following
   - Body: none
 
 - Successful Response
@@ -304,48 +301,38 @@ Returns all the stocks (paginated). The user starts typing a letter and results 
     - Content-Type: application/json
   - Body:
 
-    ```json
+   ```json
     {
-      "Stocks": [
+      "User":{
+         "id": 1,
+         "username": "demo"
+      },
+      "Following": [
         {
           "id": 1,
-          "symbol": "AAPL",
-          "displayName":"Apple"
+          "username": "Demo",
         },
         {
           "id": 1,
-          "symbol": "AAPL",
-          "displayName":"Apple"
+          "username": "marnie",
         },
         {
           "id": 1,
-          "symbol": "AAPL",
-          "displayName":"Apple"
+          "username": "bobbie",
         },
-        {
-          "id": 1,
-          "symbol": "AAPL",
-          "displayName":"Apple"
-        },
-        {
-          "id": 1,
-          "symbol": "AAPL",
-          "displayName":"Apple"
-        },
-
-      ]
+      ],
     }
     ```
 
-### Get details of a Stock from an id
+## Watchlist
 
-Returns the details of a stock specified by its id.
+Returns the watchlist of the current user by name
 
 - Require Authentication: true
 - Request
 
   - Method: GET
-  - Route path: /api/stocks/:stockId
+  - Route path: /api/:userId/watchlists/:watchlistId
   - Body: none
 
 - Successful Response
@@ -358,39 +345,24 @@ Returns the details of a stock specified by its id.
     ```json
     {
       "id": 1,
-      "ownerId": 1,
-      "regularMarketPrice": 192.58,
-      "marketCap":2435122987008,
-      "regularMarketDayHigh":195.1709,
-      "fiftyTwoWeekHigh":198.23,
-      "regularMarketDayLow":326.3551,
-      "fiftyTwoWeekLow":213.43,
-      "regularMarketOpen":195.04,
-      "regularMarketVolume":49656509,
-      "averageDailyVolume10Day":48162430,
-      "News": [
-        {
-          "id": 1,
-          "link":"https://finance.yahoo.com/news/cramer-weighs-united-airlines-nvidia-203428365.html",
-          "source":"Benzinga",
-          "title":"Cramer Weighs In On United Airlines, NVIDIA, JD, Fastly And More",
-        },
-        {
-          "id": 1,
-          "link":"https://finance.yahoo.com/news/cramer-weighs-united-airlines-nvidia-203428365.html",
-          "source":"Benzinga",
-          "title":"Cramer Weighs In On United Airlines, NVIDIA, JD, Fastly And More",
-        },
+      "user_id": 1,
+      "name": "watched",
+      "anime": [
+         {
+            "title": "Attack on Titan",
+            "image": "https://cdn.myanimelist.net/images/anime/10/47347.jpg",
+            "status": "Watching"
+         },
+         {
+            "title": "Demon Slayer: Kimetsu no Yaiba",
+            "image": "https://cdn.myanimelist.net/images/anime/1286/99889.jpg",
+            "status": "Finished"
+         },
       ],
-      "Owner": { ---IF THE USER OWNS THE STOCK
-        "id": 1,
-        "firstName": "John",
-        "lastName": "Smith"
-      }
     }
     ```
 
-- Error response: Couldn't find a Stock with the specified id
+- Error response: Couldn't find an anime with the specified name
 
   - Status Code: 404
   - Headers:
@@ -399,33 +371,24 @@ Returns the details of a stock specified by its id.
 
     ```json
     {
-      "message": "Stock couldn't be found"
+      "message": "Watchlist couldn't be found"
     }
     ```
 
-### Buy a stock
+## Anime
 
-Creates and returns a new stock.
+Returns the anime detail page.
 
 - Require Authentication: true
 - Request
 
-  - Method: POST
-  - Route path: /api/stocks/purchase
+  - Method: GET
+  - Route path: /api/anime/:animeId
   - Headers:
     - Content-Type: application/json
   - Body:
 
-     ```json
-    {
-      "id": 1,
-      "shares": 20,
-      "market_price": 50,
-      "estimated_cost": 40,
-      "buying_power_available": 70,
-      "order_type": "limit/market",
-    }
-    ```
+    none
 
 - Successful Response - redirect the user to the stock detail page
 
@@ -435,21 +398,25 @@ Creates and returns a new stock.
   - Body:
 
     ```json
-      ```json
+       ```json
     {
       "id": 1,
-      "symbol": "AAPL",
-      "shares_owned": 10,
-      "market_price": 232.49,
-      "market_value": 2320.49,
-      "total_return": 100.00,
-      "owner": {
-        "id": 1,
-        "firstName": "John",
-        "lastName": "Smith",
-      "createdAt": "2021-11-19 20:39:36",
-      "updatedAt": "2021-11-19 20:39:36"
-      }
+      "user_id": ,
+      "watchlist_id": 1,
+      "likes": 40,
+      "title": "Attack on Titan",
+      "image_url": "https://cdn.myanimelist.net/images/anime/1286/99889l.jpg",
+      "rating": 9.8,
+      "synopsis": "Ever since the death of his father, the burden of supporting the family has fallen upon Tanjirou Kamado's shoulders. Though living impoverished on a remote mountain, the Kamado family are able to enjoy a relatively peaceful and happy life. One day, Tanjirou decides to go down to the local village to make a little money selling charcoal. On his way back, night falls, forcing Tanjirou to take shelter in the house of a strange man, who warns him of the existence of flesh-eating demons that lurk in the woods at night.
+
+      When he finally arrives back home the next day, he is met with a horrifying sight—his whole family has been slaughtered. Worse still, the sole survivor is his sister Nezuko, who has been turned into a bloodthirsty demon. Consumed by rage and hatred, Tanjirou swears to avenge his family and stay by his only remaining sibling. Alongside the mysterious group calling themselves the Demon Slayer Corps, Tanjirou will do whatever it takes to slay the demons and protect the remnants of his beloved sister's humanity.
+
+      [Written by MAL Rewrite]",
+      "score": 8.2,
+      "duration": "24 min per ep",
+      "trailer": "https://www.youtube.com/watch?v=6vMuWuWlW4I",
+      "mal_url": "https://myanimelist.net/anime/25777/Shingeki_no_Kyojin_Season_2",
+      "mal_id": 25777,
     }
     ```
 
@@ -464,36 +431,28 @@ Creates and returns a new stock.
     {
       "message": "Bad Request", // (or "Validation error" if generated by Sequelize),
       "errors": {
-        "order_type": "Order type is required",
-        "shares": "Amount of shares is required",
-        "buying_power": "Buying power must be greater than or equal to stock price",
+        "anime_name": "Anime not found",
       }
     }
     ```
 
 
-### Sell a stock
+## Search
 
-Creates a sell order and 
+Searches for an anime and returns it
 
 - Require Authentication: true
 - Request
 
   - Method: POST
-  - Route path: /api/stocks/purchase
+  - Route path: /api/search/:animeName --- Ex: /api/search/Attack%20on%20Titan
   - Headers:
     - Content-Type: application/json
   - Body:
 
      ```json
     {
-      "id": 1,
-      "shares": 20,
-      "dollars_amount": 100,
-      "market_price": 50,
-      "estimated_cost": 40,
-      "buying_power_available": 70,
-      "order_type": "limit/market",
+      "anime": "Bleach",
     }
     ```
 
@@ -507,18 +466,9 @@ Creates a sell order and
     ```json
       ```json
     {
-      "id": 1,
-      "symbol": "AAPL",
-      "shares_sold": 10,
-      "avg_price_per_share": 232.49,
-      "total_credit": 2320.49,
-      "seller": {
-        "id": 1,
-        "firstName": "John",
-        "lastName": "Smith",
-      "createdAt": "2021-11-19 20:39:36",
-      "updatedAt": "2021-11-19 20:39:36"
-      }
+      "data": [
+         "API response returns multiple objects"
+      ]
     }
     ```
 
@@ -535,17 +485,14 @@ Creates a sell order and
     {
       "message": "Bad Request", // (or "Validation error" if generated by Sequelize),
       "errors": {
-        "order_type": "Order type is required",
-        "shares": "Amount of shares is required",
-        "dollars": "Amount of shares is required",
-        "buying_power": "Buying power must be greater than or equal to stock price",
+        "anime_name": "Anime name is required",
       }
     }
     ```
 
 
 
-### Fund account with money 
+<!-- ### Fund account with money 
 
 Adds fake money to account
 
@@ -644,7 +591,7 @@ Creates and returns a new stock.
         "money": "Cannot remove funds with $0 account balance",
       }
     }
-    ```
+    ``` -->
 
 
     ------
