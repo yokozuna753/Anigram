@@ -23,7 +23,6 @@ class Anime(db.Model):
         return {
             'id': self.id,
             'watchlist_id': self.watchlist_id,
-            'name': self.name,             
             'likes': self.likes,
             'title': self.title,
             'image_url': self.image_url,
