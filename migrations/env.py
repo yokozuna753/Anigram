@@ -72,9 +72,13 @@ def run_migrations_online():
             **current_app.extensions['migrate'].configure_args
         )
 
-        # Set the schema before running migrations
-        with connection.begin():
-            connection.execute(f'SET search_path TO {SCHEMA};')  # Set the schema in the connection
+        #! uncomment this for production
+        # # Set the schema before running migrations
+        # with connection.begin():
+        #     connection.execute(f'SET search_path TO {SCHEMA};')  # Set the schema in the connection
+        #     context.run_migrations()
+
+        with context.begin_transaction():
             context.run_migrations()
 
 

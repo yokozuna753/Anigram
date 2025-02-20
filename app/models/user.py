@@ -14,6 +14,22 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(255), nullable=False, unique=True)
     hashed_password = db.Column(db.String(255), nullable=False)
 
+    followers = db.relationship(
+        'Follow',
+        foreign_keys='Follow.following_id',  # Specify which foreign key to use
+        backref='following',
+        lazy='dynamic'
+    )
+
+    following = db.relationship(
+        'Follow',
+        foreign_keys='Follow.follower_id',  # Specify which foreign key to use
+        backref='follower',
+        lazy='dynamic'
+    )
+
+    watchlist = db.relationship("Watchlist", back_populates="user", cascade="all, delete-orphan")
+
     @property
     def password(self):
         return self.hashed_password
@@ -29,5 +45,7 @@ class User(db.Model, UserMixin):
         return {
             'id': self.id,
             'username': self.username,
-            'email': self.email
+            'email': self.email,
+            'watchlists': [item.to_dict() for item in self.watchlist],
+            'anime': [item.to_dict() for item in self.anime]
         }
