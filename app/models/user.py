@@ -28,7 +28,7 @@ class User(db.Model, UserMixin):
         lazy='dynamic'
     )
 
-    watchlist = db.relationship("Watchlist", back_populates="user", cascade="all, delete-orphan")
+    watchlists = db.relationship("Watchlist", back_populates="user", cascade="all, delete-orphan")
 
     @property
     def password(self):
@@ -46,6 +46,5 @@ class User(db.Model, UserMixin):
             'id': self.id,
             'username': self.username,
             'email': self.email,
-            'watchlists': [item.to_dict() for item in self.watchlist],
-            'anime': [item.to_dict() for item in self.anime]
+            'watchlists': [item.to_dict() for item in self.watchlists],
         }

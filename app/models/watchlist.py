@@ -15,12 +15,13 @@ class Watchlist(db.Model):
     created_at = db.Column(DateTime, default=datetime.timezone.utc)
     updated_at = db.Column(DateTime, onupdate=datetime.timezone.utc, default=datetime.timezone.utc)
 
-    user = db.relationship("User", back_populates="watchlist",cascade='save-update')
+    user = db.relationship("User", back_populates="watchlists",cascade='save-update')
     anime = db.relationship("Anime", back_populates="watchlist")
 
     def to_dict(self):
         return {
             'id': self.id,
             'user_id': self.user_id,
-            'name': self.name,             
+            'name': self.name,       \
+            'anime': [item.to_dict() for item in self.anime]      
         }
