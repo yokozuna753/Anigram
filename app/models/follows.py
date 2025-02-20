@@ -1,6 +1,5 @@
 from .db import db, environment, SCHEMA, add_prefix_for_prod
 
-
 class Follow(db.Model):
     __tablename__ = 'follows'
 
@@ -8,14 +7,15 @@ class Follow(db.Model):
         __table_args__ = {'schema': SCHEMA}
 
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, nullable=False)
-    follower_id = db.Column(db.Integer,db.ForeignKey(add_prefix_for_prod("users.id")), nullable=True)
-    following_id = db.Column(db.Integer,db.ForeignKey(add_prefix_for_prod("users.id")), nullable=True)
+    user_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod('users.id')), nullable=False)
+    followed_user_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod('users.id')), nullable=False)
+
+    user = db.relationship('User', foreign_keys=[user_id], back_populates='user_is_following', lazy=True)
+    followed_user = db.relationship('User', foreign_keys=[followed_user_id], back_populates='followers', lazy=True)
 
     def to_dict(self):
         return {
             'id': self.id,
             'user_id': self.user_id,
-            'follower_id': self.follower_id,
-            'following_id': self.following_id
+            'followed_user_id': self.followed_user_id
         }

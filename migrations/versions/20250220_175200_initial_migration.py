@@ -1,8 +1,9 @@
 """initial migration
 
-Revision ID: d5c186be245b
+
+Revision ID: a3fe75c76271
 Revises: 
-Create Date: 2025-02-19 23:13:44.599059
+Create Date: 2025-02-20 17:52:00.723134
 
 """
 from alembic import op
@@ -10,7 +11,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'd5c186be245b'
+revision = 'a3fe75c76271'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -30,10 +31,9 @@ def upgrade():
     op.create_table('follows',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=False),
-    sa.Column('follower_id', sa.Integer(), nullable=True),
-    sa.Column('following_id', sa.Integer(), nullable=True),
-    sa.ForeignKeyConstraint(['follower_id'], ['users.id'], ),
-    sa.ForeignKeyConstraint(['following_id'], ['users.id'], ),
+    sa.Column('followed_user_id', sa.Integer(), nullable=False),
+    sa.ForeignKeyConstraint(['followed_user_id'], ['users.id'], ),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('watchlists',
