@@ -3,11 +3,11 @@ import { thunkLogin } from "../../redux/session";
 import { useDispatch, useSelector } from "react-redux";
 import { useModal } from "../../context/Modal";
 import "./LoginForm.css";
-import { Navigate, useNavigate } from "react-router-dom";
+import {  redirect } from "react-router-dom";
 
 function LoginFormModal() {
   const user = useSelector(state => state.session.user)
-  const navigate = useNavigate();
+
 
   const dispatch = useDispatch();
   const [email, setEmail] = useState("");
@@ -28,7 +28,7 @@ function LoginFormModal() {
     if (serverResponse) {
       setErrors(serverResponse);
     } else {
-      user && navigate(`/user/${user.id}/details`)
+      user && redirect(`/user/${user.id}/details`)
       closeModal();
     }
   };
