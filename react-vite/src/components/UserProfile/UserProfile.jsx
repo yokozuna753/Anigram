@@ -1,8 +1,9 @@
 import { useSelector } from "react-redux";
-import {  Navigate} from "react-router-dom";
+import { useNavigate, Navigate} from "react-router-dom";
 
 function UserProfile() {
   const user = useSelector((store) => store.session.user);
+  const navigate = useNavigate();
 
   if(!user){
     return <Navigate to='/login'/>
@@ -10,7 +11,7 @@ function UserProfile() {
 
   function handleClick(e) {
     e.preventDefault();
-    redirect(`/user/${user.id}/watchlists`);
+    navigate(`/user/${user.id}/watchlists`);
   }
 
    return (

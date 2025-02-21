@@ -4,7 +4,7 @@ import { NavLink } from "react-router-dom";
 function SearchBar() {
 return(
     <>
-        <input type="text"></input>
+        <input style={{width: "230px"}} placeholder="Search for Anime or Friends" type="text"></input>
     </>
 )
 }
