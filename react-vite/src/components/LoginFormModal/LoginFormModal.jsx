@@ -1,19 +1,27 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { thunkLogin } from "../../redux/session";
 import { useDispatch, useSelector } from "react-redux";
 import { useModal } from "../../context/Modal";
 import "./LoginForm.css";
-import {  redirect } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { thunkLoadAnimeToWatchlists } from "../../redux/watchlist";
 
 function LoginFormModal() {
-  const user = useSelector(state => state.session.user)
+  const user = useSelector((state) => state.session.user);
 
-
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
   const { closeModal } = useModal();
+
+  useEffect(() => {
+    if (user) {
+      dispatch(thunkLoadAnimeToWatchlists(user.id))
+      navigate(`/user/${user.id}/details`);
+    }
+  }, [user, navigate, dispatch]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,11 +32,12 @@ function LoginFormModal() {
         password,
       })
     );
+  user && dispatch(thunkLoadAnimeToWatchlists(user.id));
 
     if (serverResponse) {
       setErrors(serverResponse);
     } else {
-      user && redirect(`/user/${user.id}/details`)
+      user && navigate(`/user/${user.id}/details`);
       closeModal();
     }
   };

@@ -1,19 +1,25 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { thunkLogin } from "../../redux/session";
 import { useDispatch, useSelector } from "react-redux";
-import { redirect, Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "./LoginForm.css";
+import { thunkLoadAnimeToWatchlists } from "../../redux/watchlist";
 
 function LoginFormPage() {
+
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const sessionUser = useSelector((state) => state.session.user);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
 
-  if (sessionUser) {
-    return <Navigate to="/" replace={true} />;
-  }
+  useEffect(() => {
+    if (sessionUser) {
+      dispatch(thunkLoadAnimeToWatchlists(sessionUser.id))
+      navigate(`/user/${sessionUser.id}/details`);
+    }
+  }, [sessionUser, navigate,dispatch]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,13 +30,13 @@ function LoginFormPage() {
         password,
       })
     );
-
+    
+    // If serverResponse exists, it means there were errors
     if (serverResponse) {
       setErrors(serverResponse);
-    } else {
-      redirect(`/user/${sessionUser.id}/details`);
     }
-  };
+    // No need for an else clause - the sessionUser check will handle redirect
+};
 
   return (
     <>

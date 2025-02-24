@@ -1,10 +1,9 @@
 const SET_USER = "session/setUser";
 const REMOVE_USER = "session/removeUser";
 
-const setUser = (user, follows) => ({
+const setUser = (user) => ({
   type: SET_USER,
   payload: user,
-  follows: follows
 });
 
 const removeUser = () => ({
@@ -79,7 +78,9 @@ function sessionReducer(state = initialState, action) {
         }
       }
       action.payload.posts = posts;
-      return { ...state, user: action.payload };
+      const newState = { ...state, user: action.payload };
+      console.log("New state:", newState);
+      return newState;
     }
     case REMOVE_USER:
       return { ...state, user: null };

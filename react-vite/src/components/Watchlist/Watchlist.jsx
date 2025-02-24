@@ -1,7 +1,10 @@
 import { useSelector } from "react-redux";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, Navigate } from "react-router-dom";
-// import { thunkRemoveAnimeFromWatchlist } from "../../redux/watchlist";
+import {
+  thunkRemoveAnimeFromWatchlist,
+  thunkLoadAnimeToWatchlists,
+} from "../../redux/watchlist";
 import { useDispatch } from "react-redux";
 
 function Watchlist() {
@@ -12,22 +15,28 @@ function Watchlist() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  if (!user) {
-    return <Navigate to="/login" />;
-  }
+  useEffect(() => {
+    if (!user) {
+      return <Navigate to="/login" />;
+    }
+
+    if (animeToDelete) {
+      console.log("DELETING...", animeToDelete);
+      //  grab the anime to delete name
+      // split to array by spaces
+      // join by %20
+      let animeName = animeToDelete.split(" ").join("%20");
+      // console.log(watchlistIdToDelete, 'watchlist ID');
+
+      dispatch(
+        thunkRemoveAnimeFromWatchlist(user.id, watchlistIdToDelete, animeName)
+      );
+    }
+  }, [user,dispatch, animeToDelete, watchlistIdToDelete]);
 
   function handleEditClick(e) {
     e.preventDefault();
     setEdit(!edit);
-  }
-
-  if (animeToDelete) {
-    console.log("DELETING...", animeToDelete);
-    //  grab the anime to delete name
-    // split to array by spaces
-    // join by %20
-    let anime = animeToDelete.split(" ").join("%20");
-    console.log(watchlistIdToDelete, 'watchlist ID');
   }
 
   return (

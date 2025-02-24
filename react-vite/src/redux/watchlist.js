@@ -1,43 +1,55 @@
 const REMOVE_ANIME = "watchlists/removeAnime";
+const LOAD_ANIME = "watchlists/loadWatchlists";
 
-const removeAnimeFromWatchlist = (payload) => ({
+const updateWatchlists = (payload) => ({
   type: REMOVE_ANIME,
   payload,
 });
 
-export const thunkRemoveAnimeFromWatchlist =
-  (watchlistId, animeName) => async (dispatch) => {
-    const response = await fetch(`/api/watchlists/${watchlistId}/${animeName}`);
+const loadWatchlists = (payload) => ({
+  type: LOAD_ANIME,
+  payload,
+});
 
-    if (response.ok) {
-      const data = await response.json();
-      console.log("IN WATCHLIST THUNK \n", data);
-      //     if (data.errors) {
-      //       return;
-      //     }
+export const thunkRemoveAnimeFromWatchlist = (userId,watchlistId,animeName) => async (dispatch) => {
+  const response = await fetch(`/api/watchlists/${userId}/${watchlistId}/${animeName}`);
 
-      //     dispatch(setUser(data));
+  if (response.ok) {
+    const data = await response.json();
+
+    if (data.error) {
+      return data.error;
     }
-  };
 
-const initialState = { watchlists: null };
+    await dispatch(updateWatchlists(data));
+  }
+  return response;
+};
+
+export const thunkLoadAnimeToWatchlists = (userId) => async (dispatch) => {
+
+  const response = await fetch(`/api/watchlists/${userId}/load`);
+  console.log("RESPONSE =====>", response);
+
+  if (response.ok) {
+    const data = await response.json();
+    console.log("IN WATCHLIST LOAD THUNK \n", data);
+    if (data.error) {
+      return data.error;
+    }
+
+    // await dispatch(updateWatchlists(data));
+  }
+  //   return response;
+};
+
+const initialState = {  };
 
 function watchlistReducer(state = initialState, action) {
   switch (action.type) {
-    case SET_USER: {
-      let posts = 0;
-      for (let watchlist of action.payload.watchlists) {
-        for (let a of watchlist.anime) {
-          if (a) {
-            posts += 1;
-          }
-        }
-      }
-      action.payload.posts = posts;
-      return { ...state, user: action.payload };
+    case REMOVE_ANIME: {
+      return { ...state, ...action.payload };
     }
-    case REMOVE_USER:
-      return { ...state, user: null };
     default:
       return state;
   }
