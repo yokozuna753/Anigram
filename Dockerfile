@@ -76,4 +76,11 @@ COPY . .
 
 # Run migrations and set schema before starting the app
 # CMD ["sh", "-c", "PGPASSWORD=$DATABASE_PASSWORD psql -h $DATABASE_HOST -U $DATABASE_USER -d $DATABASE_NAME -c 'SET search_path TO bat_schema;' && flask db upgrade && flask seed all && gunicorn app:app"]
-CMD sh -c 'PGPASSWORD="$DATABASE_PASSWORD" psql -h "$DATABASE_HOST" -U "$DATABASE_USER" -d "$DATABASE_NAME" -c "SET search_path TO $SCHEMA;" && flask db upgrade && flask seed all && gunicorn app:app'
+# CMD sh -c 'PGPASSWORD="$DATABASE_PASSWORD" psql -h "$DATABASE_HOST" -U "$DATABASE_USER" -d "$DATABASE_NAME" -c "SET search_path TO $SCHEMA;" && flask db upgrade && flask seed all && gunicorn app:app'
+CMD sh -c 'PGPASSWORD="$DATABASE_PASSWORD" psql -h "$DATABASE_HOST" -U "$DATABASE_USER" -d "$DATABASE_NAME" -c "SET search_path TO $SCHEMA;" && \
+           echo "Starting migrations..." && \
+           flask db upgrade && \
+           echo "Migrations complete, starting seed..." && \
+           flask seed all && \
+           echo "Seed complete, starting app..." && \
+           gunicorn app:app'
