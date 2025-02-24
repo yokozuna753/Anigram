@@ -1,4 +1,4 @@
-from .db import db, environment, SCHEMA, add_prefix_for_prod
+from .db import db, environment, SCHEMA
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 
@@ -13,6 +13,22 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(40), nullable=False, unique=True)
     email = db.Column(db.String(255), nullable=False, unique=True)
     hashed_password = db.Column(db.String(255), nullable=False)
+
+    # Relationship to "following" (users that the user is following)
+    user_is_following = db.relationship(
+        'Follow',
+        foreign_keys='Follow.user_id',  # Specify which foreign key to use
+        back_populates='user',
+    )
+
+    # Relationship to "followers" (users that are following the user)
+    followers = db.relationship(
+        'Follow',
+        foreign_keys='Follow.followed_user_id',  # Specify which foreign key to use
+        back_populates='followed_user',
+    )
+
+    watchlists = db.relationship("Watchlist", back_populates="user", cascade="all, delete-orphan")
 
     @property
     def password(self):
@@ -29,5 +45,8 @@ class User(db.Model, UserMixin):
         return {
             'id': self.id,
             'username': self.username,
-            'email': self.email
+            'email': self.email,
+            'watchlists': [item.to_dict() for item in self.watchlists],
+            'followers': [follower.to_dict() for follower in self.followers],
+            'user_is_following': [followed_user.to_dict() for followed_user in self.user_is_following]
         }
