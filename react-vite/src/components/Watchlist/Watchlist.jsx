@@ -12,39 +12,37 @@ function Watchlist() {
   const [animeToDelete, setAnimeToDelete] = useState("");
   const [watchlistIdToDelete, setWatchlistIdToDelete] = useState();
   const user = useSelector((store) => store.session.user);
-  const watchlists = useSelector((store) => store.watchlists)
-  console.log('        WATCHLISTS HERE ===>', watchlists);
-  // const navigate = useNavigate();
+  const watchlists = useSelector((store) => store.watchlists);
   const dispatch = useDispatch();
 
   useEffect(() => {
     if(user){
-      dispatch(thunkLoadAnimeToWatchlists(user.id))
+      dispatch(thunkLoadAnimeToWatchlists(user.id));
     }
-  }, [dispatch,user])
+  }, [dispatch, user]);
 
   useEffect(() => {
-    if (!user) {
-      return <Navigate to="/login" />;
-    }
-
-    if (animeToDelete) {
+    if (animeToDelete && watchlistIdToDelete) {
       console.log("DELETING...", animeToDelete);
-      //  grab the anime to delete name
-      // split to array by spaces
-      // join by %20
       let animeName = animeToDelete.split(" ").join("%20");
-      // console.log(watchlistIdToDelete, 'watchlist ID');
 
       dispatch(
         thunkRemoveAnimeFromWatchlist(user.id, watchlistIdToDelete, animeName)
       );
+      
+      // Reset state after dispatching the action
+      setAnimeToDelete("");
+      setWatchlistIdToDelete(undefined);
     }
-  }, [user,dispatch, animeToDelete, watchlistIdToDelete]);
+  }, [user, dispatch, animeToDelete, watchlistIdToDelete]);
 
   function handleEditClick(e) {
     e.preventDefault();
     setEdit(!edit);
+  }
+
+  if (!user) {
+    return <Navigate to="/login" />;
   }
 
   return (
@@ -57,18 +55,18 @@ function Watchlist() {
       </div>
       <div className="user-profile-anime">
         <ul className="user-profile-anime-list">
-          {user &&
-            user.watchlists &&
-            user.watchlists.map((watchlist) => {
-              return watchlist.anime.map((anime) => {
-                return (
-                  // ! SET THE HREF ATTRIBUTE OF EACH ANIME IMAGE TO THE ANIME DETAIL PAGE
+          {watchlists && 
+            Object.values(watchlists)
+              .filter(watchlist => watchlist && typeof watchlist === 'object' && Array.isArray(watchlist.anime))
+              .map((watchlist) => {
+                return watchlist.anime.map((anime) => (
                   <li style={{ listStyleType: "none" }} key={anime.id}>
                     <div>
-                      <a href="">
+                      <a href={`/anime/${anime.id}`}>
                         <img
                           style={{ width: "200px" }}
                           src={`${anime.image_url}`}
+                          alt={anime.title}
                         />
                         <p>{anime.title}</p>
                       </a>
@@ -84,9 +82,8 @@ function Watchlist() {
                       )}
                     </div>
                   </li>
-                );
-              });
-            })}
+                ));
+              })}
         </ul>
       </div>
     </>

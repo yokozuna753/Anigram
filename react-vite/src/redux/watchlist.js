@@ -48,14 +48,29 @@ const initialState = {};
 function watchlistReducer(state = initialState, action) {
   switch (action.type) {
     case LOAD_ANIME: {
+      let posts = 0;
       let watchlist_obj = {};
-      for(let watchlist of action.payload){
+      for (let watchlist of action.payload) {
         watchlist_obj[watchlist.name] = watchlist;
+        for (let anime of watchlist.anime) {
+          posts += 1;
+        }
       }
-      return {...state, ...watchlist_obj}
+      watchlist_obj.posts = posts;
+      return { ...state, ...watchlist_obj };
     }
     case REMOVE_ANIME: {
-      return { ...state, ...action.payload };
+      let watchlist_obj = {};
+      let posts = 0;
+      for (let watchlist of action.payload) {
+        watchlist_obj[watchlist.name] = watchlist;
+        for (let anime of watchlist.anime) {
+          posts += 1;
+        }
+      }
+      watchlist_obj.posts = posts;
+
+      return { ...state, ...watchlist_obj };
     }
     default:
       return state;

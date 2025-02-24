@@ -1,9 +1,23 @@
 import { useSelector } from "react-redux";
 import { useNavigate, Navigate} from "react-router-dom";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import {
+  thunkLoadAnimeToWatchlists,
+} from "../../redux/watchlist";
 
 function UserProfile() {
   const user = useSelector((store) => store.session.user);
+  const watchlists = useSelector((store) => store.watchlists);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  let posts = 0;
+
+    useEffect(() => {
+      if(user){
+        dispatch(thunkLoadAnimeToWatchlists(user.id))
+      }
+    }, [dispatch,user])
 
   if(!user){
     return <Navigate to='/login'/>
@@ -13,6 +27,10 @@ function UserProfile() {
     e.preventDefault();
     navigate(`/user/${user.id}/watchlists`);
   }
+
+  
+
+
 
    return (
     <>
@@ -26,10 +44,10 @@ function UserProfile() {
         <div className="follows&btns">
           <div className="user-follow-info">
             <div id="user-profile-posts">
-              {user && user.posts && (
+              {watchlists && watchlists.posts && (
                 <>
-                  <p>{user.posts}</p>
-                  <p>{user.posts === 0 || user.posts > 1 ? "Posts" : "Post"}</p>
+                  <p>{watchlists.posts}</p>
+                  <p>{watchlists.posts === 0 || watchlists.posts > 1 ? "Posts" : "Post"}</p>
                 </>
               )}
             </div>

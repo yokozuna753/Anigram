@@ -69,15 +69,7 @@ const initialState = { user: null };
 function sessionReducer(state = initialState, action) {
   switch (action.type) {
     case SET_USER: {
-      let posts = 0;
-      for (let watchlist of action.payload.watchlists) {
-        for (let a of watchlist.anime) {
-          if (a) {
-            posts += 1;
-          }
-        }
-      }
-      action.payload.posts = posts;
+     
       const newState = { ...state, user: action.payload };
       console.log("New state:", newState);
       return newState;
