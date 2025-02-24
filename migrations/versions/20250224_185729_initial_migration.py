@@ -1,8 +1,8 @@
 """initial migration
 
-Revision ID: 7a69cd91e684
+Revision ID: 0e42b288f8fc
 Revises: 
-Create Date: 2025-02-24 18:34:27.639363
+Create Date: 2025-02-24 18:57:29.125770
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '7a69cd91e684'
+revision = '0e42b288f8fc'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -50,7 +50,7 @@ def upgrade():
     sa.Column('likes', sa.Integer(), nullable=False),
     sa.Column('title', sa.String(length=200), nullable=False),
     sa.Column('image_url', sa.String(length=300), nullable=False),
-    sa.Column('producers', sa.String(length=100), nullable=False),
+    sa.Column('producers', sa.String(length=100), nullable=True),
     sa.Column('rating', sa.String(length=300), nullable=False),
     sa.Column('trailer_url', sa.String(length=300), nullable=True),
     sa.Column('mal_url', sa.String(length=300), nullable=False),

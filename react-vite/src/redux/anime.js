@@ -1,8 +1,8 @@
 const REMOVE_ANIME = "watchlists/removeAnime";
 const LOAD_ANIME = "watchlists/loadWatchlists";
 
-const updateWatchlists = (payload) => ({
-  type: REMOVE_ANIME,
+const updateAnime = (payload) => ({
+  type: LOAD_ANIME,
   payload,
 });
 
@@ -22,7 +22,7 @@ export const thunkLoadAnime = (anime_data) => async (dispatch) => {
         return data.error;
       }
 
-  //     await dispatch(loadWatchlists(data));
+  //     await dispatch(loadAnime(data));
     }
   //   return response;
 };

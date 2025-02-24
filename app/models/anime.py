@@ -14,7 +14,7 @@ class Anime(db.Model):
     likes = db.Column(db.Integer, nullable=False, default=0)
     title = db.Column(db.String(200), nullable=False)
     image_url = db.Column(db.String(300), nullable=False)
-    producers = db.Column(db.String(100), nullable=False)
+    producers = db.Column(db.String(100), nullable=True)
     rating = db.Column(db.String(300), nullable=False,)
     trailer_url = db.Column(db.String(300), nullable=True)
     mal_url = db.Column(db.String(300), nullable=False)
@@ -30,6 +30,7 @@ class Anime(db.Model):
             'likes': self.likes,
             'title': self.title,
             'image_url': self.image_url,
+            'producers': self.producers,
             'rating': self.rating,
             'trailer_url':self.trailer_url,
             'mal_url': self.mal_url,

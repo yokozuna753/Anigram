@@ -16,37 +16,37 @@ anime = Blueprint('anime', __name__)
 
 @anime.route('/<string:animeName>', methods=['GET','POST'])
 @login_required
-def search_anime(animeName):
+def add_anime(animeName):
     """
     Search for anime through Jikan API by name and return an obj of that anime
+    # if the anime exists, return an error with a message
     """
     anime_info = request.get_json()
-    print('     ANIME NAME', animeName)
+
     response = Anime.query.filter(Anime.title == anime_info['title_english']).all()
-    print('            RESPONSE HERE !!!!!!   ', response)
+
     if response:
-        print('         WE MADE ITTTTT       !!!!!!!!!')
+
         return jsonify({"error": "anime already exists in database"})
     else:
         name = '%20'.join(anime_info['title_english'].split(' '))
-        anime_response = requests.get(f'https://api.jikan.moe/v4/anime?q={name}&limit=1&page=1')
+        # anime_response = requests.get(f'https://api.jikan.moe/v4/anime?q={name}&limit=1&page=1')
 
-        anime_data = anime_response.json()
+        # anime_data = anime_response.json()
     
-        print('          !!!! THIS IS THE ANIME =====>   ', anime_data['data'])
+
         anime_obj = Anime(
             watchlist_id= None,
             likes=0,
-            title=anime_data['data'][0]['title_english'],
-            image_url=anime_data['data'][0]['images']['jpg']['large_image_url'],
-            producers=anime_data['data'][0]['producers'][0]['name'],
-            rating=anime_data['data'][0]['rating'],
-            trailer_url= anime_data['data'][0]['trailer']['url'] or None,
-            mal_url= anime_data['data'][0]['url'],
-            synopsis= anime_data['data'][0]['synopsis'],
+            title=anime_info['title_english'],
+            image_url=anime_info['images']['jpg']['large_image_url'],
+            producers=anime_info['producers'][0]['name'] or None,
+            rating=anime_info['rating'],
+            trailer_url= anime_info['trailer']['url'] or None,
+            mal_url= anime_info['url'],
+            synopsis= anime_info['synopsis'],
         )
 
-        print('       ANIME OBJECT FROM BACKEND    ====> ', anime_obj)
         db.session.add(anime_obj)
         db.session.commit()
         # first, modify the db table fields to hold correct data -- #* DONE
