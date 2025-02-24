@@ -10,13 +10,13 @@ class Anime(db.Model):
         __table_args__ = {'schema': SCHEMA}
 
     id = db.Column(db.Integer, primary_key=True)
-    watchlist_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod("watchlists.id")), nullable=False)
+    watchlist_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod("watchlists.id")), nullable=True)
     likes = db.Column(db.Integer, nullable=False, default=0)
     title = db.Column(db.String(200), nullable=False)
     image_url = db.Column(db.String(300), nullable=False)
     producers = db.Column(db.String(100), nullable=False)
     rating = db.Column(db.String(300), nullable=False,)
-    trailer_url = db.Column(db.String(300), nullable=False)
+    trailer_url = db.Column(db.String(300), nullable=True)
     mal_url = db.Column(db.String(300), nullable=False)
     synopsis = db.Column(db.String(1000), nullable=False)
 

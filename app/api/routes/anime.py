@@ -26,6 +26,7 @@ def search_anime(animeName):
     print('            RESPONSE HERE !!!!!!   ', response)
     if response:
         print('         WE MADE ITTTTT       !!!!!!!!!')
+        return jsonify({"error": "anime already exists in database"})
     else:
         name = '%20'.join(anime_info['title_english'].split(' '))
         anime_response = requests.get(f'https://api.jikan.moe/v4/anime?q={name}&limit=1&page=1')
@@ -33,11 +34,24 @@ def search_anime(animeName):
         anime_data = anime_response.json()
     
         print('          !!!! THIS IS THE ANIME =====>   ', anime_data['data'])
+        anime_obj = Anime(
+            watchlist_id= None,
+            likes=0,
+            title=anime_data['data'][0]['title_english'],
+            image_url=anime_data['data'][0]['images']['jpg']['large_image_url'],
+            producers=anime_data['data'][0]['producers'][0]['name'],
+            rating=anime_data['data'][0]['rating'],
+            trailer_url= anime_data['data'][0]['trailer']['url'] or None,
+            mal_url= anime_data['data'][0]['url'],
+            synopsis= anime_data['data'][0]['synopsis'],
+        )
 
-        # ! first, modify the db table fields to hold correct data
-        #! DELETE the migration and remigrate
+        print('       ANIME OBJECT FROM BACKEND    ====> ', anime_obj)
+        db.session.add(anime_obj)
+        db.session.commit()
+        # first, modify the db table fields to hold correct data -- #* DONE
+        # DELETE the migration and remigrate #*DONE
         # if the anime doesnt exist in db, grab the info and put it in an object
         # add and commit to the session
 
-    
-    return jsonify({'message': 'test'})
+        return jsonify(anime_obj.to_dict())

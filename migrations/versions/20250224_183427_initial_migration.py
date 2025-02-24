@@ -1,8 +1,8 @@
 """initial migration
 
-Revision ID: d9ffe2e74807
+Revision ID: 7a69cd91e684
 Revises: 
-Create Date: 2025-02-24 18:12:41.587430
+Create Date: 2025-02-24 18:34:27.639363
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'd9ffe2e74807'
+revision = '7a69cd91e684'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -46,13 +46,13 @@ def upgrade():
     )
     op.create_table('anime',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('watchlist_id', sa.Integer(), nullable=False),
+    sa.Column('watchlist_id', sa.Integer(), nullable=True),
     sa.Column('likes', sa.Integer(), nullable=False),
     sa.Column('title', sa.String(length=200), nullable=False),
     sa.Column('image_url', sa.String(length=300), nullable=False),
     sa.Column('producers', sa.String(length=100), nullable=False),
     sa.Column('rating', sa.String(length=300), nullable=False),
-    sa.Column('trailer_url', sa.String(length=300), nullable=False),
+    sa.Column('trailer_url', sa.String(length=300), nullable=True),
     sa.Column('mal_url', sa.String(length=300), nullable=False),
     sa.Column('synopsis', sa.String(length=1000), nullable=False),
     sa.ForeignKeyConstraint(['watchlist_id'], ['watchlists.id'], ),
