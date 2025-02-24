@@ -11,7 +11,7 @@ function UserProfile() {
   const watchlists = useSelector((store) => store.watchlists);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  let posts = 0;
+  // let posts = 0;
 
     useEffect(() => {
       if(user){
