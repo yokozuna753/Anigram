@@ -52,7 +52,6 @@ function watchlistReducer(state = initialState, action) {
       for(let watchlist of action.payload){
         watchlist_obj[watchlist.name] = watchlist;
       }
-      console.log('       WATCHLIST OBJ HERE ====>', watchlist_obj);
       return {...state, ...watchlist_obj}
     }
     case REMOVE_ANIME: {

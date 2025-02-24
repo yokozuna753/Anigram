@@ -12,8 +12,16 @@ function Watchlist() {
   const [animeToDelete, setAnimeToDelete] = useState("");
   const [watchlistIdToDelete, setWatchlistIdToDelete] = useState();
   const user = useSelector((store) => store.session.user);
-  const navigate = useNavigate();
+  const watchlists = useSelector((store) => store.watchlists)
+  console.log('        WATCHLISTS HERE ===>', watchlists);
+  // const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if(user){
+      dispatch(thunkLoadAnimeToWatchlists(user.id))
+    }
+  }, [dispatch,user])
 
   useEffect(() => {
     if (!user) {
