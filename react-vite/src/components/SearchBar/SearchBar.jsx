@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef } from "react";
+import { thunkLoadAnime } from "../../redux/anime";
+import { useDispatch } from "react-redux";
 
 function SearchBar() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -7,6 +9,7 @@ function SearchBar() {
   const [showResults, setShowResults] = useState(false);
   const resultsRef = useRef(null);
   const inputRef = useRef(null);
+  const dispatch = useDispatch();
 
   // Handle search input change
   const handleChange = (e) => {
@@ -18,14 +21,14 @@ function SearchBar() {
   useEffect(() => {
     function handleClickOutside(event) {
       if (
-        resultsRef.current && 
+        resultsRef.current &&
         !resultsRef.current.contains(event.target) &&
         !inputRef.current.contains(event.target)
       ) {
         setShowResults(false);
       }
     }
-    
+
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
@@ -42,7 +45,7 @@ function SearchBar() {
 
       setIsLoading(true);
       setShowResults(true);
-      
+
       try {
         const response = await fetch(
           `https://api.jikan.moe/v4/anime?q=${encodeURIComponent(
@@ -82,10 +85,11 @@ function SearchBar() {
 
   // Handle clicking on a search result
   const handleResultClick = (anime) => {
-    setSearchTerm(anime.title);
+    setSearchTerm(anime.title_english);
     setShowResults(false);
     console.log("Selected anime:", anime);
     // You can add navigation to the anime details page here
+    dispatch(thunkLoadAnime(anime))
   };
 
   return (
@@ -121,7 +125,9 @@ function SearchBar() {
           }}
         >
           {isLoading ? (
-            <div style={{ padding: "10px", textAlign: "center" }}>Loading...</div>
+            <div style={{ padding: "10px", textAlign: "center" }}>
+              Loading...
+            </div>
           ) : results.length > 0 ? (
             results.map((anime) => (
               <div
@@ -136,7 +142,7 @@ function SearchBar() {
                 }}
                 onMouseOver={(e) => {
                   e.currentTarget.style.backgroundColor = "#f0f0f0";
-                  e.currentTarget.style.cursor = "pointer"
+                  e.currentTarget.style.cursor = "pointer";
                 }}
                 onMouseOut={(e) => {
                   e.currentTarget.style.backgroundColor = "transparent";
@@ -153,7 +159,9 @@ function SearchBar() {
                   }}
                 />
                 <div>
-                  <div style={{ fontWeight: "bold" }}>{anime.title_english}</div>
+                  <div style={{ fontWeight: "bold" }}>
+                    {anime.title_english}
+                  </div>
                   <div style={{ fontSize: "0.8rem", color: "#666" }}>
                     {anime.year ? `${anime.year} • ` : ""}
                     {anime.type || ""}
