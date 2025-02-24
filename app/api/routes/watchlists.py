@@ -59,8 +59,6 @@ def remove_anime(userId, watchlistId, animeName):
         }
         watchlists_data.append(watchlist_data)
     
-    print('           FINAL WATCHLISTS HERE WITHOUT ANIME ====>   ', watchlists_data)
-    
     return jsonify(watchlists_data)
 
 
@@ -69,7 +67,6 @@ def remove_anime(userId, watchlistId, animeName):
 @login_required
 def load_anime(userId):
     watchlists = Watchlist.query.filter(Watchlist.user_id == int(userId)).all()
-    print('IN BACKEND WATCHLIST ===> \n', watchlists)
     watchlists_data = []
     for watchlist in watchlists:
         watchlist_data = {
@@ -87,6 +84,7 @@ def load_anime(userId):
                 "watchlist_id": anime.watchlist_id
             } for anime in watchlist.anime]
         }
-    watchlists_data.append(watchlist_data)
+
+        watchlists_data.append(watchlist_data)
     
     return jsonify(watchlists_data)
