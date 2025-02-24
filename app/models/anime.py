@@ -1,6 +1,6 @@
 from .db import db, environment, SCHEMA, add_prefix_for_prod
-from sqlalchemy.types import DateTime
-from datetime import datetime
+# from sqlalchemy.types import DateTime
+# from datetime import datetime
 
 
 class Anime(db.Model):
@@ -14,7 +14,11 @@ class Anime(db.Model):
     likes = db.Column(db.Integer, nullable=False, default=0)
     title = db.Column(db.String(200), nullable=False)
     image_url = db.Column(db.String(300), nullable=False)
-    rating = db.Column(db.Float, nullable=False, default=0.0)
+    producers = db.Column(db.String(100), nullable=False)
+    rating = db.Column(db.String(300), nullable=False,)
+    trailer_url = db.Column(db.String(300), nullable=False)
+    mal_url = db.Column(db.String(300), nullable=False)
+    synopsis = db.Column(db.String(1000), nullable=False)
 
     watchlist = db.relationship('Watchlist', back_populates='anime')
 
@@ -27,4 +31,7 @@ class Anime(db.Model):
             'title': self.title,
             'image_url': self.image_url,
             'rating': self.rating,
+            'trailer_url':self.trailer_url,
+            'mal_url': self.mal_url,
+            'synopsis':self.synopsis,
         }
