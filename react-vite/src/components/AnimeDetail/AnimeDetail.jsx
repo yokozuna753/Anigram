@@ -11,7 +11,7 @@ import { useEffect } from "react";
 
 function AnimeDetail() {
   const params = useParams();
-  const user = useSelector((state) => state.session.user);
+  const animeState = useSelector((state) => state.anime);
 
   const anime_obj = JSON.parse(localStorage.getItem(`anime_${params.mal_id}`));
   console.log(" ANIME OBJECT HERE ===>", anime_obj);
@@ -22,11 +22,22 @@ function AnimeDetail() {
   // console.log('THIS IS IMAGE ===>   ', anime_obj['image_url']);
 
   return (
-    <>
+    <div className="anime-detail-container">
   <h1>Anime Detail Page</h1>
+  <div className="anime-main-info">
+
   <img src={`${anime_obj.image_url}`}/>
   <h1>{anime_obj.title} </h1>
-    </>
+  <div className="anime-synopsis">
+    <p>
+      {anime_obj.synopsis}
+    </p>
+  </div>
+  </div>
+  <div className="anime-extra-info">
+
+  </div>
+    </div>
 );
 }
 

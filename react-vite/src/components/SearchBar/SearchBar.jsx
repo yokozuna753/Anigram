@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { thunkLoadAnime } from "../../redux/anime";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 function SearchBar() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -13,6 +13,7 @@ function SearchBar() {
   const inputRef = useRef(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const animeState = useSelector((state) => state.anime);
 
@@ -21,6 +22,15 @@ function SearchBar() {
     const value = e.target.value;
     setSearchTerm(value);
   };
+
+  useEffect(() => {
+    // Clear search results when navigating
+    return () => {
+      setSearchTerm("");
+      setResults([]);
+      setShowResults(false);
+    };
+  }, [location.pathname]);
 
   // Close results when clicking outside
   useEffect(() => {
@@ -80,47 +90,33 @@ function SearchBar() {
     return () => clearTimeout(timeoutId);
   }, [searchTerm]);
 
-  // Handle form submission
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(searchTerm);
-    // Navigate or set state based on the search term
-    setShowResults(false);
-  };
-
+  // Handle clicking on a search result
   // Handle clicking on a search result
   const handleResultClick = async (anime) => {
-    setSearchTerm(anime.title_english);
-    setShowResults(false);
+    
     console.log("Selected anime:", anime);
-    // You can add navigation to the anime details page here
 
     const result = await dispatch(thunkLoadAnime(anime));
-    // setAnime(anime.title_english);
+
     if (result) {
       let encoded_search_term = result["title"].split(" ").join("%20");
-
       navigate(
         `/anime/${result.id}/${encoded_search_term}/${result["mal_id"]}`
       );
     }
-
   };
 
   return (
     <div className="search-container" style={{ position: "relative" }}>
-      <form onSubmit={handleSubmit}>
-        <input
-          ref={inputRef}
-          style={{ width: "230px" }}
-          placeholder="Search for Anime or Friends"
-          type="text"
-          value={searchTerm}
-          onChange={handleChange}
-          onFocus={() => searchTerm.length >= 3 && setShowResults(true)}
-        />
-        <button type="submit">Search</button>
-      </form>
+      <input
+        ref={inputRef}
+        style={{ width: "230px" }}
+        placeholder="Search for Anime or Friends"
+        type="text"
+        value={searchTerm}
+        onChange={handleChange}
+        onFocus={() => searchTerm.length >= 3 && setShowResults(true)}
+      />
 
       {/* Search results dropdown */}
       {showResults && (
