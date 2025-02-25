@@ -89,7 +89,7 @@ function SearchBar() {
     setShowResults(false);
     console.log("Selected anime:", anime);
     // You can add navigation to the anime details page here
-    dispatch(thunkLoadAnime(anime))
+    dispatch(thunkLoadAnime(anime));
   };
 
   return (
@@ -129,9 +129,9 @@ function SearchBar() {
               Loading...
             </div>
           ) : results.length > 0 ? (
-            results.map((anime) => (
+            results.map((anime, index) => (
               <div
-                key={anime.mal_id}
+                key={`${anime.mal_id}-${index}`} // Combine mal_id with index for uniqueness
                 onClick={() => handleResultClick(anime)}
                 style={{
                   display: "flex",
