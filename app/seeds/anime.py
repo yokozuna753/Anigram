@@ -6,6 +6,7 @@ from sqlalchemy.sql import text
 # Adds a demo user, you can add other users here if you want
 def seed_anime():
     attack_on_titan = Anime(
+        mal_id=16498,
         watchlist_id=1,
           likes=0,
           title="Attack on Titan", 
@@ -19,6 +20,7 @@ After witnessing a horrific personal loss at the hands of the invading creatures
 """
 )
     demon_slayer = Anime(
+        mal_id=38000,
         watchlist_id=1,
           likes=0,
           title="Kimetsu no Yaiba", 
@@ -33,6 +35,7 @@ When he finally arrives back home the next day, he is met with a horrifying sigh
 )
 
     one_piece = Anime(
+        mal_id=21,
         watchlist_id=1,
           likes=0,
           title="One Piece", 

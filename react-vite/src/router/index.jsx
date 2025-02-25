@@ -31,7 +31,7 @@ export const router = createBrowserRouter([
         element: <Watchlist />,
       },
       {
-        path: "/anime/:animeId",
+        path: "/anime/:animeId/:animeName/:mal_id",
         element: <AnimeDetail />,
       },
     ],

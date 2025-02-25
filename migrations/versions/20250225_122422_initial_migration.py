@@ -1,8 +1,9 @@
 """initial migration
 
-Revision ID: 50b058f72cb6
+
+Revision ID: c5fa4aaa80f7
 Revises: 
-Create Date: 2025-02-24 19:29:57.285907
+Create Date: 2025-02-25 12:24:22.678605
 
 """
 from alembic import op
@@ -10,7 +11,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '50b058f72cb6'
+revision = 'c5fa4aaa80f7'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -46,6 +47,7 @@ def upgrade():
     )
     op.create_table('anime',
     sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('mal_id', sa.Integer(), nullable=False),
     sa.Column('watchlist_id', sa.Integer(), nullable=True),
     sa.Column('likes', sa.Integer(), nullable=False),
     sa.Column('title', sa.String(length=200), nullable=False),

@@ -1,15 +1,20 @@
 import { useState, useEffect, useRef } from "react";
 import { thunkLoadAnime } from "../../redux/anime";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 function SearchBar() {
   const [searchTerm, setSearchTerm] = useState("");
   const [results, setResults] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [showResults, setShowResults] = useState(false);
+  // const [anime, setAnime] = useState("");
   const resultsRef = useRef(null);
   const inputRef = useRef(null);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const animeState = useSelector((state) => state.anime);
 
   // Handle search input change
   const handleChange = (e) => {
@@ -84,12 +89,22 @@ function SearchBar() {
   };
 
   // Handle clicking on a search result
-  const handleResultClick = (anime) => {
+  const handleResultClick = async (anime) => {
     setSearchTerm(anime.title_english);
     setShowResults(false);
     console.log("Selected anime:", anime);
     // You can add navigation to the anime details page here
-    dispatch(thunkLoadAnime(anime));
+
+    const result = await dispatch(thunkLoadAnime(anime));
+    // setAnime(anime.title_english);
+    if (result) {
+      let encoded_search_term = result["title"].split(" ").join("%20");
+
+      navigate(
+        `/anime/${result.id}/${encoded_search_term}/${result["mal_id"]}`
+      );
+    }
+
   };
 
   return (

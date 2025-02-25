@@ -10,6 +10,7 @@ class Anime(db.Model):
         __table_args__ = {'schema': SCHEMA}
 
     id = db.Column(db.Integer, primary_key=True)
+    mal_id = db.Column(db.Integer, nullable=False)
     watchlist_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod("watchlists.id")), nullable=True)
     likes = db.Column(db.Integer, nullable=False, default=0)
     title = db.Column(db.String(200), nullable=False)
@@ -26,6 +27,7 @@ class Anime(db.Model):
     def to_dict(self):
         return {
             'id': self.id,
+            'mal_id': self.mal_id,
             'watchlist_id': self.watchlist_id,
             'likes': self.likes,
             'title': self.title,

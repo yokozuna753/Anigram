@@ -26,8 +26,7 @@ def add_anime(animeName):
     response = Anime.query.filter(Anime.title == anime_info['title_english']).all()
 
     if response:
-
-        return jsonify({"error": "anime already exists in database"})
+        return jsonify(response[0].to_dict())
     else:
         name = '%20'.join(anime_info['title_english'].split(' '))
         # anime_response = requests.get(f'https://api.jikan.moe/v4/anime?q={name}&limit=1&page=1')
@@ -36,6 +35,7 @@ def add_anime(animeName):
     
 
         anime_obj = Anime(
+            mal_id=anime_info['mal_id'],
             watchlist_id= None,
             likes=0,
             title=anime_info['title_english'],
