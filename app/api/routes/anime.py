@@ -14,7 +14,7 @@ anime = Blueprint('anime', __name__)
     # - format the information as per the README
 # 4. send response back as json
 
-@anime.route('/<string:animeName>', methods=['GET','POST'])
+@anime.route('/<string:animeName>/load', methods=['GET','POST'])
 @login_required
 def add_anime(animeName):
     """
@@ -40,7 +40,7 @@ def add_anime(animeName):
             likes=0,
             title=anime_info['title_english'],
             image_url=anime_info['images']['jpg']['large_image_url'],
-            producers=anime_info['producers'][0]['name'] or None,
+            producers=anime_info['producers'][0]['name'] if anime_info['producers'] and anime_info['producers'][0] else None,
             rating=anime_info['rating'],
             trailer_url= anime_info['trailer']['url'] or None,
             mal_url= anime_info['url'],

@@ -19,6 +19,7 @@ export const thunkRemoveAnimeFromWatchlist =
 
     if (response.ok) {
       const data = await response.json();
+      console.log('     DATA FROM WATCHLIST REMOVE THUNK ', data);
 
       if (data.error) {
         return data.error;
@@ -34,6 +35,8 @@ export const thunkLoadAnimeToWatchlists = (userId) => async (dispatch) => {
 
   if (response.ok) {
     const data = await response.json();
+
+
     if (data.error) {
       return data.error;
     }

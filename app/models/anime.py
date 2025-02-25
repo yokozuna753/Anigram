@@ -15,10 +15,10 @@ class Anime(db.Model):
     title = db.Column(db.String(200), nullable=False)
     image_url = db.Column(db.String(300), nullable=False)
     producers = db.Column(db.String(100), nullable=True)
-    rating = db.Column(db.String(300), nullable=False,)
+    rating = db.Column(db.String(300), nullable=True,)
     trailer_url = db.Column(db.String(300), nullable=True)
     mal_url = db.Column(db.String(300), nullable=False)
-    synopsis = db.Column(db.String(1000), nullable=False)
+    synopsis = db.Column(db.String(1000), nullable=True)
 
     watchlist = db.relationship('Watchlist', back_populates='anime')
 
