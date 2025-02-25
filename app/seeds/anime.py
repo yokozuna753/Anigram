@@ -23,7 +23,7 @@ After witnessing a horrific personal loss at the hands of the invading creatures
         mal_id=38000,
         watchlist_id=1,
           likes=0,
-          title="Kimetsu no Yaiba", 
+          title="Demon Slayer: Kimetsu no Yaiba", 
           image_url="https://cdn.myanimelist.net/images/anime/1286/99889l.jpg", 
           producers="Aniplex",
           rating="R - 17+ (violence & profanity)", 

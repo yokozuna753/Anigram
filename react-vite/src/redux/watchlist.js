@@ -1,5 +1,13 @@
+const ADD_ANIME = "watchlists/addAnime";
 const REMOVE_ANIME = "watchlists/removeAnime";
 const LOAD_ANIME = "watchlists/loadWatchlists";
+
+
+
+const addAnimeToWatchlist = (payload) => ({
+  type: ADD_ANIME,
+  payload,
+});
 
 const updateWatchlists = (payload) => ({
   type: REMOVE_ANIME,
@@ -10,6 +18,25 @@ const loadWatchlists = (payload) => ({
   type: LOAD_ANIME,
   payload,
 });
+
+export const thunkAddAnimeToWatchlist =
+  (userId, watchlistId, animeName) => async (dispatch) => {
+    const response = await fetch(
+      `/api/watchlists/${userId}/${watchlistId}/${animeName}`
+    );
+
+    if (response.ok) {
+      const data = await response.json();
+      console.log('     DATA FROM WATCHLIST REMOVE THUNK ', data);
+
+      if (data.error) {
+        return data.error;
+      }
+
+      await dispatch(updateWatchlists(data));
+    }
+    return response;
+  };
 
 export const thunkRemoveAnimeFromWatchlist =
   (userId, watchlistId, animeName) => async (dispatch) => {

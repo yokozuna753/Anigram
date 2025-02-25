@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { thunkLoadAnime } from "../../redux/anime";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useNavigate, useLocation } from "react-router-dom";
 
 function SearchBar() {
@@ -14,8 +14,6 @@ function SearchBar() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
-
-  const animeState = useSelector((state) => state.anime);
 
   // Handle search input change
   const handleChange = (e) => {
@@ -93,7 +91,7 @@ function SearchBar() {
   // Handle clicking on a search result
   // Handle clicking on a search result
   const handleResultClick = async (anime) => {
-    
+
     console.log("Selected anime:", anime);
 
     const result = await dispatch(thunkLoadAnime(anime));
