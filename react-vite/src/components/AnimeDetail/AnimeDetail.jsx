@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+// import { useParams } from "react-router-dom";
 
 // 1. user enters anime name in search bar
 // 2. fetch request is made for anime info on button click
