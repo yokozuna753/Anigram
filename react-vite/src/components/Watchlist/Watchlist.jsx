@@ -9,7 +9,7 @@ import { useDispatch } from "react-redux";
 
 function Watchlist() {
   const [edit, setEdit] = useState(false);
-  const [animeToDelete, setAnimeToDelete] = useState("");
+  const [animeToDeleteFromWatchlist, setAnimeToDeleteFromWatchlist] = useState("");
   const [watchlistIdToDelete, setWatchlistIdToDelete] = useState();
   const user = useSelector((store) => store.session.user);
   const watchlists = useSelector((store) => store.watchlists);
@@ -22,19 +22,20 @@ function Watchlist() {
   }, [dispatch, user]);
 
   useEffect(() => {
-    if (animeToDelete && watchlistIdToDelete) {
-      console.log("DELETING...", animeToDelete);
-      let animeName = animeToDelete.split(" ").join("%20");
+    if (animeToDeleteFromWatchlist && watchlistIdToDelete) {
+      console.log("DELETING...", animeToDeleteFromWatchlist);
+      let animeName = animeToDeleteFromWatchlist.split(" ").join("%20");
+      console.log('FINAL ANIME NAME ==>', animeName);
 
       dispatch(
         thunkRemoveAnimeFromWatchlist(user.id, watchlistIdToDelete, animeName)
       );
       
       // Reset state after dispatching the action
-      setAnimeToDelete("");
+      setAnimeToDeleteFromWatchlist("");
       setWatchlistIdToDelete(undefined);
     }
-  }, [user, dispatch, animeToDelete, watchlistIdToDelete]);
+  }, [user, dispatch, animeToDeleteFromWatchlist, watchlistIdToDelete]);
 
   function handleEditClick(e) {
     e.preventDefault();
@@ -73,7 +74,7 @@ function Watchlist() {
                       {edit && (
                         <button
                           onClick={() => {
-                            setAnimeToDelete(anime.title);
+                            setAnimeToDeleteFromWatchlist(anime.title);
                             setWatchlistIdToDelete(watchlist.id);
                           }}
                         >

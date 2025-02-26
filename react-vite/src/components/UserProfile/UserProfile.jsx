@@ -39,7 +39,7 @@ function UserProfile() {
       <div id="user-info">
        {user && <div className="pic&username">
           <img className="user-profile-pic"></img>
-          <p>username</p>
+          <p>@{user.username}</p>
         </div>}
         <div className="follows&btns">
           <div className="user-follow-info">

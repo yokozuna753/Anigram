@@ -59,8 +59,15 @@ export const thunkAddAnimeToWatchlist =
 
 export const thunkRemoveAnimeFromWatchlist =
   (userId, watchlistId, animeName) => async (dispatch) => {
+    console.log('userId ',userId, 'watchlistId', watchlistId, 'anime: ', animeName );
     const response = await fetch(
-      `/api/watchlists/${userId}/${watchlistId}/${animeName}`
+      `/api/watchlists/${userId}/${watchlistId}/${animeName}`,
+      {
+        method: 'DELETE',
+        headers: {
+          "Content-Type": "application/json"
+        }
+      }
     );
 
     if (response.ok) {
@@ -125,10 +132,16 @@ function watchlistReducer(state = initialState, action) {
       // iterate through action.payload
       // key - watchlist name
       // val - watchlist
-      const final_obj = {};
-      action.payload.forEach((watchlist)=> final_obj[watchlist.name] = watchlist)
-      console.log("PAYLOAD FROM ADD REDUCER -->   ", action.payload);
-      return { ...state, ...final_obj };
+      let watchlist_obj = {};
+      let posts = 0;
+      for (let watchlist of action.payload) {
+        watchlist_obj[watchlist.name] = watchlist;
+        watchlist.anime.forEach(() => {
+          posts += 1;
+        });
+      }
+      watchlist_obj.posts = posts;
+      return { ...state, ...watchlist_obj };
     }
     default:
       return state;
