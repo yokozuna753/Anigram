@@ -3,45 +3,51 @@ import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {thunkAddAnimeToWatchlist} from '../../redux/watchlist'
+import {
+  thunkLoadAnimeToWatchlists,
+} from "../../redux/watchlist";
 
-// import { thunkLoadAnime } from "../../redux/anime";
-// import { useState } from "react";
 
-// 1. user enters anime name in search bar
-// 2. fetch request is made for anime info on button click
-// 3. anime gets added to the db if not exists
-// 4. user gets redirected to anime detail page
 
 function AnimeDetail() {
 
   const user = useSelector((state) => state.session.user);
+  const watchlists = useSelector((state)=> state.watchlists)
   const params = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const animeState = useSelector((state) => state.anime);
   const [inWatchlist, setInWatchlist] = useState(false);
   
-  // useEffect(()=>{
-  //   if(!user){
-  //     // (async () => {
-
-  //        navigate('/login')
-    
-  //     // })();
-  //   }
-
-  // },[user])
+  // * iterate through the watchlists redux state and anime in each watchlist
+  // * if the anime name is found & matches the current anime name
+      // change the inWatchlist with the use state and use effect hooks to true
+  // * if not found
+      // on button click - add the anime to the watchlists
+          // re-render the watchlists state with useSelector
 
 
  
 
   const anime_obj = JSON.parse(localStorage.getItem(`anime_${params.mal_id}`));
   console.log(" ANIME OBJECT HERE ===>", anime_obj);
+
+   useEffect(() => {
+      if(user){
+        dispatch(thunkLoadAnimeToWatchlists(user.id));
+      }
+    }, [dispatch, user]);
+
+  useEffect(()=>{
+    const watchlist_arr = Object.values(watchlists);
+    console.log(' watchlists array ==>  ', watchlist_arr);
+  })
+
   useEffect(() => {
     // check the anime redux state  for the anime name
     const animeInWatchlist = animeState[params.animeName];
     // console.log('      FROM USE EFFECT', animeInWatchlist);
-    if (animeInWatchlist.watchlist_id) setInWatchlist(true);
+    if (animeInWatchlist && animeInWatchlist.watchlist_id) setInWatchlist(true);
     else {
       // dispatch()
     }
@@ -52,7 +58,6 @@ function AnimeDetail() {
   }
 
   console.log("THESE ARE THE PARAMS", params);
-  // console.log('THIS IS IMAGE ===>   ', anime_obj['image_url']);
 
   function redirectToWatchlist(e) {
     e.preventDefault();

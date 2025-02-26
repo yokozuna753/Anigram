@@ -19,13 +19,16 @@ anime = Blueprint('anime', __name__)
 def add_anime(animeName):
     """
     Search for anime through Jikan API by name and return an obj of that anime
-    # if the anime exists, return an error with a message
+    # if the anime exists, return that anime object as a dict
     """
     anime_info = request.get_json()
 
     response = Anime.query.filter(Anime.title == anime_info['title_english']).all()
 
+    print('             RESPONSE HERE FROM ANIME BACKEND   !!!!!!!!!   ', response)
+
     if response:
+        print('   THE ANIME EXISTS FROM ANIME BACKEND   ===>    ', response)
         return jsonify(response[0].to_dict())
     else:
         name = '%20'.join(anime_info['title_english'].split(' '))

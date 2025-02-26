@@ -6,7 +6,7 @@ const loadAnime = (payload) => ({
 });
 
 export const thunkLoadAnime = (anime_data) => async (dispatch) => {
-  // console.log("        IN LOAD ANIME THUNK ===> data...", anime_data);
+  console.log("        IN LOAD ANIME THUNK ===> data...", anime_data);
 
   try {
     // First check if we have cached data in localStorage
