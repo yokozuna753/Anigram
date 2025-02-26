@@ -30,7 +30,7 @@ function AnimeDetail() {
     }
   }, [dispatch, user]);
 
-  useEffect(() => {
+  useEffect(() => { //? checks if the current anime is in the watchlist
     const watchlist_arr = Object.values(watchlists);
     // console.log(' watchlists array ==>  ', watchlist_arr);
     for (let watchlist of watchlist_arr) {
@@ -73,6 +73,7 @@ function AnimeDetail() {
 
   function redirectToWatchlist(e) {
     e.preventDefault();
+    navigate(`/user/${user.id}/watchlists`)
   }
 
   function handleAddToWatchlist(e) {
