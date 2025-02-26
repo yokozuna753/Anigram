@@ -1,6 +1,6 @@
 import { Navigate, useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { thunkAddAnimeToWatchlist } from "../../redux/watchlist";
 import { thunkLoadAnimeToWatchlists } from "../../redux/watchlist";
@@ -13,13 +13,9 @@ function AnimeDetail() {
   const dispatch = useDispatch();
   const animeState = useSelector((state) => state.anime);
   const [inWatchlist, setInWatchlist] = useState(false);
-
-  // * iterate through the watchlists redux state and anime in each watchlist
-  // * if the anime name is found & matches the current anime name
-  // change the inWatchlist with the use state and use effect hooks to true
-  // * if not found
-  // on button click - add the anime to the watchlists
-  // re-render the watchlists state with useSelector
+  const [showWatchlists, setShowWatchlists] = useState(false);
+  const watchlistDropdownRef = useRef(null);
+  const watchlistButtonRef = useRef(null);
 
   const anime_obj = JSON.parse(localStorage.getItem(`anime_${params.mal_id}`));
   console.log(" ANIME OBJECT HERE ===>", anime_obj);
@@ -30,32 +26,30 @@ function AnimeDetail() {
     }
   }, [dispatch, user]);
 
-  useEffect(() => { //? checks if the current anime is in the watchlist
+  useEffect(() => {
+    //? checks if the current anime is in the watchlist
     const watchlist_arr = Object.values(watchlists);
     // console.log(' watchlists array ==>  ', watchlist_arr);
     for (let watchlist of watchlist_arr) {
       // console.log("THIS IS WATCHLIST ANIME ==> ", watchlist_arr[watchlist].anime);
-      if(watchlist.anime){
-        for(let anime of watchlist.anime){
+      if (watchlist.anime) {
+        for (let anime of watchlist.anime) {
           // console.log('       WATCHLIST ANIME HERE ==>>>>>', (anime));
-          if(anime.title === anime_obj.title){
+          if (anime.title === anime_obj?.title) {
             // console.log('YESSS');
             setInWatchlist(true);
           }
-
         }
-
       }
     }
 
-    return ()=>{
-      setInWatchlist(false)
-    }
-
-  }, [watchlists, anime_obj.title]);
+    return () => {
+      setInWatchlist(false);
+    };
+  }, [watchlists, anime_obj?.title]);
 
   useEffect(() => {
-    // check the anime redux state  for the anime name
+    // check the anime redux state for the anime name
     const animeInWatchlist = animeState[params.animeName];
     // console.log('      FROM USE EFFECT', animeInWatchlist);
     if (animeInWatchlist && animeInWatchlist.watchlist_id) setInWatchlist(true);
@@ -64,24 +58,42 @@ function AnimeDetail() {
     }
   }, [animeState, params.animeName]);
 
+  // Handle clicks outside the dropdown
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (
+        watchlistDropdownRef.current &&
+        !watchlistDropdownRef.current.contains(event.target) &&
+        !watchlistButtonRef.current.contains(event.target)
+      ) {
+        setShowWatchlists(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   if (!user) {
     return <Navigate to="/login" />;
   }
 
-  console.log("THESE ARE THE PARAMS", params);
-  console.log('IN WATCHLIST? ', inWatchlist);
-
   function redirectToWatchlist(e) {
     e.preventDefault();
-    navigate(`/user/${user.id}/watchlists`)
+    navigate(`/user/${user.id}/watchlists`);
   }
 
-  function handleAddToWatchlist(e) {
-    e.preventDefault();
-    // button is clicked to add to watchlist
-    // * pop up a dropdown of watchlists the user has
-    // once a watchlist is clicked:
-    // dispatch the add to watchlist thunk with the anime info necessary
+  function handleAddToWatchlist(watchlistId) {
+    // Add the anime to the selected watchlist
+    dispatch(
+      thunkAddAnimeToWatchlist({
+        watchlist_id: watchlistId,
+        anime: anime_obj,
+      })
+    );
+    setShowWatchlists(false);
   }
 
   return (
@@ -91,16 +103,81 @@ function AnimeDetail() {
           <h1>Anime Detail Page</h1>
           {user && (
             <div className="anime-detail-image">
-              <img src={`${anime_obj.image_url}`} />
+              <img src={`${anime_obj.image_url}`} alt={anime_obj.title} />
             </div>
           )}
           <div className="anime-main-info">
-            {inWatchlist ? (
-              <button onClick={redirectToWatchlist}>In Watchlist</button>
-            ) : (
-              <button onClick={handleAddToWatchlist}>Add To Watchlist</button>
-            )}
-            <h1>{anime_obj.title} </h1>
+            <div style={{ position: "relative" }}>
+              {inWatchlist ? (
+                <button onClick={redirectToWatchlist}>In Watchlist</button>
+              ) : (
+                <button
+                  ref={watchlistButtonRef}
+                  onClick={() => setShowWatchlists(!showWatchlists)}
+                >
+                  Add To Watchlist
+                </button>
+              )}
+
+              {/* Watchlist dropdown */}
+              {/* Watchlist dropdown */}
+              {showWatchlists && (
+                <div
+                  ref={watchlistDropdownRef}
+                  style={{
+                    position: "absolute",
+                    top: "100%",
+                    left: "0",
+                    width: "200px",
+                    backgroundColor: "white",
+                    border: "1px solid #ddd",
+                    borderRadius: "4px",
+                    boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
+                    zIndex: 10,
+                    padding: "10px",
+                    marginTop: "5px",
+                  }}
+                >
+                  <h4 style={{ margin: "0 0 10px 0" }}>Select a watchlist:</h4>
+                  {Object.values(watchlists).length > 0 ? (
+                    Object.values(watchlists)
+                      .filter(
+                        (watchlist) =>
+                          watchlist && watchlist.id && watchlist.name
+                      )
+                      .map((watchlist, index) => (
+                        <div
+                          key={watchlist.id || index}
+                          onClick={() => handleAddToWatchlist(watchlist.id)}
+                          style={{
+                            padding: "8px",
+                            cursor: "pointer",
+                            borderBottom:
+                              index === Object.values(watchlists).length - 1
+                                ? "none"
+                                : "1px solid #eee",
+                            transition: "background-color 0.2s",
+                          }}
+                          onMouseOver={(e) => {
+                            e.currentTarget.style.backgroundColor = "#f0f0f0";
+                          }}
+                          onMouseOut={(e) => {
+                            e.currentTarget.style.backgroundColor =
+                              "transparent";
+                          }}
+                        >
+                          {watchlist.name}
+                        </div>
+                      ))
+                  ) : (
+                    <div style={{ padding: "8px", color: "#666" }}>
+                      No watchlists found. Create one first.
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+            <h1>{anime_obj.title}</h1>
             <div className="anime-synopsis">
               <p>{anime_obj.synopsis}</p>
             </div>
@@ -116,7 +193,6 @@ function AnimeDetail() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              {" "}
               {anime_obj.trailer_url}
             </a>
           </p>

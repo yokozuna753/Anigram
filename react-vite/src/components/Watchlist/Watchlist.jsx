@@ -62,7 +62,7 @@ function Watchlist() {
                 return watchlist.anime.map((anime) => (
                   <li style={{ listStyleType: "none" }} key={anime.id}>
                     <div>
-                      <a href={`/anime/${anime.id}`}>
+                      <a href={`/anime/${anime.id}/${encodeURIComponent(anime.title)}/${anime.mal_id}`}>
                         <img
                           style={{ width: "200px" }}
                           src={`${anime.image_url}`}
