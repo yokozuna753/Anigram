@@ -100,7 +100,10 @@ function AnimeDetail() {
           <h1>Anime Detail Page</h1>
           {user && (
             <div className="anime-detail-image">
+              <a href={anime_obj.mal_url} target="_blank" rel="noopener noreferrer" >
+
               <img src={`${anime_obj.image_url}`} alt={anime_obj.title} />
+              </a>
             </div>
           )}
           <div className="anime-main-info">
@@ -182,16 +185,21 @@ function AnimeDetail() {
           <p>Likes: {anime_obj.likes}</p>
           <p>Producers: {anime_obj.producers}</p>
           <p>Rating: {anime_obj.rating}</p>
-          <p>
+          {
+          anime_obj.trailer_url ?
+            <p>
             Trailer:{" "}
             <a
               href={`${anime_obj.trailer_url}`}
               target="_blank"
               rel="noopener noreferrer"
-            >
+              >
               {anime_obj.trailer_url}
             </a>
           </p>
+          :
+          <p>Trailer: N/A</p>
+            }
         </div>
       )}
     </>
