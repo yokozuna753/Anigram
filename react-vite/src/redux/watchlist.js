@@ -2,8 +2,6 @@ const ADD_ANIME = "watchlists/addAnime";
 const REMOVE_ANIME = "watchlists/removeAnime";
 const LOAD_ANIME = "watchlists/loadWatchlists";
 
-
-
 const addAnimeToWatchlist = (payload) => ({
   type: ADD_ANIME,
   payload,
@@ -20,20 +18,41 @@ const loadWatchlists = (payload) => ({
 });
 
 export const thunkAddAnimeToWatchlist =
-  (userId, watchlistId, animeName) => async (dispatch) => {
+  (userId, watchlistId, anime_obj) => async (dispatch) => {
+    console.log(
+      "userId ==>  ",
+      userId,
+      "watchlistId: ",
+      watchlistId,
+      "anime object: ",
+      anime_obj
+    );
     const response = await fetch(
-      `/api/watchlists/${userId}/${watchlistId}/${animeName}`
+      `/api/watchlists/${userId}/${watchlistId}/${encodeURIComponent(
+        anime_obj.title
+      )}/add`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId,
+          watchlistId,
+          anime_obj,
+        }),
+      }
     );
 
     if (response.ok) {
       const data = await response.json();
-      console.log('     DATA FROM WATCHLIST REMOVE THUNK ', data);
+      console.log("     DATA FROM WATCHLIST ADD!! THUNK ", data);
 
       if (data.error) {
         return data.error;
       }
 
-      await dispatch(updateWatchlists(data));
+      await dispatch(addAnimeToWatchlist(data));
     }
     return response;
   };
@@ -46,7 +65,7 @@ export const thunkRemoveAnimeFromWatchlist =
 
     if (response.ok) {
       const data = await response.json();
-      console.log('     DATA FROM WATCHLIST REMOVE THUNK ', data);
+      console.log("     DATA FROM WATCHLIST REMOVE THUNK ", data);
 
       if (data.error) {
         return data.error;
@@ -62,7 +81,6 @@ export const thunkLoadAnimeToWatchlists = (userId) => async (dispatch) => {
 
   if (response.ok) {
     const data = await response.json();
-
 
     if (data.error) {
       return data.error;
@@ -101,6 +119,16 @@ function watchlistReducer(state = initialState, action) {
       watchlist_obj.posts = posts;
 
       return { ...state, ...watchlist_obj };
+    }
+    case ADD_ANIME: {
+      // make a new object
+      // iterate through action.payload
+      // key - watchlist name
+      // val - watchlist
+      const final_obj = {};
+      action.payload.forEach((watchlist)=> final_obj[watchlist.name] = watchlist)
+      console.log("PAYLOAD FROM ADD REDUCER -->   ", action.payload);
+      return { ...state, ...final_obj };
     }
     default:
       return state;

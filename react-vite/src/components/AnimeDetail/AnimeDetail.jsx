@@ -85,13 +85,10 @@ function AnimeDetail() {
     navigate(`/user/${user.id}/watchlists`);
   }
 
-  function handleAddToWatchlist(watchlistId) {
+  function handleAddToWatchlist(userId, watchlistId, anime_obj) {
     // Add the anime to the selected watchlist
     dispatch(
-      thunkAddAnimeToWatchlist({
-        watchlist_id: watchlistId,
-        anime: anime_obj,
-      })
+      thunkAddAnimeToWatchlist(userId, watchlistId, anime_obj)
     );
     setShowWatchlists(false);
   }
@@ -120,7 +117,6 @@ function AnimeDetail() {
               )}
 
               {/* Watchlist dropdown */}
-              {/* Watchlist dropdown */}
               {showWatchlists && (
                 <div
                   ref={watchlistDropdownRef}
@@ -148,7 +144,7 @@ function AnimeDetail() {
                       .map((watchlist, index) => (
                         <div
                           key={watchlist.id || index}
-                          onClick={() => handleAddToWatchlist(watchlist.id)}
+                          onClick={() => handleAddToWatchlist(user.id, watchlist.id, anime_obj)}
                           style={{
                             padding: "8px",
                             cursor: "pointer",
