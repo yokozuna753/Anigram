@@ -1,89 +1,60 @@
-from flask import Blueprint, jsonify
-from app.models.user import User
+from flask import Blueprint, jsonify, request
 from flask_login import login_required
+from app.models.anime import Anime
+from app.models import db
 import requests
 
+anime = Blueprint('anime', __name__)
 
-anime = Blueprint("anime", __name__)
+# 1. receive a request from the frontend for an anime
+    # - request will have anime name in the url
+# 2. fetch the anime info by the name to Jikan API
+# 3. receive the response
+    # - add the anime to the db if doesnt exist
+    # - format the information as per the README
+# 4. send response back as json
 
-# get all of the most popular news to display on the portfolio page
-# USE THE BELOW KEY IN EACH REQUEST
-# RAPID API KEY ==>  6651915af7mshd9cda3b8839c5e8p12bdc4jsn69f39d90caa4
-
-"""
-SHOW THE USERS PORTFOLIO
-
-- grab all of the stocks they own from the user table 
-        - should have the stocks_owned relationship
-{'AAPL': {'id': 1, 'estimated_cost': 22740.0, 'owner_id': 1, 'ticker': 'AAPL', 'shares_owned': 100.0, 'stock_info': {'symbol': 'AAPL:NASDAQ', 
-'name': 'Apple Inc', 'type': 'stock', 'price': 228.61, 'open': 229.57, 'high': 230.585, 'low': 228.6301, 
-'volume': 10927280, 'previous_close': 227.38, 'change': 1.23, 'change_percent': 0.5409, 'pre_or_post_market': 229.51, 
-'pre_or_post_market_change': 0.7846, 'pre_or_post_market_change_percent': 0.343, 'last_update_utc': '2025-02-10 17:09:06'}}}
-
-grab the shares_owned & price_purchased from the orders table - relationship with user
-
-"""
-
-
-@anime.route("/<int:userId>/stocks", methods=["GET", "POST"])
+@anime.route('/<string:animeName>/load', methods=['GET','POST'])
 @login_required
-def stocks_portfolio(userId):
-    # get all the investments owned by the current logged in user => news = [{},{}]
-    final_news = []
-    user = User.query.filter(User.id == int(userId)).all()
-    user_stocks = user[0].to_dict()["stocks_owned"]
+def add_anime(animeName):
+    """
+    Search for anime through Jikan API by name and return an obj of that anime
+    # if the anime exists, return that anime object as a dict
+    """
+    anime_info = request.get_json()
 
-    stock_dict = {"tickers": [], "portfolio_value": 0}
-    # ** for loop to show each stock the user owns
-    for ticker in user_stocks:
-        # * grab the symbol of the stock from ticker
-        symbol = ticker["ticker"]  # * ==> 'AAPL'
+    response = Anime.query.filter(Anime.title == anime_info['title_english']).all()
 
-        # #* set the stock dictionary values to the data returned
-        # ! stock_dict['tickers'][symbol] = ticker
+    print('             RESPONSE HERE FROM ANIME BACKEND   !!!!!!!!!   ', response)
 
-        # #* set the portfolio value from the stocks_owned table
-        stock_dict["portfolio_value"] += int(ticker["total_cost"])
+    if response:
+        print('   THE ANIME EXISTS FROM ANIME BACKEND   ===>    ', response)
+        return jsonify(response[0].to_dict())
+    else:
+        name = '%20'.join(anime_info['title_english'].split(' '))
+        # anime_response = requests.get(f'https://api.jikan.moe/v4/anime?q={name}&limit=1&page=1')
 
-        # #* set the data for the stock (data, percent gain)
+        # anime_data = anime_response.json()
+    
 
+        anime_obj = Anime(
+            mal_id=anime_info['mal_id'],
+            watchlist_id= None,
+            likes=0,
+            title=anime_info['title_english'],
+            image_url=anime_info['images']['jpg']['large_image_url'],
+            producers=anime_info['producers'][0]['name'] if anime_info['producers'] and anime_info['producers'][0] else None,
+            rating=anime_info['rating'],
+            trailer_url= anime_info['trailer']['url'] or None,
+            mal_url= anime_info['url'],
+            synopsis= anime_info['synopsis'],
+        )
 
-        ticker["historical_data"] = [row[0] for index, row in history.iterrows()]
+        db.session.add(anime_obj)
+        db.session.commit()
+        # first, modify the db table fields to hold correct data -- #* DONE
+        # DELETE the migration and remigrate #*DONE
+        # if the anime doesnt exist in db, grab the info and put it in an object
+        # add and commit to the session
 
-
-
-
-        total_cost = ticker["total_cost"]
-        shares = ticker["shares_owned"]
-        avg_cost = total_cost / shares
-        percent_gain = (
-            (ticker["stock_info"]["currentPrice"] - avg_cost) / avg_cost
-        ) * 100
-        ticker["percent_gain/loss"] = round(percent_gain, 2)
-
-
-
-
-        # i need to append the ticker object to the stock_dict at the end
-        stock_dict["tickers"].append(ticker)
-    # flatten out the news matrix as one array of objects
-    final_news = [x for subarr in final_news for x in subarr]
-    stock_dict["news"] = final_news
-
-    return jsonify(stock_dict)
-
-
-# @portfolio.route('/<int:userId>/stocks/news', methods=['GET'])
-# @login_required
-# def news_portfolio(userId):
-#         user = User.query.filter(User.id == int(2)).all()
-#         user_stocks = user[0].to_dict()["stocks_owned"]
-#         print('                USER STOCKS !!!! ==>    ',       user_stocks)
-#         final_news = {}
-
-#         for stock in user_stocks:
-#                 ticker = stock["ticker"]
-#                 print('TICKER ====>>>', ticker)
-
-
-#         return final_news
+        return jsonify(anime_obj.to_dict())

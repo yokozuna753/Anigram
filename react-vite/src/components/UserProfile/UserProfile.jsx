@@ -39,7 +39,7 @@ function UserProfile() {
       <div id="user-info">
        {user && <div className="pic&username">
           <img className="user-profile-pic"></img>
-          <p>username</p>
+          <p>@{user.username}</p>
         </div>}
         <div className="follows&btns">
           <div className="user-follow-info">
@@ -87,7 +87,7 @@ function UserProfile() {
                 return (
                   // ! SET THE HREF ATTRIBUTE OF EACH ANIME IMAGE TO THE ANIME DETAIL PAGE
                   <li style={{ listStyleType: "none" }} key={anime.id}>
-                    <a href="">
+                    <a href={`/anime/${anime.id}/${encodeURIComponent(anime.title)}/${anime.mal_id}`}>
                       <img
                         style={{ width: "200px" }}
                         src={`${anime.image_url}`}

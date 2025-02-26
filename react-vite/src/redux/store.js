@@ -7,10 +7,12 @@ import {
 import thunk from "redux-thunk";
 import sessionReducer from "./session";
 import watchlistReducer from "./watchlist";
+import animeReducer from "./anime";
 
 const rootReducer = combineReducers({
   session: sessionReducer,
-  watchlists: watchlistReducer
+  watchlists: watchlistReducer,
+  anime: animeReducer,
 });
 
 let enhancer;
@@ -29,8 +31,7 @@ const configureStore = (preloadedState) => {
 
 export default configureStore;
 
-// 
-
+//
 
 //! ORIGINAL CODE ABOVE
 
@@ -55,10 +56,10 @@ export default configureStore;
 // const configureStore = (preloadedState) => {
 //   // Base middleware - always include thunk
 //   const middlewares = [thunk];
-  
+
 //   // Determine environment
 //   const isProduction = import.meta.env.MODE === "production";
-  
+
 //   // Only add logger in development
 //   if (!isProduction) {
 //     // Configure redux-logger with proper options
@@ -73,10 +74,10 @@ export default configureStore;
 //       // Don't log these actions (optional)
 //       predicate: (getState, action) => !action.type.includes('@@redux')
 //     });
-    
+
 //     middlewares.push(logger);
 //   }
-  
+
 //   // Apply appropriate enhancers
 //   let enhancer;
 //   if (!isProduction && typeof window !== 'undefined' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) {
@@ -87,7 +88,7 @@ export default configureStore;
 //     // Production or development without DevTools
 //     enhancer = applyMiddleware(...middlewares);
 //   }
-  
+
 //   return createStore(rootReducer, preloadedState, enhancer);
 // };
 

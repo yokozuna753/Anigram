@@ -1,5 +1,11 @@
+const ADD_ANIME = "watchlists/addAnime";
 const REMOVE_ANIME = "watchlists/removeAnime";
 const LOAD_ANIME = "watchlists/loadWatchlists";
+
+const addAnimeToWatchlist = (payload) => ({
+  type: ADD_ANIME,
+  payload,
+});
 
 const updateWatchlists = (payload) => ({
   type: REMOVE_ANIME,
@@ -11,14 +17,62 @@ const loadWatchlists = (payload) => ({
   payload,
 });
 
-export const thunkRemoveAnimeFromWatchlist =
-  (userId, watchlistId, animeName) => async (dispatch) => {
+export const thunkAddAnimeToWatchlist =
+  (userId, watchlistId, anime_obj) => async (dispatch) => {
+    console.log(
+      "userId ==>  ",
+      userId,
+      "watchlistId: ",
+      watchlistId,
+      "anime object: ",
+      anime_obj
+    );
     const response = await fetch(
-      `/api/watchlists/${userId}/${watchlistId}/${animeName}`
+      `/api/watchlists/${userId}/${watchlistId}/${encodeURIComponent(
+        anime_obj.title
+      )}/add`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId,
+          watchlistId,
+          anime_obj,
+        }),
+      }
     );
 
     if (response.ok) {
       const data = await response.json();
+      console.log("     DATA FROM WATCHLIST ADD!! THUNK ", data);
+
+      if (data.error) {
+        return data.error;
+      }
+
+      await dispatch(addAnimeToWatchlist(data));
+    }
+    return response;
+  };
+
+export const thunkRemoveAnimeFromWatchlist =
+  (userId, watchlistId, animeName) => async (dispatch) => {
+    console.log('userId ',userId, 'watchlistId', watchlistId, 'anime: ', animeName );
+    const response = await fetch(
+      `/api/watchlists/${userId}/${watchlistId}/${animeName}`,
+      {
+        method: 'DELETE',
+        headers: {
+          "Content-Type": "application/json"
+        }
+      }
+    );
+
+    if (response.ok) {
+      const data = await response.json();
+      console.log("     DATA FROM WATCHLIST REMOVE THUNK ", data);
 
       if (data.error) {
         return data.error;
@@ -34,6 +88,7 @@ export const thunkLoadAnimeToWatchlists = (userId) => async (dispatch) => {
 
   if (response.ok) {
     const data = await response.json();
+
     if (data.error) {
       return data.error;
     }
@@ -70,6 +125,22 @@ function watchlistReducer(state = initialState, action) {
       }
       watchlist_obj.posts = posts;
 
+      return { ...state, ...watchlist_obj };
+    }
+    case ADD_ANIME: {
+      // make a new object
+      // iterate through action.payload
+      // key - watchlist name
+      // val - watchlist
+      let watchlist_obj = {};
+      let posts = 0;
+      for (let watchlist of action.payload) {
+        watchlist_obj[watchlist.name] = watchlist;
+        watchlist.anime.forEach(() => {
+          posts += 1;
+        });
+      }
+      watchlist_obj.posts = posts;
       return { ...state, ...watchlist_obj };
     }
     default:
