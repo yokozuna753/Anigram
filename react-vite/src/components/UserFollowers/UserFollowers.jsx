@@ -1,3 +1,6 @@
+import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
 
 /*
@@ -23,6 +26,21 @@
 */
 
 function UserFollowers(){
+    
+    const user = useSelector((store) => store.session.user);
+    const [isUserSelf, setIsUserSelf] = useState(true);
+    
+    const params = useParams();
+
+
+        useEffect(() => {
+          if(user && user.id){
+            console.log('PARAMS FROM FOLLOWERS ->  ', params);
+            if (Number(params.userId) == user.id){
+                setIsUserSelf(true);
+            }
+          }
+        }, [user])
 
     return (
         <>

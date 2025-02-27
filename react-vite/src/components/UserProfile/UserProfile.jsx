@@ -1,10 +1,11 @@
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useNavigate, Navigate} from "react-router-dom";
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import {thunkLoadFollows} from '../../redux/follows'
 import {
   thunkLoadAnimeToWatchlists,
 } from "../../redux/watchlist";
+
 
 function UserProfile() {
   const user = useSelector((store) => store.session.user);
@@ -16,6 +17,7 @@ function UserProfile() {
     useEffect(() => {
       if(user){
         dispatch(thunkLoadAnimeToWatchlists(user.id))
+        dispatch(thunkLoadFollows(user.id))
       }
     }, [dispatch,user])
 
