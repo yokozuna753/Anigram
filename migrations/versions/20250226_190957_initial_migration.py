@@ -1,8 +1,9 @@
 """initial migration
 
-Revision ID: 67cbbdcadd9e
+
+Revision ID: 8a02d90c0233
 Revises: 
-Create Date: 2025-02-26 12:37:09.871310
+Create Date: 2025-02-26 19:09:57.525811
 
 """
 from alembic import op
@@ -10,7 +11,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '67cbbdcadd9e'
+revision = '8a02d90c0233'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -51,11 +52,11 @@ def upgrade():
     sa.Column('likes', sa.Integer(), nullable=False),
     sa.Column('title', sa.String(length=200), nullable=False),
     sa.Column('image_url', sa.String(length=300), nullable=False),
-    sa.Column('producers', sa.String(length=100), nullable=True),
+    sa.Column('producers', sa.String(length=500), nullable=True),
     sa.Column('rating', sa.String(length=300), nullable=True),
     sa.Column('trailer_url', sa.String(length=300), nullable=True),
     sa.Column('mal_url', sa.String(length=300), nullable=False),
-    sa.Column('synopsis', sa.String(length=1000), nullable=True),
+    sa.Column('synopsis', sa.String(length=7000), nullable=True),
     sa.ForeignKeyConstraint(['watchlist_id'], ['watchlists.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
