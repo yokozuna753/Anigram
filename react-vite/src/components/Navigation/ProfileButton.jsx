@@ -47,7 +47,9 @@ function ProfileButton() {
         <FaUserCircle />
       </button>
       {showMenu && (
-        <ul className={"profile-dropdown"} ref={ulRef}>
+        <div className="menu-box">
+
+        <ul className={"profile-dropdown"} ref={ulRef} style={{listStyleType: "none"}}>
           {user ? (
             <>
               <li>{user.username}</li>
@@ -63,15 +65,16 @@ function ProfileButton() {
                 itemText="Log In"
                 onItemClick={closeMenu}
                 modalComponent={<LoginFormModal />}
-              />
+                />
               <OpenModalMenuItem
                 itemText="Sign Up"
                 onItemClick={closeMenu}
                 modalComponent={<SignupFormModal />}
-              />
+                />
             </>
           )}
         </ul>
+          </div>
       )}
     </>
   );

@@ -34,7 +34,7 @@ function UserProfile() {
 
    return (
     <>
-      {user && <h1>USER PROFILE PAGE</h1>}
+      {/* {user && <h1>USER PROFILE PAGE</h1>} */}
 
       <div id="user-info">
        {user && <div className="pic&username">
