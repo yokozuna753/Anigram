@@ -15,11 +15,11 @@ class Anime(db.Model):
     likes = db.Column(db.Integer, nullable=False, default=0)
     title = db.Column(db.String(200), nullable=False)
     image_url = db.Column(db.String(300), nullable=False)
-    producers = db.Column(db.String(100), nullable=True)
+    producers = db.Column(db.String(500), nullable=True)
     rating = db.Column(db.String(300), nullable=True,)
     trailer_url = db.Column(db.String(300), nullable=True)
     mal_url = db.Column(db.String(300), nullable=False)
-    synopsis = db.Column(db.String(1000), nullable=True)
+    synopsis = db.Column(db.String(7000), nullable=True)
 
     watchlist = db.relationship('Watchlist', back_populates='anime')
 
