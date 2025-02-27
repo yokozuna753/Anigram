@@ -94,7 +94,8 @@ function Watchlist() {
                     setActiveWatchlistId(watchlist.id);
                   }}
                   style={{
-                    backgroundColor: activeWatchlistId === watchlist.id ? "#CBC3E3" : ""
+                    backgroundColor: activeWatchlistId === watchlist.id ? "#CBC3E3" : "",
+                    cursor: "pointer"
                   }}
                   className="watchlist-button-individual"
                 >
@@ -104,7 +105,7 @@ function Watchlist() {
             })}
       </div>
       <div id="watchlist-button">
-        <button onClick={handleEditClick}>Edit Watchlist</button>
+        <button onClick={handleEditClick} style={{cursor: "pointer"}}>Edit Watchlist</button>
       </div>
       <div className="user-profile-anime">
         <ul className="user-profile-anime-list">
@@ -139,7 +140,7 @@ function Watchlist() {
                               setAnimeToDeleteFromWatchlist(anime.title);
                               setWatchlistIdToDelete(watchlist.id);
                             }}
-                            style={{color: 'red'}}
+                            style={{color: 'red', cursor: "pointer"}}
                           >
                             Remove From Watchlist
                           </button>

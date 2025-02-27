@@ -2,10 +2,13 @@
 
 /*
 
-1. make Profile Type the parent component which renders child components 
+1. User clicks on followers (whether its the users' or another users' followers)
 
-2. user goes to Profile Type route
-ROUTE ==> /user/:userId/details
+
+
+2. user goes to the User Followers component route
+!!!!!    ROUTE ==>       /user/:userId/details            !!!!!!!!
+
     - use the url params (userId) to check if it matches the session user's id
 - MATCHES - render user profile component
 - NOT MATCHES - render friends profile component
@@ -18,3 +21,15 @@ ROUTE ==> /user/:userId/details
 
 
 */
+
+function UserFollowers(){
+
+    return (
+        <>
+        <h1>Followers</h1>
+        </>
+    )
+
+}
+
+export default UserFollowers

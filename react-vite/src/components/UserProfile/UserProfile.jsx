@@ -56,9 +56,11 @@ function UserProfile() {
                 <>
                   <p>{user.followers.length}</p>
                   <p>
+                  <a href={`/user/${user && user.id && user.id}/followers`}>
                     {user.followers.length === 0 || user.followers.length > 1
                       ? "Followers"
                       : "Follower"}{" "}
+                      </a>
                   </p>
                 </>
               )}
@@ -67,13 +69,13 @@ function UserProfile() {
               {user && user.user_is_following && (
                 <>
                   <p>{user.user_is_following.length}</p>
-                  <p>Following</p>
+                  <p><a href={`/user/${user && user.id && user.id}/following`}> Following</a></p>
                 </>
               )}
             </div>
           </div>
          {user && <div className="user-profile-buttons">
-            <button onClick={handleClick}>Watchlist</button>
+            <button onClick={handleClick} style={{cursor: "pointer"}}>Watchlist</button>
           </div>}
         </div>
       </div>

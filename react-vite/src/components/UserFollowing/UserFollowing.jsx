@@ -5,7 +5,7 @@
 1. make Profile Type the parent component which renders child components 
 
 2. user goes to Profile Type route
-ROUTE ==> /user/:userId/details
+!!!!!  ROUTE ==> /user/:userId/details
     - use the url params (userId) to check if it matches the session user's id
 - MATCHES - render user profile component
 - NOT MATCHES - render friends profile component
@@ -18,3 +18,15 @@ ROUTE ==> /user/:userId/details
 
 
 */
+
+function UserFollowing(){
+
+    return (
+        <>
+        <h1>Following</h1>
+        </>
+    )
+
+}
+
+export default UserFollowing
