@@ -5,10 +5,17 @@ import { thunkLoadFollows } from "../../redux/follows";
 import { thunkLoadAnimeToWatchlists } from "../../redux/watchlist";
 
 // 1. check th params for the user Id,
-// if it matches, load the logged in user's info
-// if not matches, load the friends info + "Follow" button
+//! This is for other user's profile (not the logged in user)
+// fetch for the user by user id in the search params
+//* if the user id in the search params doesnt match the logged in user:
+    // dispatch a "thunkLoadOtherUser"
+    // dispatch "thunkLoadFollows"
+    // dispatch "thunkLoadAnimeToWatchlists"
+//* use the use State "isUserSelf" to limit access
+// 
+// load the friends info + "Follow" button
 
-function UserProfile() {
+function OtherProfile() {
   const user = useSelector((store) => store.session.user);
   const watchlists = useSelector((store) => store.watchlists);
   const [isUserSelf, setIsUserSelf] = useState(true);
@@ -16,16 +23,16 @@ function UserProfile() {
   const dispatch = useDispatch();
   const params = useParams();
 
-  // useEffect(() => {
-  //   if (user && user.id && user.id === Number(params.userId)) {
-  //     setIsUserSelf(true);
-  //     dispatch(thunkLoadAnimeToWatchlists(user.id));
-  //     dispatch(thunkLoadFollows(user.id));
-  //   }
-  //   return () => {
-  //     setIsUserSelf(false);
-  //   };
-  // }, [dispatch, user]);
+  useEffect(() => {
+    if (user && user.id && user.id === Number(params.userId)) {
+      setIsUserSelf(true);
+      dispatch(thunkLoadAnimeToWatchlists(user.id));
+      dispatch(thunkLoadFollows(user.id));
+    }
+    return () => {
+      setIsUserSelf(false);
+    };
+  }, [dispatch, user]);
 
   if (!user) {
     return <Navigate to="/login" />;
@@ -130,4 +137,4 @@ function UserProfile() {
   );
 }
 
-export default UserProfile;
+export default OtherProfile;

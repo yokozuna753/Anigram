@@ -7,6 +7,7 @@ import Watchlist from "../components/Watchlist/Watchlist";
 import AnimeDetail from "../components/AnimeDetail/AnimeDetail";
 import UserFollowers from "../components/UserFollowers/UserFollowers";
 import UserFollowing from "../components/UserFollowing/UserFollowing";
+import ProfileType from "../components/ProfileType/ProfileType";
 
 export const router = createBrowserRouter([
   {
@@ -26,7 +27,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "/user/:userId/details",
-        element: <UserProfile />,
+        element: <ProfileType />,
       },
       {
         path: "/user/:userId/followers",

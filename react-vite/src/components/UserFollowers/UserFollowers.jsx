@@ -1,9 +1,7 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import {thunkLoadFollows} from '../../redux/follows'
-
-
+import { thunkLoadFollows } from "../../redux/follows";
 
 /*
 
@@ -27,39 +25,51 @@ import {thunkLoadFollows} from '../../redux/follows'
 
 */
 
-function UserFollowers(){
-    
-    const user = useSelector((store) => store.session.user);
-    const follows = useSelector((store)=> store.follows)
-    const [isUserSelf, setIsUserSelf] = useState(true);
-      const dispatch = useDispatch();
-    
-    const params = useParams();
+function UserFollowers() {
+  const user = useSelector((store) => store.session.user);
+  const follows = useSelector((store) => store.follows);
+  const [isUserSelf, setIsUserSelf] = useState(true);
+  const dispatch = useDispatch();
 
+  console.log(follows && follows["Followers"]);
 
-        useEffect(() => {
-          if(user && user.id){
-            console.log('PARAMS FROM FOLLOWERS ->  ', params);
-            if (Number(params.userId) == user.id){
-                setIsUserSelf(true);
-            }
-            dispatch(thunkLoadFollows(user.id))
-          }
-        }, [dispatch, user])
+  const params = useParams();
+  console.log("PARAMS FROM FOLLOWERS ->  ", params);
 
-    return (
-        <>
-        <h1>Followers</h1>
-        <div className="followers-container">
-            <ul>
-                {follows && follows['Followers'] && follows['Followers']
-                .map((follower)=> <li>{follower.user_id}</li>)}
-            </ul>
+  useEffect(() => {
+    if (user && user.id) {
+      if (Number(params.userId) === user.id) {
+        setIsUserSelf(true);
+      }
+      dispatch(thunkLoadFollows(user.id));
+    }
+  }, [params.userId, dispatch, user]);
 
-        </div>
-        </>
-    )
+  return (
+    <>
+      <h1>Followers</h1>
+      <div className="followers-container">
+        <ul style={{ listStyleType: "none" }}>
+          {follows &&
+            follows["Followers"] &&
+            follows["Followers"].map((follower) => {
+                console.log('follower:  ', follower.user_username);
 
+             return  (<li key={follower.id}>
+                <h2>
+                  <a
+                    href={`/user/${follower.user_id}/details`}
+                    style={{ cursor: "pointer" }}
+                  >
+                    @{follower.user_username}
+                  </a>
+                </h2>
+              </li>);
+            })}
+        </ul>
+      </div>
+    </>
+  );
 }
 
-export default UserFollowers
+export default UserFollowers;
