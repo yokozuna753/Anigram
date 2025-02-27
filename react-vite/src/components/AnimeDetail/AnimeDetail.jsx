@@ -18,7 +18,7 @@ function AnimeDetail() {
   const watchlistButtonRef = useRef(null);
 
   const anime_obj = JSON.parse(localStorage.getItem(`anime_${params.mal_id}`));
-  console.log(" ANIME OBJECT HERE ===>", anime_obj);
+  // console.log(" ANIME OBJECT HERE ===>", anime_obj);
 
   useEffect(() => {
     if (user) {
@@ -100,7 +100,7 @@ function AnimeDetail() {
           <h1>Anime Detail Page</h1>
           {user && (
             <div className="anime-detail-image">
-              <a href={anime_obj.mal_url} target="_blank" rel="noopener noreferrer" >
+              <a href={anime_obj && anime_obj.mal_url && anime_obj.mal_url} target="_blank" rel="noopener noreferrer" >
 
               <img src={`${anime_obj.image_url}`} alt={anime_obj.title} />
               </a>

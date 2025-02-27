@@ -48,9 +48,9 @@ function Watchlist() {
 
   useEffect(() => {
     if (animeToDeleteFromWatchlist && watchlistIdToDelete) {
-      console.log("DELETING...", animeToDeleteFromWatchlist);
+      // console.log("DELETING...", animeToDeleteFromWatchlist);
       let animeName = animeToDeleteFromWatchlist.split(" ").join("%20");
-      console.log("FINAL ANIME NAME ==>", animeName);
+      // console.log("FINAL ANIME NAME ==>", animeName);
 
       dispatch(
         thunkRemoveAnimeFromWatchlist(user.id, watchlistIdToDelete, animeName)
