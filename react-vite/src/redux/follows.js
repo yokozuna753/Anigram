@@ -6,7 +6,7 @@ const loadFollows = (payload) => ({
 });
 
 export const thunkLoadFollows = (userId) => async (dispatch) => {
-  console.log("        IN LOAD FOLLOWS THUNK ===>  ", userId);
+  // console.log("        IN LOAD FOLLOWS THUNK ===>  ", userId);
 
     
     const response = await fetch(`/api/follows/${userId}`, {
@@ -16,7 +16,7 @@ export const thunkLoadFollows = (userId) => async (dispatch) => {
 
     if (response.ok) {
       const data = await response.json();
-      console.log('DATA HERE FROM FOLLOWS ==>  ', data);
+      // console.log('DATA HERE FROM FOLLOWS ==>  ', data);
 
       await dispatch(loadFollows(data));
     }

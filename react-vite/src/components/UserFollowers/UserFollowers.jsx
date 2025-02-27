@@ -1,6 +1,8 @@
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import {thunkLoadFollows} from '../../redux/follows'
+
 
 
 /*
@@ -28,7 +30,9 @@ import { useParams } from "react-router-dom";
 function UserFollowers(){
     
     const user = useSelector((store) => store.session.user);
+    const follows = useSelector((store)=> store.follows)
     const [isUserSelf, setIsUserSelf] = useState(true);
+      const dispatch = useDispatch();
     
     const params = useParams();
 
@@ -39,12 +43,20 @@ function UserFollowers(){
             if (Number(params.userId) == user.id){
                 setIsUserSelf(true);
             }
+            dispatch(thunkLoadFollows(user.id))
           }
-        }, [user])
+        }, [dispatch, user])
 
     return (
         <>
         <h1>Followers</h1>
+        <div className="followers-container">
+            <ul>
+                {follows && follows['Followers'] && follows['Followers']
+                .map((follower)=> <li>{follower.user_id}</li>)}
+            </ul>
+
+        </div>
         </>
     )
 

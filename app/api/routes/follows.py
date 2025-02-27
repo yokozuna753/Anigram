@@ -28,7 +28,7 @@ def follows_list(userId):
         final_obj
 )
 
-# User goes to friends profile page
+# User goes to friends/own profile page
 # 1. follows object gets loaded for the user in the url params
     # - frontend sends a request to the redux thunk to load the follows object
     # - redux thunk fetches backend data from user follows with the userId

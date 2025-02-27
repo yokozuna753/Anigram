@@ -8,6 +8,8 @@ class Follow(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod('users.id')), nullable=False)
+    user_username = db.Column(db.String(100), nullable=False)
+    followed_user_username = db.Column(db.String(100), nullable=False)
     followed_user_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod('users.id')), nullable=False)
 
     user = db.relationship('User', foreign_keys=[user_id], back_populates='user_is_following', lazy=True)
@@ -17,5 +19,7 @@ class Follow(db.Model):
         return {
             'id': self.id,
             'user_id': self.user_id,
-            'followed_user_id': self.followed_user_id
+            'user_username': self.user_username,
+            'followed_user_id': self.followed_user_id,
+            'followed_user_username': self.followed_user_username,
         }
