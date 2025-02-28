@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate, Navigate, useParams } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { thunkLoadFollows } from "../../redux/follows";
 import { thunkLoadAnimeToWatchlists } from "../../redux/watchlist";
 
@@ -23,6 +23,7 @@ function OtherProfile() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const params = useParams();
+  const [hasAnimeInWatchlists, setHasAnimeInWatchlists] = useState();
 
   useEffect(() => {
     if (otherUser && otherUser.id && otherUser.id === Number(params.userId)) {
@@ -30,6 +31,21 @@ function OtherProfile() {
       dispatch(thunkLoadFollows(otherUser.id));
     }
   }, [params.userId, dispatch, otherUser]);
+
+  useEffect(() => {
+    if (otherUser && otherUser.id && otherUser.id === Number(params.userId)) {
+      watchlists && Object.values(watchlists).map((watchlist) => {
+        return watchlist?.anime?.map((anime) => {
+          if (anime) {
+            setHasAnimeInWatchlists(true);
+          }
+        });
+      });
+    }
+    return () => {
+      setHasAnimeInWatchlists(false);
+    };
+  });
 
   if (!user) {
     return <Navigate to="/login" />;
@@ -39,6 +55,20 @@ function OtherProfile() {
     e.preventDefault();
     navigate(`/user/${otherUser.id}/watchlists`);
   }
+
+
+  // !!!!! check the other users followers
+  // state.follows.Followers
+  //* iterate through the "Followers" array
+    // if the session user id is in the array, display a button that says "Following"
+    // ! NOT IN ARRAY: 
+      // display a button that says follow
+          // 1. dispatch a thunk to follows redux state to add the session user to the follows
+  
+  // ! USER WANTS TO UNFOLLOW OTHER USER
+    // display a button titled "Following"
+      // * dispatch a thunk to follows redux store to 
+      //* remove the session user from the followers of the OTHER USER
 
   return (
     <>
@@ -113,7 +143,7 @@ function OtherProfile() {
 
       <div className="user-profile-anime">
         <ul className="user-profile-anime-list">
-          {otherUser && watchlists ? (
+          {otherUser && watchlists && hasAnimeInWatchlists ? (
             Object.values(watchlists) &&
             Object.values(watchlists).map((watchlist) => {
               {
