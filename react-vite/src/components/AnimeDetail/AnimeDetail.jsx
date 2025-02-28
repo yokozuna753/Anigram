@@ -198,7 +198,7 @@ function AnimeDetail() {
           <p>Likes: {anime_obj && anime_obj.likes && anime_obj.likes}</p>
           <p>Producers: {anime_obj && anime_obj.producers && anime_obj.producers}</p>
           <p>Rating: {anime_obj && anime_obj.rating && anime_obj.rating}</p>
-          
+          {/*  */}
         </div>
       )}
     </>
