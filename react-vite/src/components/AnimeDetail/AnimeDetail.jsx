@@ -145,7 +145,7 @@ function AnimeDetail() {
                   }}
                 >
                   <h4 style={{ margin: "0 0 10px 0" }}>Select a watchlist:</h4>
-                  {Object.values(watchlists).length > 0 ? (
+                  {watchlists && Object.values(watchlists) && Object.values(watchlists).length > 0 ? (
                     Object.values(watchlists)
                       .filter(
                         (watchlist) =>
@@ -191,22 +191,22 @@ function AnimeDetail() {
             </div>
             <h1>{anime_obj && anime_obj.title && anime_obj.title}</h1>
             <div className="anime-synopsis">
-              <p>{anime_obj.synopsis}</p>
+              <p>{anime_obj && anime_obj.synopsis && anime_obj.synopsis}</p>
             </div>
           </div>
           <div className="anime-extra-info"></div>
-          <p>Likes: {anime_obj.likes}</p>
-          <p>Producers: {anime_obj.producers}</p>
-          <p>Rating: {anime_obj.rating}</p>
-          {anime_obj.trailer_url ? (
+          <p>Likes: {anime_obj && anime_obj.likes && anime_obj.likes}</p>
+          <p>Producers: {anime_obj && anime_obj.producers && anime_obj.producers}</p>
+          <p>Rating: {anime_obj && anime_obj.rating && anime_obj.rating}</p>
+          {anime_obj && anime_obj.trailer_url && anime_obj.trailer_url ? (
             <p>
               Trailer:{" "}
               <a
-                href={`${anime_obj.trailer_url}`}
+                href={`${ anime_obj && anime_obj.trailer_url && anime_obj.trailer_url}`}
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                {anime_obj.trailer_url}
+                {anime_obj && anime_obj.trailer_url && anime_obj.trailer_url}
               </a>
             </p>
           ) : (
