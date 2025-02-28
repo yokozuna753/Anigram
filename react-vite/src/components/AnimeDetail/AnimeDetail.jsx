@@ -191,7 +191,7 @@ function AnimeDetail() {
             </div>
             <h1>{anime_obj && anime_obj.title && anime_obj.title}</h1>
             <div className="anime-synopsis">
-              <p>{anime_obj.synopsis}</p>
+              <p>{anime_obj && anime_obj.synopsis && anime_obj.synopsis}</p>
             </div>
           </div>
           <div className="anime-extra-info"></div>
