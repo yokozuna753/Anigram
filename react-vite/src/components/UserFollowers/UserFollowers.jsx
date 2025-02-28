@@ -40,10 +40,10 @@ function UserFollowers() {
   console.log("PARAMS FROM FOLLOWERS ->  ", params);
 
   useEffect(() => {
-    if (user && user.id && user.id === Number(params.userId)) {
+    if (user && user.id && user.id === Number(params.userId)) { //* CURRENT USER FOLLOWERS
       dispatch(thunkLoadFollows(user.id));
       dispatch(thunkRemoveOtherUser());
-    } else if (user && user.id && user.id !== Number(params.userId)) {
+    } else if (user && user.id && user.id !== Number(params.userId)) { //* OTHER USER FOLLOWERS
       dispatch(thunkLoadOtherUser(Number(params.userId)));
       dispatch(thunkLoadOtherUser(Number(params.userId)));
       dispatch(thunkLoadFollows(Number(params.userId)));
