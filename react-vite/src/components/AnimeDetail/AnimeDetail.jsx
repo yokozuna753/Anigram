@@ -145,7 +145,7 @@ function AnimeDetail() {
                   }}
                 >
                   <h4 style={{ margin: "0 0 10px 0" }}>Select a watchlist:</h4>
-                  {watchlists && Object.values(watchlists) && Object.values(watchlists).length > 0 ? (
+                  {Object.values(watchlists).length > 0 ? (
                     Object.values(watchlists)
                       .filter(
                         (watchlist) =>
@@ -198,20 +198,7 @@ function AnimeDetail() {
           <p>Likes: {anime_obj && anime_obj.likes && anime_obj.likes}</p>
           <p>Producers: {anime_obj && anime_obj.producers && anime_obj.producers}</p>
           <p>Rating: {anime_obj && anime_obj.rating && anime_obj.rating}</p>
-          {anime_obj && anime_obj.trailer_url && anime_obj.trailer_url ? (
-            <p>
-              Trailer:{" "}
-              <a
-                href={`${ anime_obj && anime_obj.trailer_url && anime_obj.trailer_url}`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {anime_obj && anime_obj.trailer_url && anime_obj.trailer_url}
-              </a>
-            </p>
-          ) : (
-            <p>Trailer: N/A</p>
-          )}
+          
         </div>
       )}
     </>
