@@ -23,7 +23,7 @@ ROUTE ==> /user/:userId/details
         -CAN EDIT - follow button
 
     ! NOT MATCHES:
-
+// 
 
     1. check the params for the user Id,
 ! This is for other user's profile (not the logged in user)
