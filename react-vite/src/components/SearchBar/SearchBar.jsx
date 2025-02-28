@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { thunkLoadAnime } from "../../redux/anime";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useLocation } from "react-router-dom";
 
 function SearchBar() {
@@ -12,6 +12,7 @@ function SearchBar() {
   const [allUsers, setAllUsers] = useState([]); // Store all users
   const resultsRef = useRef(null);
   const inputRef = useRef(null);
+  const animeState = useSelector((state) => state.anime);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
@@ -20,7 +21,7 @@ function SearchBar() {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch('/api/users/');
+        const response = await fetch("/api/users/");
         const data = await response.json();
         setAllUsers(data.users || []);
       } catch (error) {
@@ -35,7 +36,7 @@ function SearchBar() {
   const handleChange = (e) => {
     const value = e.target.value;
     setSearchTerm(value);
-    
+
     // Determine search type based on first character
     if (value.startsWith("@")) {
       setSearchType("user");
@@ -78,7 +79,7 @@ function SearchBar() {
       setResults([]);
       return;
     }
-    
+
     // For user search, require at least 2 characters after @
     if (searchType === "user" && searchTerm.length < 2) {
       setResults([]);
@@ -102,9 +103,9 @@ function SearchBar() {
         } else {
           // Filter users on the frontend
           const userQuery = searchTerm.substring(1).toLowerCase(); // Remove the @ symbol and lowercase for case-insensitive matching
-          const filteredUsers = allUsers.filter(user => 
-            user.username.toLowerCase().includes(userQuery)
-          ).slice(0, 5); // Limit to 5 results
+          const filteredUsers = allUsers
+            .filter((user) => user.username.toLowerCase().includes(userQuery))
+            .slice(0, 5); // Limit to 5 results
           setResults(filteredUsers);
         }
       } catch (error) {
@@ -132,21 +133,32 @@ function SearchBar() {
   const handleResultClick = async (result) => {
     if (searchType === "anime") {
       // Existing anime click handler
-      console.log("Selected anime:", result);
-      const anime = await dispatch(thunkLoadAnime(result));
+      //* console.log("Selected anime:", result);
+      // console.log('MAL _   ID ===>', animeState[result.mal_id]); 
 
-      if (anime) {
-        let encoded_search_term = anime["title"].split(" ").join("%20");
+      if (animeState[`anime_${result.mal_id}`]) {
+        // console.log(animeState[`anime_${result.mal_id}`]);
+        let encoded_search_term = animeState && animeState[`anime_${result.mal_id}`]['title'].split(" ").join("%20");
         navigate(
-          `/anime/${anime.id}/${encoded_search_term}/${anime["mal_id"]}`
+          `/anime/${animeState[`anime_${result.mal_id}`]['id']}/${encoded_search_term}/${
+            animeState[`anime_${result.mal_id}`]['mal_id']
+          }`
         );
+      } else {
+        const anime = await dispatch(thunkLoadAnime(result));
+        if (anime) {
+          let encoded_search_term = anime["title"].split(" ").join("%20");
+          navigate(
+            `/anime/${anime.id}/${encoded_search_term}/${anime["mal_id"]}`
+          );
+        }
       }
     } else {
       // User click handler
-      console.log("Selected user:", result);
+      // console.log("Selected user:", result);
       navigate(`/user/${result.id}/details`);
     }
-    
+
     // Clear search after selection
     setSearchTerm("");
     setShowResults(false);
@@ -162,8 +174,10 @@ function SearchBar() {
         value={searchTerm}
         onChange={handleChange}
         onFocus={() => {
-          if ((searchType === "anime" && searchTerm.length >= 3) || 
-              (searchType === "user" && searchTerm.length >= 2)) {
+          if (
+            (searchType === "anime" && searchTerm.length >= 3) ||
+            (searchType === "user" && searchTerm.length >= 2)
+          ) {
             setShowResults(true);
           }
         }}
@@ -193,9 +207,11 @@ function SearchBar() {
           ) : results.length > 0 ? (
             results.map((result, index) => (
               <div
-                key={searchType === "anime" ? 
-                  `${result.mal_id}-${index}` : 
-                  `user-${result.id}-${index}`}
+                key={
+                  searchType === "anime"
+                    ? `${result.mal_id}-${index}`
+                    : `user-${result.id}-${index}`
+                }
                 onClick={() => handleResultClick(result)}
                 style={{
                   display: "flex",
@@ -282,8 +298,8 @@ function SearchBar() {
             </div>
           ) : (
             <div style={{ padding: "10px", textAlign: "center" }}>
-              {searchType === "anime" 
-                ? "Type at least 3 characters to search for anime" 
+              {searchType === "anime"
+                ? "Type at least 3 characters to search for anime"
                 : "Type at least 2 characters after @ to search for users"}
             </div>
           )}

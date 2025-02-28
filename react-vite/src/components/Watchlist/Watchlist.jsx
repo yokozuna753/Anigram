@@ -24,7 +24,9 @@ function Watchlist() {
   const dispatch = useDispatch();
   const params = useParams();
 
-  console.log("PARAMS ==>  ", params);
+
+
+
 
   useEffect(() => {
     if (user && user.id === Number(params.userId)) {
@@ -34,6 +36,8 @@ function Watchlist() {
     }
   }, [user, params.userId]);
 
+
+
   useEffect(()=>{
     if(user && user.id && user.id !== Number(params.userId)){
       dispatch(thunkLoadOtherUser(Number(params.userId)));
@@ -42,6 +46,8 @@ function Watchlist() {
       dispatch(thunkRemoveOtherUser(Number(params.userId)))
     }
   },[user,dispatch,params.userId])
+
+
 
   useEffect(() => {
     if (
@@ -62,6 +68,8 @@ function Watchlist() {
     watchlists,
   ]);
 
+
+
   useEffect(() => {
     if (user && user.id && Number(params.userId) === user.id) {
       dispatch(thunkLoadAnimeToWatchlists(user.id));
@@ -69,6 +77,9 @@ function Watchlist() {
       dispatch(thunkLoadAnimeToWatchlists(otherUser.id))
     }
   }, [params.userId,otherUser,dispatch, user]);
+
+
+
 
   useEffect(() => {
     if (animeToDeleteFromWatchlist && watchlistIdToDelete && isUserSelf) {
@@ -83,36 +94,39 @@ function Watchlist() {
       // Reset state after dispatching the action
       setAnimeToDeleteFromWatchlist("");
       setWatchlistIdToDelete(undefined);
-    } else if (
-      animeToDeleteFromWatchlist &&
-      watchlistIdToDelete &&
-      otherUser &&
-      otherUser.id &&
-      !isUserSelf
-    ) {
-      let animeName = animeToDeleteFromWatchlist.split(" ").join("%20");
-      // console.log("FINAL ANIME NAME ==>", animeName);
+    // } else if (
+    //   animeToDeleteFromWatchlist &&
+    //   watchlistIdToDelete &&
+    //   otherUser &&
+    //   otherUser.id &&
+    //   !isUserSelf
+    // ) {
+    //   let animeName = animeToDeleteFromWatchlist.split(" ").join("%20");
+    //   // console.log("FINAL ANIME NAME ==>", animeName);
 
-      dispatch(
-        thunkRemoveAnimeFromWatchlist(
-          otherUser.id,
-          watchlistIdToDelete,
-          animeName
-        )
-      );
+    //   dispatch(
+    //     thunkRemoveAnimeFromWatchlist(
+    //       otherUser.id,
+    //       watchlistIdToDelete,
+    //       animeName
+    //     )
+    //   );
 
-      // Reset state after dispatching the action
-      setAnimeToDeleteFromWatchlist("");
-      setWatchlistIdToDelete(undefined);
+    //   // Reset state after dispatching the action
+    //   setAnimeToDeleteFromWatchlist("");
+    //   setWatchlistIdToDelete(undefined);
     }
   }, [
     user,
     dispatch,
     animeToDeleteFromWatchlist,
     watchlistIdToDelete,
-    otherUser,
+    // otherUser,
     isUserSelf
   ]);
+
+
+
 
   function handleEditClick(e) {
     e.preventDefault();

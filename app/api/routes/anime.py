@@ -58,3 +58,13 @@ def add_anime(animeName):
         # add and commit to the session
 
         return jsonify(anime_obj.to_dict())
+    
+
+
+
+@anime.route('/load/all', methods=['GET'])
+@login_required
+def populate_anime():
+    all_anime = Anime.query.all()
+    print('                 !!!!!!!!!      This is all Anime      ', all_anime)
+    return jsonify({f'anime_{anime.mal_id}': anime.to_dict() for anime in all_anime})

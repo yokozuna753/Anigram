@@ -3,6 +3,7 @@ import { useNavigate, Navigate } from "react-router-dom";
 import { useEffect } from "react";
 // import { thunkLoadFollows } from "../../redux/follows";
 import { thunkLoadAnimeToWatchlists } from "../../redux/watchlist";
+import { thunkPopulateAnime } from "../../redux/anime";
 
 // 1. check th params for the user Id,
 // if it matches, load the logged in user's info
@@ -11,13 +12,17 @@ import { thunkLoadAnimeToWatchlists } from "../../redux/watchlist";
 function UserProfile() {
   const user = useSelector((store) => store.session.user);
   const watchlists = useSelector((store) => store.watchlists);
+  const animeState = useSelector((state) => state.anime);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   useEffect(() => {
 
    if(user) dispatch(thunkLoadAnimeToWatchlists(user.id));
-  }, [dispatch, user,]);
+   if(!Object.keys(animeState).length){
+    dispatch(thunkPopulateAnime())
+   }
+  }, [animeState,dispatch, user,]);
 
   if (!user) {
     return <Navigate to="/login" />;

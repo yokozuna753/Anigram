@@ -4,25 +4,31 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { thunkAddAnimeToWatchlist } from "../../redux/watchlist";
 import { thunkLoadAnimeToWatchlists } from "../../redux/watchlist";
+import {thunkPopulateAnime} from '../../redux/anime'
 
 function AnimeDetail() {
   const user = useSelector((state) => state.session.user);
+  const anime = useSelector((state)=> state.anime)
   const watchlists = useSelector((state) => state.watchlists);
   const params = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const animeState = useSelector((state) => state.anime);
   const [inWatchlist, setInWatchlist] = useState(false);
   const [showWatchlists, setShowWatchlists] = useState(false);
   const watchlistDropdownRef = useRef(null);
   const watchlistButtonRef = useRef(null);
 
-  const anime_obj = JSON.parse(localStorage.getItem(`anime_${params.mal_id}`));
-  // console.log(" ANIME OBJECT HERE ===>", anime_obj);
+  // click on search item for anime in searchbar
+  // 
+
+ 
+  const anime_obj = anime[`anime_${params.mal_id}`]
+  // console.log('params: ....', params);
 
   useEffect(() => {
     if (user) {
       dispatch(thunkLoadAnimeToWatchlists(user.id));
+      dispatch(thunkPopulateAnime())
     }
   }, [dispatch, user]);
 
@@ -48,15 +54,9 @@ function AnimeDetail() {
     };
   }, [watchlists, anime_obj?.title]);
 
-  useEffect(() => {
-    // check the anime redux state for the anime name
-    const animeInWatchlist = animeState[params.animeName];
-    // console.log('      FROM USE EFFECT', animeInWatchlist);
-    if (animeInWatchlist && animeInWatchlist.watchlist_id) setInWatchlist(true);
-    else {
-      // dispatch()
-    }
-  }, [animeState, params.animeName]);
+
+
+
 
   // Handle clicks outside the dropdown
   useEffect(() => {
@@ -75,6 +75,12 @@ function AnimeDetail() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+
+  // * check if anime is in watchlists
+  // * if it is:
+    // * add the anime to the local storage
+
 
   if (!user) {
     return <Navigate to="/login" />;
@@ -145,7 +151,7 @@ function AnimeDetail() {
                   }}
                 >
                   <h4 style={{ margin: "0 0 10px 0" }}>Select a watchlist:</h4>
-                  {watchlists && Object.values(watchlists) && Object.values(watchlists).length > 0 ? (
+                  {Object.values(watchlists).length > 0 ? (
                     Object.values(watchlists)
                       .filter(
                         (watchlist) =>
@@ -198,20 +204,7 @@ function AnimeDetail() {
           <p>Likes: {anime_obj && anime_obj.likes && anime_obj.likes}</p>
           <p>Producers: {anime_obj && anime_obj.producers && anime_obj.producers}</p>
           <p>Rating: {anime_obj && anime_obj.rating && anime_obj.rating}</p>
-          {anime_obj && anime_obj.trailer_url && anime_obj.trailer_url ? (
-            <p>
-              Trailer:{" "}
-              <a
-                href={`${ anime_obj && anime_obj.trailer_url && anime_obj.trailer_url}`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {anime_obj && anime_obj.trailer_url && anime_obj.trailer_url}
-              </a>
-            </p>
-          ) : (
-            <p>Trailer: N/A</p>
-          )}
+          {/*  */}
         </div>
       )}
     </>
