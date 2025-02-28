@@ -48,15 +48,9 @@ function AnimeDetail() {
     };
   }, [watchlists, anime_obj?.title]);
 
-  useEffect(() => {
-    // check the anime redux state for the anime name
-    const animeInWatchlist = animeState[params.animeName];
-    // console.log('      FROM USE EFFECT', animeInWatchlist);
-    if (animeInWatchlist && animeInWatchlist.watchlist_id) setInWatchlist(true);
-    else {
-      // dispatch()
-    }
-  }, [animeState, params.animeName]);
+
+
+
 
   // Handle clicks outside the dropdown
   useEffect(() => {
