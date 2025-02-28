@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate, Navigate, useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { thunkLoadFollows } from "../../redux/follows";
 import { thunkLoadAnimeToWatchlists } from "../../redux/watchlist";
 

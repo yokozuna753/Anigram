@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from "react-redux";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { thunkLoadFollows } from "../../redux/follows";
 import {
@@ -31,7 +31,7 @@ import {
 
 function UserFollowing() {
   const user = useSelector((store) => store.session.user);
-  const otherUser = useSelector((store) => store.otherUser.user);
+  useSelector((store) => store.otherUser.user);
   const follows = useSelector((store) => store.follows);
   const dispatch = useDispatch();
   const params = useParams();

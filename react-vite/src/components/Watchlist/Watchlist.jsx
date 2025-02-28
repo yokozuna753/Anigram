@@ -31,7 +31,7 @@ function Watchlist() {
     } else {
       setIsUserSelf(false);
     }
-  });
+  }, [user, params.userId]);
 
   useEffect(() => {
     if (
@@ -58,7 +58,7 @@ function Watchlist() {
     }else{
       dispatch(thunkLoadAnimeToWatchlists(otherUser.id))
     }
-  }, [dispatch, user]);
+  }, [params.userId,otherUser.id,dispatch, user]);
 
   useEffect(() => {
     if (animeToDeleteFromWatchlist && watchlistIdToDelete && isUserSelf) {
@@ -99,6 +99,7 @@ function Watchlist() {
     animeToDeleteFromWatchlist,
     watchlistIdToDelete,
     otherUser,
+    isUserSelf
   ]);
 
   function handleEditClick(e) {

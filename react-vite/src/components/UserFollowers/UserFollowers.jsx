@@ -1,8 +1,11 @@
 import { useSelector, useDispatch } from "react-redux";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { thunkLoadFollows } from "../../redux/follows";
-import { thunkLoadOtherUser, thunkRemoveOtherUser } from "../../redux/otherUser";
+import {
+  thunkLoadOtherUser,
+  thunkRemoveOtherUser,
+} from "../../redux/otherUser";
 
 /*
 
@@ -28,7 +31,7 @@ import { thunkLoadOtherUser, thunkRemoveOtherUser } from "../../redux/otherUser"
 
 function UserFollowers() {
   const user = useSelector((store) => store.session.user);
-  const otherUser = useSelector((store) => store.otherUser.user);
+  useSelector((store) => store.otherUser.user);
   const follows = useSelector((store) => store.follows);
 
   const dispatch = useDispatch();
@@ -38,17 +41,14 @@ function UserFollowers() {
 
   useEffect(() => {
     if (user && user.id && user.id === Number(params.userId)) {
-
-        dispatch(thunkLoadFollows(user.id));
-        dispatch(thunkRemoveOtherUser());
-
-    } else if(user && user.id && user.id !== Number(params.userId)) {
-
-      dispatch(thunkLoadOtherUser(Number(params.userId)))
+      dispatch(thunkLoadFollows(user.id));
+      dispatch(thunkRemoveOtherUser());
+    } else if (user && user.id && user.id !== Number(params.userId)) {
+      dispatch(thunkLoadOtherUser(Number(params.userId)));
       dispatch(thunkLoadOtherUser(Number(params.userId)));
       dispatch(thunkLoadFollows(Number(params.userId)));
     }
-  }, [params.userId, dispatch, user, ]);
+  }, [params.userId, dispatch, user]);
 
   return (
     <>

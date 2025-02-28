@@ -1,7 +1,7 @@
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate, Navigate, useParams } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
 import { useEffect } from "react";
-import { thunkLoadFollows } from "../../redux/follows";
+// import { thunkLoadFollows } from "../../redux/follows";
 import { thunkLoadAnimeToWatchlists } from "../../redux/watchlist";
 
 // 1. check th params for the user Id,

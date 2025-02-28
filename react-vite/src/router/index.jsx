@@ -2,7 +2,6 @@ import { createBrowserRouter } from "react-router-dom";
 import LoginFormPage from "../components/LoginFormPage";
 import SignupFormPage from "../components/SignupFormPage";
 import Layout from "./Layout";
-import UserProfile from "../components/UserProfile/UserProfile";
 import Watchlist from "../components/Watchlist/Watchlist";
 import AnimeDetail from "../components/AnimeDetail/AnimeDetail";
 import UserFollowers from "../components/UserFollowers/UserFollowers";
