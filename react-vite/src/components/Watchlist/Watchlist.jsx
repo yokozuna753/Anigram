@@ -65,10 +65,10 @@ function Watchlist() {
   useEffect(() => {
     if (user && user.id && Number(params.userId) === user.id) {
       dispatch(thunkLoadAnimeToWatchlists(user.id));
-    }else{
+    }else if (otherUser && otherUser.id && Number(params.userId) === otherUser.id){
       dispatch(thunkLoadAnimeToWatchlists(otherUser.id))
     }
-  }, [params.userId,otherUser.id,dispatch, user]);
+  }, [params.userId,otherUser,dispatch, user]);
 
   useEffect(() => {
     if (animeToDeleteFromWatchlist && watchlistIdToDelete && isUserSelf) {
@@ -86,6 +86,8 @@ function Watchlist() {
     } else if (
       animeToDeleteFromWatchlist &&
       watchlistIdToDelete &&
+      otherUser &&
+      otherUser.id &&
       !isUserSelf
     ) {
       let animeName = animeToDeleteFromWatchlist.split(" ").join("%20");
