@@ -103,7 +103,7 @@ function AnimeDetail() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <img src={`${anime_obj.image_url}`} alt={anime_obj.title} />
+                <img src={`${anime_obj && anime_obj.image_url && anime_obj.image_url}`} alt={anime_obj && anime_obj.title && anime_obj.title} />
               </a>
             </div>
           )}
