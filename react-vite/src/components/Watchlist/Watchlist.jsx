@@ -6,6 +6,7 @@ import {
   thunkLoadAnimeToWatchlists,
 } from "../../redux/watchlist";
 import { useDispatch } from "react-redux";
+import { thunkLoadOtherUser, thunkRemoveOtherUser } from "../../redux/otherUser";
 
 function Watchlist() {
   const [edit, setEdit] = useState(false);
@@ -32,6 +33,15 @@ function Watchlist() {
       setIsUserSelf(false);
     }
   }, [user, params.userId]);
+
+  useEffect(()=>{
+    if(user && user.id && user.id !== Number(params.userId)){
+      dispatch(thunkLoadOtherUser(Number(params.userId)));
+    }
+    return()=>{
+      dispatch(thunkRemoveOtherUser(Number(params.userId)))
+    }
+  },[user,dispatch,params.userId])
 
   useEffect(() => {
     if (
