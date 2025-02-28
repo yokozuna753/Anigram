@@ -18,8 +18,12 @@ function AnimeDetail() {
   const watchlistDropdownRef = useRef(null);
   const watchlistButtonRef = useRef(null);
 
-  const anime_obj = JSON.parse(localStorage.getItem(`anime_${params.mal_id}`));
-  //const anime_obj = anime[`anime_${params.mal_id}`]
+  // click on search item for anime in searchbar
+  // 
+
+ 
+  const anime_obj = anime[`anime_${params.mal_id}`]
+  // console.log('params: ....', params);
 
   useEffect(() => {
     if (user) {

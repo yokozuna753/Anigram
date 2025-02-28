@@ -54,14 +54,14 @@ export const thunkAddAnimeToWatchlist =
       let final_anime_obj;
       const data = await response.json();
       for (let watchlist of data) {
-        for (let anime of watchlist?.anime) {
-          if (anime?.title === anime_obj?.title) {
+        for (let anime of watchlist.anime) {
+          if (anime.title === anime_obj.title) {
             final_anime_obj = anime;
           }
         }
       }
 
-      console.log('WATCHLIST ADD ANIME THUNK ---->  ', final_anime_obj);
+      // console.log('WATCHLIST ADD ANIME THUNK ---->  ', final_anime_obj);
 
       localStorage.setItem(
         `anime_${final_anime_obj.mal_id}`,
