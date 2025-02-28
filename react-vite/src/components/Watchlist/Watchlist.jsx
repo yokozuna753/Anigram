@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
 import { useState, useEffect } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 import {
   thunkRemoveAnimeFromWatchlist,
   thunkLoadAnimeToWatchlists,
@@ -15,10 +15,23 @@ function Watchlist() {
   const [watchlistIdToView, setWatchlistIdToView] = useState(undefined);
   const [watchlistName, setWatchlistName] = useState(undefined);
   const [activeWatchlistId, setActiveWatchlistId] = useState(null);
+  const [isUserSelf, setIsUserSelf] = useState(undefined);
 
   const user = useSelector((store) => store.session.user);
+  const otherUser = useSelector((store) => store.otherUser.user);
   const watchlists = useSelector((store) => store.watchlists);
   const dispatch = useDispatch();
+  const params = useParams();
+
+  console.log("PARAMS ==>  ", params);
+
+  useEffect(() => {
+    if (user && user.id === Number(params.userId)) {
+      setIsUserSelf(true);
+    } else {
+      setIsUserSelf(false);
+    }
+  }, [user, params.userId]);
 
   useEffect(() => {
     if (
@@ -30,8 +43,7 @@ function Watchlist() {
       let watchlists_array = Object.values(watchlists);
       setWatchlistIdToView(watchlists_array[0].id);
       setWatchlistName(watchlists_array[0].name);
-      setActiveWatchlistId(watchlists_array[0].id)
-
+      setActiveWatchlistId(watchlists_array[0].id);
     }
   }, [
     setWatchlistIdToView,
@@ -41,16 +53,18 @@ function Watchlist() {
   ]);
 
   useEffect(() => {
-    if (user) {
+    if (user && user.id && Number(params.userId) === user.id) {
       dispatch(thunkLoadAnimeToWatchlists(user.id));
+    }else{
+      dispatch(thunkLoadAnimeToWatchlists(otherUser.id))
     }
-  }, [dispatch, user]);
+  }, [params.userId,otherUser.id,dispatch, user]);
 
   useEffect(() => {
-    if (animeToDeleteFromWatchlist && watchlistIdToDelete) {
-      console.log("DELETING...", animeToDeleteFromWatchlist);
+    if (animeToDeleteFromWatchlist && watchlistIdToDelete && isUserSelf) {
+      // console.log("DELETING...", animeToDeleteFromWatchlist);
       let animeName = animeToDeleteFromWatchlist.split(" ").join("%20");
-      console.log("FINAL ANIME NAME ==>", animeName);
+      // console.log("FINAL ANIME NAME ==>", animeName);
 
       dispatch(
         thunkRemoveAnimeFromWatchlist(user.id, watchlistIdToDelete, animeName)
@@ -59,8 +73,34 @@ function Watchlist() {
       // Reset state after dispatching the action
       setAnimeToDeleteFromWatchlist("");
       setWatchlistIdToDelete(undefined);
+    } else if (
+      animeToDeleteFromWatchlist &&
+      watchlistIdToDelete &&
+      !isUserSelf
+    ) {
+      let animeName = animeToDeleteFromWatchlist.split(" ").join("%20");
+      // console.log("FINAL ANIME NAME ==>", animeName);
+
+      dispatch(
+        thunkRemoveAnimeFromWatchlist(
+          otherUser.id,
+          watchlistIdToDelete,
+          animeName
+        )
+      );
+
+      // Reset state after dispatching the action
+      setAnimeToDeleteFromWatchlist("");
+      setWatchlistIdToDelete(undefined);
     }
-  }, [user, dispatch, animeToDeleteFromWatchlist, watchlistIdToDelete]);
+  }, [
+    user,
+    dispatch,
+    animeToDeleteFromWatchlist,
+    watchlistIdToDelete,
+    otherUser,
+    isUserSelf
+  ]);
 
   function handleEditClick(e) {
     e.preventDefault();
@@ -78,7 +118,7 @@ function Watchlist() {
   // ! MAX 4 WATCH LISTS
 
   return (
-    <>
+    <div>
       <h1>{watchlistName}</h1>
       <div id="watchlist-buttons-div">
         {watchlists &&
@@ -90,11 +130,13 @@ function Watchlist() {
                   key={watchlist.id}
                   onClick={() => {
                     setWatchlistIdToView(watchlist.id);
-                    setWatchlistName(watchlist.name)
+                    setWatchlistName(watchlist.name);
                     setActiveWatchlistId(watchlist.id);
                   }}
                   style={{
-                    backgroundColor: activeWatchlistId === watchlist.id ? "#CBC3E3" : ""
+                    backgroundColor:
+                      activeWatchlistId === watchlist.id ? "#CBC3E3" : "",
+                    cursor: "pointer",
                   }}
                   className="watchlist-button-individual"
                 >
@@ -103,9 +145,13 @@ function Watchlist() {
               );
             })}
       </div>
-      <div id="watchlist-button">
-        <button onClick={handleEditClick}>Edit Watchlist</button>
-      </div>
+      {isUserSelf && (
+        <div id="watchlist-edit-button">
+          <button onClick={handleEditClick} style={{ cursor: "pointer" }}>
+            Edit Watchlist
+          </button>
+        </div>
+      )}
       <div className="user-profile-anime">
         <ul className="user-profile-anime-list">
           {watchlists &&
@@ -139,7 +185,7 @@ function Watchlist() {
                               setAnimeToDeleteFromWatchlist(anime.title);
                               setWatchlistIdToDelete(watchlist.id);
                             }}
-                            style={{color: 'red'}}
+                            style={{ color: "red", cursor: "pointer" }}
                           >
                             Remove From Watchlist
                           </button>
@@ -150,7 +196,7 @@ function Watchlist() {
               })}
         </ul>
       </div>
-    </>
+    </div>
   );
 }
 

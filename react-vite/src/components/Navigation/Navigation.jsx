@@ -5,8 +5,8 @@ import "./Navigation.css";
 
 function Navigation() {
   return (
-    <ul>
-      <li>
+    <ul style={{listStyleType: "none"}}>
+      <li >
         <NavLink to="/">Home</NavLink>
       </li>
 

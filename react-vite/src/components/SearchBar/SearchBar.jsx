@@ -8,17 +8,40 @@ function SearchBar() {
   const [results, setResults] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [showResults, setShowResults] = useState(false);
-  // const [anime, setAnime] = useState("");
+  const [searchType, setSearchType] = useState("anime"); // 'anime' or 'user'
+  const [allUsers, setAllUsers] = useState([]); // Store all users
   const resultsRef = useRef(null);
   const inputRef = useRef(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
 
+  // Fetch all users once when component mounts
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await fetch('/api/users/');
+        const data = await response.json();
+        setAllUsers(data.users || []);
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
+    };
+
+    fetchUsers();
+  }, []);
+
   // Handle search input change
   const handleChange = (e) => {
     const value = e.target.value;
     setSearchTerm(value);
+    
+    // Determine search type based on first character
+    if (value.startsWith("@")) {
+      setSearchType("user");
+    } else {
+      setSearchType("anime");
+    }
   };
 
   useEffect(() => {
@@ -48,27 +71,44 @@ function SearchBar() {
     };
   }, []);
 
-  // Fetch anime data when search term changes
+  // Fetch or filter data when search term changes
   useEffect(() => {
-    const fetchData = async () => {
-      if (searchTerm.length < 3) {
-        setResults([]);
-        return;
-      }
+    // For anime search, require at least 3 characters
+    if (searchType === "anime" && searchTerm.length < 3) {
+      setResults([]);
+      return;
+    }
+    
+    // For user search, require at least 2 characters after @
+    if (searchType === "user" && searchTerm.length < 2) {
+      setResults([]);
+      return;
+    }
 
+    const fetchData = async () => {
       setIsLoading(true);
       setShowResults(true);
 
       try {
-        const response = await fetch(
-          `https://api.jikan.moe/v4/anime?q=${encodeURIComponent(
-            searchTerm
-          )}&limit=5`
-        );
-        const data = await response.json();
-        setResults(data.data || []);
+        if (searchType === "anime") {
+          // Fetch anime from external API
+          const response = await fetch(
+            `https://api.jikan.moe/v4/anime?q=${encodeURIComponent(
+              searchTerm
+            )}&limit=5`
+          );
+          const data = await response.json();
+          setResults(data.data || []);
+        } else {
+          // Filter users on the frontend
+          const userQuery = searchTerm.substring(1).toLowerCase(); // Remove the @ symbol and lowercase for case-insensitive matching
+          const filteredUsers = allUsers.filter(user => 
+            user.username.toLowerCase().includes(userQuery)
+          ).slice(0, 5); // Limit to 5 results
+          setResults(filteredUsers);
+        }
       } catch (error) {
-        console.error("Error fetching anime:", error);
+        console.error(`Error processing ${searchType} search:`, error);
         setResults([]);
       } finally {
         setIsLoading(false);
@@ -86,22 +126,30 @@ function SearchBar() {
     }, 300);
 
     return () => clearTimeout(timeoutId);
-  }, [searchTerm]);
+  }, [searchTerm, searchType, allUsers]);
 
   // Handle clicking on a search result
-  // Handle clicking on a search result
-  const handleResultClick = async (anime) => {
+  const handleResultClick = async (result) => {
+    if (searchType === "anime") {
+      // Existing anime click handler
+      console.log("Selected anime:", result);
+      const anime = await dispatch(thunkLoadAnime(result));
 
-    console.log("Selected anime:", anime);
-
-    const result = await dispatch(thunkLoadAnime(anime));
-
-    if (result) {
-      let encoded_search_term = result["title"].split(" ").join("%20");
-      navigate(
-        `/anime/${result.id}/${encoded_search_term}/${result["mal_id"]}`
-      );
+      if (anime) {
+        let encoded_search_term = anime["title"].split(" ").join("%20");
+        navigate(
+          `/anime/${anime.id}/${encoded_search_term}/${anime["mal_id"]}`
+        );
+      }
+    } else {
+      // User click handler
+      console.log("Selected user:", result);
+      navigate(`/user/${result.id}/details`);
     }
+    
+    // Clear search after selection
+    setSearchTerm("");
+    setShowResults(false);
   };
 
   return (
@@ -109,11 +157,16 @@ function SearchBar() {
       <input
         ref={inputRef}
         style={{ width: "230px" }}
-        placeholder="Search for Anime or Friends"
+        placeholder="Search for Anime or @Users"
         type="text"
         value={searchTerm}
         onChange={handleChange}
-        onFocus={() => searchTerm.length >= 3 && setShowResults(true)}
+        onFocus={() => {
+          if ((searchType === "anime" && searchTerm.length >= 3) || 
+              (searchType === "user" && searchTerm.length >= 2)) {
+            setShowResults(true);
+          }
+        }}
       />
 
       {/* Search results dropdown */}
@@ -138,10 +191,12 @@ function SearchBar() {
               Loading...
             </div>
           ) : results.length > 0 ? (
-            results.map((anime, index) => (
+            results.map((result, index) => (
               <div
-                key={`${anime.mal_id}-${index}`} // Combine mal_id with index for uniqueness
-                onClick={() => handleResultClick(anime)}
+                key={searchType === "anime" ? 
+                  `${result.mal_id}-${index}` : 
+                  `user-${result.id}-${index}`}
+                onClick={() => handleResultClick(result)}
                 style={{
                   display: "flex",
                   alignItems: "center",
@@ -157,34 +212,79 @@ function SearchBar() {
                   e.currentTarget.style.backgroundColor = "transparent";
                 }}
               >
-                <img
-                  src={anime.images.jpg.small_image_url}
-                  alt={anime.title}
-                  style={{
-                    width: "40px",
-                    height: "56px",
-                    marginRight: "10px",
-                    objectFit: "cover",
-                  }}
-                />
-                <div>
-                  <div style={{ fontWeight: "bold" }}>
-                    {anime.title_english}
-                  </div>
-                  <div style={{ fontSize: "0.8rem", color: "#666" }}>
-                    {anime.year ? `${anime.year} • ` : ""}
-                    {anime.type || ""}
-                  </div>
-                </div>
+                {searchType === "anime" ? (
+                  // Anime result display
+                  <>
+                    <img
+                      src={result.images.jpg.small_image_url}
+                      alt={result.title}
+                      style={{
+                        width: "40px",
+                        height: "56px",
+                        marginRight: "10px",
+                        objectFit: "cover",
+                      }}
+                    />
+                    <div>
+                      <div style={{ fontWeight: "bold" }}>
+                        {result.title_english}
+                      </div>
+                      <div style={{ fontSize: "0.8rem", color: "#666" }}>
+                        {result.year ? `${result.year} • ` : ""}
+                        {result.type || ""}
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  // User result display
+                  <>
+                    <div
+                      style={{
+                        width: "40px",
+                        height: "40px",
+                        borderRadius: "50%",
+                        backgroundColor: "#ddd",
+                        marginRight: "10px",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        overflow: "hidden",
+                      }}
+                    >
+                      {result.profile_pic ? (
+                        <img
+                          src={result.profile_pic}
+                          alt={result.username}
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            objectFit: "cover",
+                          }}
+                        />
+                      ) : (
+                        <span style={{ fontSize: "18px" }}>
+                          {result.username.charAt(0).toUpperCase()}
+                        </span>
+                      )}
+                    </div>
+                    <div>
+                      <div style={{ fontWeight: "bold" }}>
+                        @{result.username}
+                      </div>
+                    </div>
+                  </>
+                )}
               </div>
             ))
-          ) : searchTerm.length >= 3 ? (
+          ) : searchTerm.length >= (searchType === "anime" ? 3 : 2) ? (
             <div style={{ padding: "10px", textAlign: "center" }}>
               No results found
             </div>
           ) : (
             <div style={{ padding: "10px", textAlign: "center" }}>
-              Type at least 3 characters to search
+              {searchType === "anime" 
+                ? "Type at least 3 characters to search for anime" 
+                : "Type at least 2 characters after @ to search for users"}
             </div>
           )}
         </div>

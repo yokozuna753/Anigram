@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate} from "react-router-dom";
 import { FaUserCircle } from 'react-icons/fa';
 import { thunkLogout } from "../../redux/session";
 import OpenModalMenuItem from "./OpenModalMenuItem";
@@ -11,6 +12,7 @@ function ProfileButton() {
   const [showMenu, setShowMenu] = useState(false);
   const user = useSelector((store) => store.session.user);
   const ulRef = useRef();
+  const navigate = useNavigate();
 
   const toggleMenu = (e) => {
     e.stopPropagation(); // Keep from bubbling up to document and triggering closeMenu
@@ -41,17 +43,20 @@ function ProfileButton() {
 
   return (
     <>
-      <button onClick={toggleMenu}>
+      <button onClick={toggleMenu} style={{cursor: "pointer"}}>
         <FaUserCircle />
       </button>
       {showMenu && (
-        <ul className={"profile-dropdown"} ref={ulRef}>
+        <div className="menu-box">
+
+        <ul className={"profile-dropdown"} ref={ulRef} style={{listStyleType: "none"}}>
           {user ? (
             <>
               <li>{user.username}</li>
               <li>{user.email}</li>
+              <button onClick={()=> navigate(`/user/${user && user.id && user.id}/details`)} style={{cursor: "pointer"}}> Account</button>
               <li>
-                <button onClick={logout}>Log Out</button>
+                <button onClick={logout} style={{cursor: "pointer"}}>Log Out</button>
               </li>
             </>
           ) : (
@@ -60,15 +65,16 @@ function ProfileButton() {
                 itemText="Log In"
                 onItemClick={closeMenu}
                 modalComponent={<LoginFormModal />}
-              />
+                />
               <OpenModalMenuItem
                 itemText="Sign Up"
                 onItemClick={closeMenu}
                 modalComponent={<SignupFormModal />}
-              />
+                />
             </>
           )}
         </ul>
+          </div>
       )}
     </>
   );

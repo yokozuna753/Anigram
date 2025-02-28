@@ -40,7 +40,7 @@ def remove_anime(userId, watchlistId, animeName):
 
     db.session.commit()
 
-    watchlists = Watchlist.query.all()
+    watchlists = Watchlist.query.filter(Watchlist.id == int(watchlistId)).all()
     
     # Return serialized watchlists data
     watchlists_data = []

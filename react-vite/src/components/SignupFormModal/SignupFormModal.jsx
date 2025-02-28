@@ -83,7 +83,7 @@ function SignupFormModal() {
           />
         </label>
         {errors.confirmPassword && <p>{errors.confirmPassword}</p>}
-        <button type="submit">Sign Up</button>
+        <button type="submit" style={{cursor: "pointer"}}>Sign Up</button>
       </form>
     </>
   );

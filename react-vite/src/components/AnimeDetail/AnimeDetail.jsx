@@ -18,7 +18,7 @@ function AnimeDetail() {
   const watchlistButtonRef = useRef(null);
 
   const anime_obj = JSON.parse(localStorage.getItem(`anime_${params.mal_id}`));
-  console.log(" ANIME OBJECT HERE ===>", anime_obj);
+  // console.log(" ANIME OBJECT HERE ===>", anime_obj);
 
   useEffect(() => {
     if (user) {
@@ -87,9 +87,7 @@ function AnimeDetail() {
 
   function handleAddToWatchlist(userId, watchlistId, anime_obj) {
     // Add the anime to the selected watchlist
-    dispatch(
-      thunkAddAnimeToWatchlist(userId, watchlistId, anime_obj)
-    );
+    dispatch(thunkAddAnimeToWatchlist(userId, watchlistId, anime_obj));
     setShowWatchlists(false);
   }
 
@@ -100,20 +98,29 @@ function AnimeDetail() {
           <h1>Anime Detail Page</h1>
           {user && (
             <div className="anime-detail-image">
-              <a href={anime_obj.mal_url} target="_blank" rel="noopener noreferrer" >
-
-              <img src={`${anime_obj.image_url}`} alt={anime_obj.title} />
+              <a
+                href={anime_obj && anime_obj.mal_url && anime_obj.mal_url}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <img src={`${anime_obj.image_url}`} alt={anime_obj.title} />
               </a>
             </div>
           )}
           <div className="anime-main-info">
             <div style={{ position: "relative" }}>
               {inWatchlist ? (
-                <button onClick={redirectToWatchlist}>In Watchlist</button>
+                <button
+                  onClick={redirectToWatchlist}
+                  style={{ cursor: "pointer" }}
+                >
+                  In Watchlist
+                </button>
               ) : (
                 <button
                   ref={watchlistButtonRef}
                   onClick={() => setShowWatchlists(!showWatchlists)}
+                  style={{ cursor: "pointer" }}
                 >
                   Add To Watchlist
                 </button>
@@ -147,7 +154,13 @@ function AnimeDetail() {
                       .map((watchlist, index) => (
                         <div
                           key={watchlist.id || index}
-                          onClick={() => handleAddToWatchlist(user.id, watchlist.id, anime_obj)}
+                          onClick={() =>
+                            handleAddToWatchlist(
+                              user.id,
+                              watchlist.id,
+                              anime_obj
+                            )
+                          }
                           style={{
                             padding: "8px",
                             cursor: "pointer",
@@ -185,21 +198,20 @@ function AnimeDetail() {
           <p>Likes: {anime_obj.likes}</p>
           <p>Producers: {anime_obj.producers}</p>
           <p>Rating: {anime_obj.rating}</p>
-          {
-          anime_obj.trailer_url ?
+          {anime_obj.trailer_url ? (
             <p>
-            Trailer:{" "}
-            <a
-              href={`${anime_obj.trailer_url}`}
-              target="_blank"
-              rel="noopener noreferrer"
+              Trailer:{" "}
+              <a
+                href={`${anime_obj.trailer_url}`}
+                target="_blank"
+                rel="noopener noreferrer"
               >
-              {anime_obj.trailer_url}
-            </a>
-          </p>
-          :
-          <p>Trailer: N/A</p>
-            }
+                {anime_obj.trailer_url}
+              </a>
+            </p>
+          ) : (
+            <p>Trailer: N/A</p>
+          )}
         </div>
       )}
     </>

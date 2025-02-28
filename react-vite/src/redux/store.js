@@ -8,11 +8,15 @@ import thunk from "redux-thunk";
 import sessionReducer from "./session";
 import watchlistReducer from "./watchlist";
 import animeReducer from "./anime";
+import followsReducer from "./follows";
+import otherUserReducer from "./otherUser";
 
 const rootReducer = combineReducers({
   session: sessionReducer,
   watchlists: watchlistReducer,
   anime: animeReducer,
+  follows: followsReducer,
+  otherUser: otherUserReducer,
 });
 
 let enhancer;
