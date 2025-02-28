@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate, Navigate, useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { thunkLoadFollows } from "../../redux/follows";
 import { thunkLoadAnimeToWatchlists } from "../../redux/watchlist";
 
@@ -11,21 +11,13 @@ import { thunkLoadAnimeToWatchlists } from "../../redux/watchlist";
 function UserProfile() {
   const user = useSelector((store) => store.session.user);
   const watchlists = useSelector((store) => store.watchlists);
-  const [isUserSelf, setIsUserSelf] = useState(true);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const params = useParams();
 
-  // useEffect(() => {
-  //   if (user && user.id && user.id === Number(params.userId)) {
-  //     setIsUserSelf(true);
-  //     dispatch(thunkLoadAnimeToWatchlists(user.id));
-  //     dispatch(thunkLoadFollows(user.id));
-  //   }
-  //   return () => {
-  //     setIsUserSelf(false);
-  //   };
-  // }, [dispatch, user]);
+  useEffect(() => {
+
+   if(user) dispatch(thunkLoadAnimeToWatchlists(user.id));
+  }, [dispatch, user,]);
 
   if (!user) {
     return <Navigate to="/login" />;
@@ -41,16 +33,16 @@ function UserProfile() {
       {/* {user && <h1>USER PROFILE PAGE</h1>} */}
 
       <div id="user-info">
-        {isUserSelf && (
+
           <div className="pic&username">
             <img className="user-profile-pic"></img>
             <p>@{user.username}</p>
           </div>
-        )}
+        
         <div className="follows&btns">
           <div className="user-follow-info">
             <div id="user-profile-posts">
-              {watchlists && watchlists.posts && (
+              {watchlists && (
                 <>
                   <p>{watchlists.posts}</p>
                   <p>
@@ -92,7 +84,7 @@ function UserProfile() {
           {user && (
             <div className="user-profile-buttons">
               <button onClick={handleClick} style={{ cursor: "pointer" }}>
-                Watchlist
+                Watchlists
               </button>
             </div>
           )}
@@ -102,9 +94,11 @@ function UserProfile() {
       <div className="user-profile-anime">
         <ul className="user-profile-anime-list">
           {user &&
-            user.watchlists &&
-            user.watchlists.map((watchlist) => {
-              return watchlist.anime.map((anime) => {
+            watchlists &&
+            Object.values(watchlists) &&
+            Object.values(watchlists).map((watchlist) => {
+
+              {return watchlist.anime && watchlist.anime.map((anime) => {
                 return (
                   // ! SET THE HREF ATTRIBUTE OF EACH ANIME IMAGE TO THE ANIME DETAIL PAGE
                   <li style={{ listStyleType: "none" }} key={anime.id}>
@@ -122,7 +116,7 @@ function UserProfile() {
                     </a>
                   </li>
                 );
-              });
+              })}
             })}
         </ul>
       </div>

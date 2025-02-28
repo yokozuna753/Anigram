@@ -2,6 +2,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { thunkLoadFollows } from "../../redux/follows";
+import { thunkLoadOtherUser, thunkRemoveOtherUser } from "../../redux/otherUser";
 
 /*
 
@@ -27,23 +28,27 @@ import { thunkLoadFollows } from "../../redux/follows";
 
 function UserFollowers() {
   const user = useSelector((store) => store.session.user);
+  const otherUser = useSelector((store) => store.otherUser.user);
   const follows = useSelector((store) => store.follows);
-  const [isUserSelf, setIsUserSelf] = useState(true);
+
   const dispatch = useDispatch();
-
-  console.log(follows && follows["Followers"]);
-
   const params = useParams();
+
   console.log("PARAMS FROM FOLLOWERS ->  ", params);
 
   useEffect(() => {
-    if (user && user.id) {
-      if (Number(params.userId) === user.id) {
-        setIsUserSelf(true);
-      }
-      dispatch(thunkLoadFollows(user.id));
+    if (user && user.id && user.id === Number(params.userId)) {
+
+        dispatch(thunkLoadFollows(user.id));
+        dispatch(thunkRemoveOtherUser());
+
+    } else if(user && user.id && user.id !== Number(params.userId)) {
+
+      dispatch(thunkLoadOtherUser(Number(params.userId)))
+      dispatch(thunkLoadOtherUser(Number(params.userId)));
+      dispatch(thunkLoadFollows(Number(params.userId)));
     }
-  }, [params.userId, dispatch, user]);
+  }, [params.userId, dispatch, user, ]);
 
   return (
     <>
@@ -53,18 +58,20 @@ function UserFollowers() {
           {follows &&
             follows["Followers"] &&
             follows["Followers"].map((follower) => {
-                console.log('follower:  ', follower.user_username);
+              console.log("follower:  ", follower.user_username);
 
-             return  (<li key={follower.id}>
-                <h2>
-                  <a
-                    href={`/user/${follower.user_id}/details`}
-                    style={{ cursor: "pointer" }}
-                  >
-                    @{follower.user_username}
-                  </a>
-                </h2>
-              </li>);
+              return (
+                <li key={follower.id}>
+                  <h2>
+                    <a
+                      href={`/user/${follower.user_id}/details`}
+                      style={{ cursor: "pointer" }}
+                    >
+                      @{follower.user_username}
+                    </a>
+                  </h2>
+                </li>
+              );
             })}
         </ul>
       </div>

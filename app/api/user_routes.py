@@ -28,12 +28,12 @@ def user(id):
     - query for the for the anime and attach the "data" to each
     """
     user = User.query.get(id)
-    for watchlist in user.watchlists:
-        for a in watchlist.anime:
-            # print('          ANIME    ==>', a.title)
-            r = requests.get(f'https://api.jikan.moe/v4/anime?q={a.title}')
-            # print(r)
-            a.image_url = r.json()['data'][0]['images']['jpg']['image_url']
+    # for watchlist in user.watchlists:
+    #     for a in watchlist.anime:
+    #         # print('          ANIME    ==>', a.title)
+    #         r = requests.get(f'https://api.jikan.moe/v4/anime?q={a.title}')
+    #         # print(r)
+    #         a.image_url = r.json()['data'][0]['images']['jpg']['image_url']
     return user.to_dict()
 
 

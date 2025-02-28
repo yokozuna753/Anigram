@@ -5,6 +5,7 @@ import  UserProfile  from '../UserProfile';
 import OtherProfile from "../OtherProfile/OtherProfile";
 import { thunkLoadFollows } from "../../redux/follows";
 import { thunkLoadAnimeToWatchlists } from "../../redux/watchlist";
+import { thunkLoadOtherUser, thunkRemoveOtherUser } from "../../redux/otherUser";
 
 /*
 
@@ -47,11 +48,15 @@ function ProfileType() {
   useEffect(() => {
     if (user && user.id && Number(params.userId) === user.id) {
       setIsUserSelf(true);
-      dispatch(thunkLoadAnimeToWatchlists(user.id));
+    //   dispatch(thunkLoadAnimeToWatchlists(user.id));
       dispatch(thunkLoadFollows(user.id));
+      dispatch(thunkRemoveOtherUser())
     } else{
         setIsUserSelf(false);
-        // dispatch the other thunks here
+        //* dispatch the other thunks here
+        dispatch(thunkLoadOtherUser(Number(params.userId)))
+        dispatch(thunkLoadFollows(Number(params.userId)))
+        dispatch(thunkLoadAnimeToWatchlists(Number(params.userId)))
     }
   }, [user, params.userId, dispatch]);
 
