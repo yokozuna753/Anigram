@@ -1,7 +1,12 @@
 const LOAD_ANIME = "anime/loadAnime";
+const POPULATE_ANIME = "anime/populateAnime";
 
 const loadAnime = (payload) => ({
   type: LOAD_ANIME,
+  payload,
+});
+const populateAnime = (payload) => ({
+  type: POPULATE_ANIME,
   payload,
 });
 
@@ -31,11 +36,21 @@ export const thunkLoadAnime = (anime_data) => async (dispatch) => {
       localStorage.setItem(`anime_${data.mal_id}`, JSON.stringify(data));
 
       await dispatch(loadAnime(data));
-      return data
+      return data;
     }
     return response;
   } catch (error) {
     console.error("Error loading anime:", error);
+  }
+};
+
+export const thunkPopulateAnime = () => async (dispatch) => {
+  const response = await fetch(`/api/anime/load/all`);
+
+  if(response.ok){
+    const data = await response.json();
+    console.log('LOADING ANIME... ',data);
+    dispatch(populateAnime(data))
   }
 };
 
@@ -45,6 +60,9 @@ function animeReducer(state = initialState, action) {
   switch (action.type) {
     case LOAD_ANIME: {
       return { ...state, [action.payload.title]: action.payload };
+    }
+    case POPULATE_ANIME: {
+      return { ...state, ...action.payload };
     }
     default:
       return state;

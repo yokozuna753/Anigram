@@ -4,25 +4,27 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { thunkAddAnimeToWatchlist } from "../../redux/watchlist";
 import { thunkLoadAnimeToWatchlists } from "../../redux/watchlist";
+import {thunkPopulateAnime} from '../../redux/anime'
 
 function AnimeDetail() {
   const user = useSelector((state) => state.session.user);
+  const anime = useSelector((state)=> state.anime)
   const watchlists = useSelector((state) => state.watchlists);
   const params = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const animeState = useSelector((state) => state.anime);
   const [inWatchlist, setInWatchlist] = useState(false);
   const [showWatchlists, setShowWatchlists] = useState(false);
   const watchlistDropdownRef = useRef(null);
   const watchlistButtonRef = useRef(null);
 
   const anime_obj = JSON.parse(localStorage.getItem(`anime_${params.mal_id}`));
-  // console.log(" ANIME OBJECT HERE ===>", anime_obj);
+  //const anime_obj = anime[`anime_${params.mal_id}`]
 
   useEffect(() => {
     if (user) {
       dispatch(thunkLoadAnimeToWatchlists(user.id));
+      dispatch(thunkPopulateAnime())
     }
   }, [dispatch, user]);
 
@@ -69,6 +71,12 @@ function AnimeDetail() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+
+  // * check if anime is in watchlists
+  // * if it is:
+    // * add the anime to the local storage
+
 
   if (!user) {
     return <Navigate to="/login" />;

@@ -19,14 +19,16 @@ const loadWatchlists = (payload) => ({
 
 export const thunkAddAnimeToWatchlist =
   (userId, watchlistId, anime_obj) => async (dispatch) => {
-    console.log(
-      "userId ==>  ",
-      userId,
-      "watchlistId: ",
-      watchlistId,
-      "anime object: ",
-      anime_obj
-    );
+    // console.log(
+    //   "userId ==>  ",
+    //   userId,
+    //   "watchlistId: ",
+    //   watchlistId,
+    //   "anime object: ",
+    //   anime_obj
+    // );
+
+    // add the anime to the watchlist
     const response = await fetch(
       `/api/watchlists/${userId}/${watchlistId}/${encodeURIComponent(
         anime_obj.title
@@ -44,9 +46,27 @@ export const thunkAddAnimeToWatchlist =
       }
     );
 
+    // iterate through the data
+    // match the anime_obj.title to the watchlist anime.title
+    // use that obj and set it with the mal_id to the local storage
+
     if (response.ok) {
+      let final_anime_obj;
       const data = await response.json();
-      console.log("     DATA FROM WATCHLIST ADD!! THUNK ", data);
+      for (let watchlist of data) {
+        for (let anime of watchlist?.anime) {
+          if (anime?.title === anime_obj?.title) {
+            final_anime_obj = anime;
+          }
+        }
+      }
+
+      console.log('WATCHLIST ADD ANIME THUNK ---->  ', final_anime_obj);
+
+      localStorage.setItem(
+        `anime_${final_anime_obj.mal_id}`,
+        JSON.stringify(final_anime_obj)
+      );
 
       if (data.error) {
         return data.error;
@@ -59,14 +79,14 @@ export const thunkAddAnimeToWatchlist =
 
 export const thunkRemoveAnimeFromWatchlist =
   (userId, watchlistId, animeName) => async (dispatch) => {
-    console.log('userId ',userId, 'watchlistId', watchlistId, 'anime: ', animeName );
+    // //console.log('userId ',userId, 'watchlistId', watchlistId, 'anime: ', animeName );
     const response = await fetch(
       `/api/watchlists/${userId}/${watchlistId}/${animeName}`,
       {
-        method: 'DELETE',
+        method: "DELETE",
         headers: {
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
       }
     );
 
