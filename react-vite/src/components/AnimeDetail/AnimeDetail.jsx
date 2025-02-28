@@ -35,7 +35,7 @@ function AnimeDetail() {
       if (watchlist.anime) {
         for (let anime of watchlist.anime) {
           // console.log('       WATCHLIST ANIME HERE ==>>>>>', (anime));
-          if (anime.title === anime_obj?.title) {
+          if (anime?.title === anime_obj?.title) {
             // console.log('YESSS');
             setInWatchlist(true);
           }
@@ -189,7 +189,7 @@ function AnimeDetail() {
                 </div>
               )}
             </div>
-            <h1>{anime_obj.title}</h1>
+            <h1>{anime_obj && anime_obj.title && anime_obj.title}</h1>
             <div className="anime-synopsis">
               <p>{anime_obj.synopsis}</p>
             </div>
