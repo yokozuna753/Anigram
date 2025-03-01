@@ -125,7 +125,7 @@ function OtherProfile() {
             <div id="user-profile-followers">
               {otherUser && follows && (
                 <>
-                  <p>{follows.Followers.length}</p>
+                  <p>{follows && follows['Followers'].length}</p>
                   <p>
                     <a
                       href={`/user/${

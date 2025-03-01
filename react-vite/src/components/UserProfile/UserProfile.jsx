@@ -13,6 +13,7 @@ function UserProfile() {
   const user = useSelector((store) => store.session.user);
   const watchlists = useSelector((store) => store.watchlists);
   const animeState = useSelector((state) => state.anime);
+  const follows = useSelector((store) => store.follows);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -59,12 +60,13 @@ function UserProfile() {
               )}
             </div>
             <div id="user-profile-followers">
-              {user && user.followers && (
+              {user && follows && (
                 <>
-                  <p>{user.followers.length}</p>
+                  <p>{follows && follows['Followers'] && follows['Followers'].length}</p>
                   <p>
                     <a href={`/user/${user && user.id && user.id}/followers`}>
-                      {user.followers.length === 0 || user.followers.length > 1
+                      {follows && follows['Followers'] && follows['Followers'].length && follows['Followers'].length === 0 ||
+                      follows && follows['Followers'] && follows['Followers'].length && follows['Followers'].length > 1
                         ? "Followers"
                         : "Follower"}{" "}
                     </a>
@@ -73,9 +75,9 @@ function UserProfile() {
               )}
             </div>
             <div id="user-profile-posts">
-              {user && user.user_is_following && (
+              {user && (
                 <>
-                  <p>{user.user_is_following.length}</p>
+                  <p>{follows && follows['Following'] && follows['Following'].length && follows['Following'].length}</p>
                   <p>
                     <a href={`/user/${user && user.id && user.id}/following`}>
                       {" "}

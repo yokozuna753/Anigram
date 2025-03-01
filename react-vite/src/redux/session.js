@@ -50,6 +50,7 @@ export const thunkSignup = (user) => async (dispatch) => {
 
   if (response.ok) {
     const data = await response.json();
+    console.log('DATA HERE -===> ', data);
     dispatch(setUser(data));
   } else if (response.status < 500) {
     const errorMessages = await response.json();

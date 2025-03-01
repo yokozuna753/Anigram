@@ -6,7 +6,6 @@ import "./LoginForm.css";
 import { thunkLoadAnimeToWatchlists } from "../../redux/watchlist";
 
 function LoginFormPage() {
-
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const sessionUser = useSelector((state) => state.session.user);
@@ -16,10 +15,10 @@ function LoginFormPage() {
 
   useEffect(() => {
     if (sessionUser) {
-      dispatch(thunkLoadAnimeToWatchlists(sessionUser.id))
+      dispatch(thunkLoadAnimeToWatchlists(sessionUser.id));
       navigate(`/user/${sessionUser.id}/details`);
     }
-  }, [sessionUser, navigate,dispatch]);
+  }, [sessionUser, navigate, dispatch]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -30,13 +29,18 @@ function LoginFormPage() {
         password,
       })
     );
-    
+
     // If serverResponse exists, it means there were errors
     if (serverResponse) {
       setErrors(serverResponse);
     }
     // No need for an else clause - the sessionUser check will handle redirect
-};
+  };
+
+  const handleSignUpClick = (e) => {
+    e.preventDefault();
+    navigate('/signup');
+  };
 
   return (
     <>
@@ -64,8 +68,13 @@ function LoginFormPage() {
           />
         </label>
         {errors.password && <p>{errors.password}</p>}
-        <button type="submit" style={{cursor: "pointer"}}>Log In</button>
+        <button type="submit" style={{ cursor: "pointer" }}>
+          Log In
+        </button>
       </form>
+      <div>
+        <button onClick={handleSignUpClick}>Sign Up</button>
+      </div>
     </>
   );
 }
