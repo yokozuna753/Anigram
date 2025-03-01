@@ -19,7 +19,9 @@ function OtherProfile() {
   const user = useSelector((store) => store.session.user);
   const otherUser = useSelector((store) => store.otherUser.user);
   const watchlists = useSelector((store) => store.watchlists);
-  const follows = useSelector((store) => store.follows.Followers);
+  const follows = useSelector((store) => store.follows);
+
+  console.log('FOLLOWS HERE      ==>', follows);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -53,7 +55,7 @@ function OtherProfile() {
   }, [otherUser, params.userId, watchlists]);
 
   useEffect(() => {
-    follows?.forEach((follow) => {
+    follows?.Followers?.forEach((follow) => {
       console.log("Follow: =>", follow);
       if (follow.user_id === user.id) {
         setUserFollowsOtherUser(true);
@@ -121,17 +123,17 @@ function OtherProfile() {
               )}
             </div>
             <div id="user-profile-followers">
-              {otherUser && otherUser.followers && (
+              {otherUser && follows && (
                 <>
-                  <p>{otherUser.followers.length}</p>
+                  <p>{follows.Followers.length}</p>
                   <p>
                     <a
                       href={`/user/${
                         otherUser && otherUser.id && otherUser.id
                       }/followers`}
                     >
-                      {otherUser.followers.length === 0 ||
-                      otherUser.followers.length > 1
+                      {follows && follows['Followers'] && follows['Followers'].length && follows['Followers'].length === 0 ||
+                      follows && follows['Followers'] && follows['Followers'].length && follows['Followers'].length > 1
                         ? "Followers"
                         : "Follower"}{" "}
                     </a>
@@ -140,9 +142,9 @@ function OtherProfile() {
               )}
             </div>
             <div id="user-profile-posts">
-              {otherUser && otherUser.user_is_following && (
+              {otherUser && (
                 <>
-                  <p>{otherUser.user_is_following.length}</p>
+                  <p>{follows && follows['Following'] && follows['Following'].length && follows['Following'].length}</p>
                   <p>
                     <a
                       href={`/user/${

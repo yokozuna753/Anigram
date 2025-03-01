@@ -39,7 +39,7 @@ def follow_other_user(userId,otherUserId):
     # * query the db for the user following otherUser
 
     request_data = request.get_json()
-    print('THIS IS REQUEST DATA ===>  ', request_data)
+    # print('THIS IS REQUEST DATA ===>  ', request_data)
     foundFollow = Follow.query.filter(Follow.user_id == userId, Follow.followed_user_id == otherUserId).first()
     # print('DID WE FIND THE FOLLOW?')
     # print('          !!!!!!!!!  ', foundFollow)
@@ -49,7 +49,7 @@ def follow_other_user(userId,otherUserId):
             user_id=userId,user_username=request_data['mainUserUsername'], followed_user_id=otherUserId, followed_user_username=request_data['otherUserUsername']
         )
 
-        print('            !!!!!!!!!!! NEW FOLLOW ===>   ', new_follow.user_id, new_follow.followed_user_id)
+        # print('            !!!!!!!!!!! NEW FOLLOW ===>   ', new_follow.user_id, new_follow.followed_user_id)
 
 
         db.session.add(new_follow)
@@ -79,8 +79,8 @@ def unfollow_other_user(userId,otherUserId):
     request_data = request.get_json()
     print('THIS IS REQUEST DATA ===>  ', request_data)
     found_follow = Follow.query.filter(Follow.user_id == userId, Follow.followed_user_id == otherUserId).first()
-    print('DID WE FIND THE FOLLOW?')
-    print('          !!!!!!!!!  ', found_follow)
+    # print('DID WE FIND THE FOLLOW?')
+    # print('          !!!!!!!!!  ', found_follow)
 
     if found_follow:
         db.session.delete(found_follow)
