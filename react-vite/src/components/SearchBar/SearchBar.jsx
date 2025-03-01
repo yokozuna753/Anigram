@@ -279,7 +279,7 @@ function SearchBar() {
                         />
                       ) : (
                         <span style={{ fontSize: "18px" }}>
-                          {result.username.charAt(0).toUpperCase()}
+                          {result.username[0].toUpperCase()}
                         </span>
                       )}
                     </div>

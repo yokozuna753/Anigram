@@ -40,6 +40,11 @@ function SignupFormPage() {
     }
   };
 
+  const handleLoginClick = (e) => {
+    e.preventDefault();
+    navigate('/login');
+  };
+
   return (
     <>
       <h1>Sign Up</h1>
@@ -87,6 +92,9 @@ function SignupFormPage() {
         {errors.confirmPassword && <p>{errors.confirmPassword}</p>}
         <button type="submit" style={{cursor: "pointer"}}>Sign Up</button>
       </form>
+      <div>
+        <button onClick={handleLoginClick}>Log In</button>
+      </div>
     </>
   );
 }
