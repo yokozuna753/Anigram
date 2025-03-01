@@ -14,7 +14,7 @@ export const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <h1>Welcome!</h1>, //! Change this to render the FEED
+        element: <LoginFormPage />, //! Change this to render the FEED
       },
       {
         path: "login",

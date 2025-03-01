@@ -1,22 +1,30 @@
-import { NavLink } from "react-router-dom";
+// import { NavLink } from "react-router-dom";
 import ProfileButton from "./ProfileButton";
 import SearchBar from "../SearchBar/SearchBar";
+import { useSelector } from "react-redux";
 import "./Navigation.css";
 
 function Navigation() {
+  const user = useSelector((store) => store.session.user);
+
   return (
-    <ul style={{listStyleType: "none"}}>
+    <ul style={{ listStyleType: "none" }}>
+      {/* {user && //////! MAKE THIS REDIRECT TO THE FEED
       <li >
-        <NavLink to="/">Home</NavLink>
-      </li>
+    <NavLink to={`/user/${user.id}/details`}>Home</NavLink>
+    </li>} */}
 
-      <li>
-        <SearchBar/>
-      </li>
+      {user && (
+        <li>
+          <SearchBar />
+        </li>
+      )}
 
-      <li>
-        <ProfileButton />
-      </li>
+      {user && (
+        <li>
+          <ProfileButton />
+        </li>
+      )}
     </ul>
   );
 }

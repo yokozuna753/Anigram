@@ -38,7 +38,7 @@ function SearchBar() {
     setSearchTerm(value);
 
     // Determine search type based on first character
-    if (value.startsWith("@")) {
+    if (value && value.startsWith("@")) {
       setSearchType("user");
     } else {
       setSearchType("anime");
