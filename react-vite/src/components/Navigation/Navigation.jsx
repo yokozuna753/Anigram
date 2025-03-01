@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+// import { NavLink } from "react-router-dom";
 import ProfileButton from "./ProfileButton";
 import SearchBar from "../SearchBar/SearchBar";
 import { useSelector } from "react-redux";

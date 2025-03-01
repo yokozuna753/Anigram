@@ -45,9 +45,14 @@ const response = await fetch(`/api/follows/${userId}/${otherUserId}/follow`, {
     otherUserUsername
   })
 })
+const data = await response.json();
+if(data.errors){
+  return data.errors
+}
+
 if(response.ok){
-  const data = await response.json();
   console.log('FOLLOW DATA THUNK ==>    ', data);
+  dispatch(followOtherUserAction(data))
 }
 return response;
 };
@@ -66,9 +71,14 @@ export const thunkUnfollowOtherUser = (userId, mainUserUsername, otherUserId,oth
     })
   })
   
+  const data = await response.json();
+  if(data.errors){
+    return data.errors
+  }
+
   if(response.ok){
-    const data = await response.json();
     console.log('UNFOLLOW DATA THUNK ==>    ', data);
+    dispatch(unfollowOtherUserAction(data));
   }
 
   return response

@@ -45,11 +45,26 @@ def follow_other_user(userId,otherUserId):
     # print('          !!!!!!!!!  ', foundFollow)
 
     if not foundFollow:
-        # new_follow = Follow(
-        #     user_id=1,user_username='Demo', followed_user_id=2, followed_user_username='marnie'
-        # )
-        pass
-    return jsonify({'message': "response from FOLLOW backend"})
+        new_follow = Follow(
+            user_id=userId,user_username=request_data['mainUserUsername'], followed_user_id=otherUserId, followed_user_username=request_data['otherUserUsername']
+        )
+
+        print('            !!!!!!!!!!! NEW FOLLOW ===>   ', new_follow.user_id, new_follow.followed_user_id)
+
+
+        db.session.add(new_follow)
+        db.session.commit()
+        following = Follow.query.filter(Follow.user_id == int(otherUserId)).all()
+        followers = Follow.query.filter(Follow.followed_user_id == int(otherUserId)).all()
+
+        final_obj = {"Following": [follow.to_dict() for follow in following],
+                 "Followers": [follower.to_dict() for follower in followers]
+                 }
+
+        return (
+        final_obj
+)
+    return jsonify({'errors': "User not found"})
 
 
 
@@ -57,9 +72,32 @@ def follow_other_user(userId,otherUserId):
 @follow.route('/<int:userId>/<int:otherUserId>/unfollow', methods=['DELETE'])
 @login_required
 def unfollow_other_user(userId,otherUserId):
+    """
+    Query for the follow row in the db, unfollow the other user, 
+    and return the updated other user's follows
+    """
+    request_data = request.get_json()
+    print('THIS IS REQUEST DATA ===>  ', request_data)
+    found_follow = Follow.query.filter(Follow.user_id == userId, Follow.followed_user_id == otherUserId).first()
+    print('DID WE FIND THE FOLLOW?')
+    print('          !!!!!!!!!  ', found_follow)
+
+    if found_follow:
+        db.session.delete(found_follow)
+        db.session.commit()
 
 
-    return jsonify({'message': "response from UNFOLLOW backend"})
+
+        following = Follow.query.filter(Follow.user_id == int(otherUserId)).all()
+        followers = Follow.query.filter(Follow.followed_user_id == int(otherUserId)).all()
+
+        final_obj = {"Following": [follow.to_dict() for follow in following],
+                 "Followers": [follower.to_dict() for follower in followers]
+                 }
+
+        return (final_obj)
+
+    return jsonify({'errors': "User not found"})
 # User goes to friends/own profile page
 # 1. follows object gets loaded for the user in the url params
     # - frontend sends a request to the redux thunk to load the follows object
