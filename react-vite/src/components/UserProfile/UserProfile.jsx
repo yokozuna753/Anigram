@@ -4,6 +4,7 @@ import { useEffect } from "react";
 // import { thunkLoadFollows } from "../../redux/follows";
 import { thunkLoadAnimeToWatchlists } from "../../redux/watchlist";
 import { thunkPopulateAnime } from "../../redux/anime";
+import './UserProfile.css'
 
 // 1. check th params for the user Id,
 // if it matches, load the logged in user's info
@@ -35,7 +36,7 @@ function UserProfile() {
   }
 
   return (
-    <>
+    <div id="user-profile-container">
       {/* {user && <h1>USER PROFILE PAGE</h1>} */}
 
       <div id="user-info">
@@ -45,7 +46,7 @@ function UserProfile() {
             <p>@{user.username}</p>
           </div>
         
-        <div className="follows&btns">
+        <div className="follows-btns">
           <div className="user-follow-info">
             <div id="user-profile-posts">
               {watchlists && (
@@ -119,6 +120,7 @@ function UserProfile() {
                       <img
                         style={{ width: "200px" }}
                         src={`${anime && anime.image_url && anime.image_url}`}
+                        className="anime-images-profile"
                       />
                     </a>
                   </li>
@@ -127,7 +129,7 @@ function UserProfile() {
             })}
         </ul>
       </div>
-    </>
+    </div>
   );
 }
 

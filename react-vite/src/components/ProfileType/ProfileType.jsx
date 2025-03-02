@@ -62,7 +62,6 @@ function ProfileType() {
 
   return (
     <>
-  <h1>Profile</h1>
     {isUserSelf ?
         <UserProfile />
         :
