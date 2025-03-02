@@ -6,6 +6,7 @@ import {
   thunkLoadOtherUser,
   thunkRemoveOtherUser,
 } from "../../redux/otherUser";
+import './UserFollowing.css'
 
 /*
 
@@ -52,9 +53,9 @@ function UserFollowing() {
 
   return (
     <>
-      <h1>Following</h1>
+      <h1 id="following-h1">Following</h1>
       <div className="followers-container">
-        <ul style={{ listStyleType: "none" }}>
+        <ul style={{ listStyleType: "none" }} id="followers-ul">
           {follows &&
             follows["Following"] &&
             follows["Following"].map((following) => {
