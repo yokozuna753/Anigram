@@ -1,10 +1,10 @@
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate, Navigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useNavigate, Navigate, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 // import { thunkLoadFollows } from "../../redux/follows";
 import { thunkLoadAnimeToWatchlists } from "../../redux/watchlist";
 import { thunkPopulateAnime } from "../../redux/anime";
-import './UserProfile.css'
+import "./UserProfile.css";
 
 // 1. check th params for the user Id,
 // if it matches, load the logged in user's info
@@ -17,14 +17,33 @@ function UserProfile() {
   const follows = useSelector((store) => store.follows);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const params = useParams();
+  const [hasAnimeInWatchlists, setHasAnimeInWatchlists] = useState();
 
   useEffect(() => {
+    if (user) dispatch(thunkLoadAnimeToWatchlists(user.id));
+    if (!Object.keys(animeState).length) {
+      dispatch(thunkPopulateAnime());
+    }
+  }, [animeState, dispatch, user]);
 
-   if(user) dispatch(thunkLoadAnimeToWatchlists(user.id));
-   if(!Object.keys(animeState).length){
-    dispatch(thunkPopulateAnime())
-   }
-  }, [animeState,dispatch, user,]);
+
+
+  useEffect(() => {
+    if (user && user.id && user.id === Number(params.userId)) {
+      watchlists &&
+        Object.values(watchlists).map((watchlist) => {
+          return watchlist?.anime?.map((anime) => {
+            if (anime) {
+              setHasAnimeInWatchlists(true);
+            }
+          });
+        });
+    }
+    return () => {
+      setHasAnimeInWatchlists(false);
+    };
+  }, [user, params.userId, watchlists]);
 
   if (!user) {
     return <Navigate to="/login" />;
@@ -40,12 +59,11 @@ function UserProfile() {
       {/* {user && <h1>USER PROFILE PAGE</h1>} */}
 
       <div id="user-info">
+        <div className="pic&username">
+          <img className="user-profile-pic"></img>
+          <p>@{user.username}</p>
+        </div>
 
-          <div className="pic&username">
-            <img className="user-profile-pic"></img>
-            <p>@{user.username}</p>
-          </div>
-        
         <div className="follows-btns">
           <div className="user-follow-info">
             <div id="user-profile-posts">
@@ -63,11 +81,21 @@ function UserProfile() {
             <div id="user-profile-followers">
               {user && follows && (
                 <>
-                  <p>{follows && follows['Followers'] && follows['Followers'].length}</p>
+                  <p>
+                    {follows &&
+                      follows["Followers"] &&
+                      follows["Followers"].length}
+                  </p>
                   <p>
                     <a href={`/user/${user && user.id && user.id}/followers`}>
-                      {follows && follows['Followers'] && follows['Followers'].length && follows['Followers'].length === 0 ||
-                      follows && follows['Followers'] && follows['Followers'].length && follows['Followers'].length > 1
+                      {(follows &&
+                        follows["Followers"] &&
+                        follows["Followers"].length &&
+                        follows["Followers"].length === 0) ||
+                      (follows &&
+                        follows["Followers"] &&
+                        follows["Followers"].length &&
+                        follows["Followers"].length > 1)
                         ? "Followers"
                         : "Follower"}{" "}
                     </a>
@@ -78,7 +106,12 @@ function UserProfile() {
             <div id="user-profile-posts">
               {user && (
                 <>
-                  <p>{follows && follows['Following'] && follows['Following'].length && follows['Following'].length}</p>
+                  <p>
+                    {follows &&
+                      follows["Following"] &&
+                      follows["Following"].length &&
+                      follows["Following"].length}
+                  </p>
                   <p>
                     <a href={`/user/${user && user.id && user.id}/following`}>
                       {" "}
@@ -101,32 +134,40 @@ function UserProfile() {
 
       <div className="user-profile-anime">
         <ul className="user-profile-anime-list">
-          {user &&
-            watchlists &&
+          {user && watchlists && hasAnimeInWatchlists ? (
             Object.values(watchlists) &&
             Object.values(watchlists).map((watchlist) => {
-
-              {return watchlist.anime && watchlist.anime.map((anime) => {
+              {
                 return (
-                  // ! SET THE HREF ATTRIBUTE OF EACH ANIME IMAGE TO THE ANIME DETAIL PAGE
-                  <li style={{ listStyleType: "none" }} key={anime.id}>
-                    <a
-                      href={`/anime/${
-                        anime && anime.id && anime.id
-                      }/${encodeURIComponent(
-                        anime && anime.title && anime.title
-                      )}/${anime && anime.mal_id && anime.mal_id}`}
-                    >
-                      <img
-                        style={{ width: "200px" }}
-                        src={`${anime && anime.image_url && anime.image_url}`}
-                        className="anime-images-profile"
-                      />
-                    </a>
-                  </li>
+                  watchlist.anime &&
+                  watchlist.anime.map((anime) => {
+                    return (
+                      // ! SET THE HREF ATTRIBUTE OF EACH ANIME IMAGE TO THE ANIME DETAIL PAGE
+                      <li style={{ listStyleType: "none" }} key={anime.id}>
+                        <a
+                          href={`/anime/${
+                            anime && anime.id && anime.id
+                          }/${encodeURIComponent(
+                            anime && anime.title && anime.title
+                          )}/${anime && anime.mal_id && anime.mal_id}`}
+                        >
+                          <img
+                            style={{ width: "200px" }}
+                            src={`${
+                              anime && anime.image_url && anime.image_url
+                            }`}
+                            className="anime-images-profile"
+                          />
+                        </a>
+                      </li>
+                    );
+                  })
                 );
-              })}
-            })}
+              }
+            })
+          ) : (
+            <h3>No Anime in Watchlists Yet!</h3>
+          )}
         </ul>
       </div>
     </div>

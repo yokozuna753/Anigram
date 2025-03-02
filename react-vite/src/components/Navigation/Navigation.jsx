@@ -8,20 +8,20 @@ function Navigation() {
   const user = useSelector((store) => store.session.user);
 
   return (
-    <ul style={{ listStyleType: "none" }}>
+    <ul style={{ listStyleType: "none" }} id="nav-ul">
       {/* {user && //////! MAKE THIS REDIRECT TO THE FEED
       <li >
     <NavLink to={`/user/${user.id}/details`}>Home</NavLink>
     </li>} */}
 
       {user && (
-        <li>
+        <li id="searchbar">
           <SearchBar />
         </li>
       )}
 
       {user && (
-        <li>
+        <li id="profile-button">
           <ProfileButton />
         </li>
       )}
