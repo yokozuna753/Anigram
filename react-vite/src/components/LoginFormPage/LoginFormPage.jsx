@@ -58,42 +58,50 @@ function LoginFormPage() {
   };
 
   return (
-    <>
+    <div id="log-in-root">
       <h1>Log In</h1>
       {errors.length > 0 &&
         errors.map((message) => <p key={message}>{message}</p>)}
-      <form onSubmit={handleSubmit}>
+      <form id="fields" onSubmit={handleSubmit}>
+        <div>
+
         <label>
-          Email
+          Email:
           <input
             type="text"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-          />
+            id="log-in-email"
+            />
         </label>
+            </div>
         {errors.email && <p>{errors.email}</p>}
+        <div>
+
         <label>
-          Password
+          Password:
           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-          />
+            id="log-in-password"
+            />
         </label>
+            </div>
         {errors.password && <p>{errors.password}</p>}
-        <button type="submit" style={{ cursor: "pointer" }}>
+        <button type="submit" style={{ cursor: "pointer" }} className="log-in-buttons">
           Log In
         </button>
       </form>
       <div>
-        <button onClick={handleDemoLogIn}>Log In As Demo</button>
+        <button onClick={handleDemoLogIn} className="log-in-buttons">Log In As Demo</button>
       </div>
       <div>
-        <button onClick={handleSignUpClick}>Sign Up</button>
+        <button onClick={handleSignUpClick} className="log-in-buttons">Sign Up</button>
       </div>
-    </>
+    </div>
   );
 }
 
