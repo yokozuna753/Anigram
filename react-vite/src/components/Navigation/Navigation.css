@@ -7,7 +7,7 @@
   justify-content: center;
   align-items: center;
   gap: 169px;
-  margin-left: 300px;
+  margin-left: 11%;
 }
 
 #profile-button {
@@ -15,3 +15,5 @@
   align-self: flex-start ;
 
 }
+
+

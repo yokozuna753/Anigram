@@ -1,0 +1,17 @@
+#watchlist-buttons-div{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+h1{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#watchlist-edit-button{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 10px 0px;
+}

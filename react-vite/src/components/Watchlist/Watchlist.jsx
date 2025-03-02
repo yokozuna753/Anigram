@@ -7,6 +7,7 @@ import {
 } from "../../redux/watchlist";
 import { useDispatch } from "react-redux";
 import { thunkLoadOtherUser, thunkRemoveOtherUser } from "../../redux/otherUser";
+import './Watchlist.css'
 
 function Watchlist() {
   const [edit, setEdit] = useState(false);
