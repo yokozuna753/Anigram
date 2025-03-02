@@ -39,7 +39,22 @@ function LoginFormPage() {
 
   const handleSignUpClick = (e) => {
     e.preventDefault();
-    navigate('/signup');
+    navigate("/signup");
+  };
+  const handleDemoLogIn = async (e) => {
+    e.preventDefault();
+    const serverResponse = await dispatch(
+      thunkLogin({
+        email: "demo@aa.io",
+        password,
+      })
+    );
+
+    // If serverResponse exists, it means there were errors
+    if (serverResponse) {
+      setErrors(serverResponse);
+    }
+    // No need for an else clause - the sessionUser check will handle redirect
   };
 
   return (
@@ -72,6 +87,9 @@ function LoginFormPage() {
           Log In
         </button>
       </form>
+      <div>
+        <button onClick={handleDemoLogIn}>Log In As Demo</button>
+      </div>
       <div>
         <button onClick={handleSignUpClick}>Sign Up</button>
       </div>

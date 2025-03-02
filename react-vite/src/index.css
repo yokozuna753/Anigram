@@ -1,1 +1,14 @@
 /* TODO: Add sitewide styles */
+#root{
+    background-color: lightslategrey;
+}
+
+body{
+    margin: 0px;
+    height: 100%;
+    width: 100%;
+}
+
+h1,h2,h3,p{
+    color: white;
+}
