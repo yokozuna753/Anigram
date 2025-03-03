@@ -14,6 +14,10 @@ function Navigation() {
     <NavLink to={`/user/${user.id}/details`}>Home</NavLink>
     </li>} */}
 
+        <li id="logo">
+          Anigram
+        </li>
+
       {user && (
         <li id="searchbar">
           <SearchBar />
