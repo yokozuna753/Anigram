@@ -150,7 +150,7 @@ function SearchBar() {
 
         console.log('ANIME FROM ERROR: ', anime);
         if (anime) {
-          let encoded_search_term = anime && anime['title'] && anime["title"].split(" ").join("%20");
+          let encoded_search_term = anime && anime['title'] && encodeURIComponent(anime["title"]);
           navigate(
             `/anime/${anime.id}/${encoded_search_term}/${anime["mal_id"]}`
           );

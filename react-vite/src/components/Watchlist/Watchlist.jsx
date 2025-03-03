@@ -1,9 +1,10 @@
 import { useSelector } from "react-redux";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Navigate, useParams } from "react-router-dom";
 import {
   thunkRemoveAnimeFromWatchlist,
   thunkLoadAnimeToWatchlists,
+  thunkAddAnimeToWatchlist
 } from "../../redux/watchlist";
 import { useDispatch } from "react-redux";
 import { thunkLoadOtherUser, thunkRemoveOtherUser } from "../../redux/otherUser";
@@ -11,25 +12,23 @@ import './Watchlist.css'
 
 function Watchlist() {
   const [edit, setEdit] = useState(false);
-  const [animeToDeleteFromWatchlist, setAnimeToDeleteFromWatchlist] =
-    useState("");
+  const [animeToDeleteFromWatchlist, setAnimeToDeleteFromWatchlist] = useState("");
   const [watchlistIdToDelete, setWatchlistIdToDelete] = useState();
   const [watchlistIdToView, setWatchlistIdToView] = useState(undefined);
-  const [watchlistIdToChange, setWatchlistIdToChangeTo] = useState(undefined);
+  // const [watchlistIdToChange, setWatchlistIdToChangeTo] = useState(undefined);
   const [animeMalIdToChangeWatchlists, setAnimeMalIdToChangeWatchlists] = useState(undefined);
   const [watchlistName, setWatchlistName] = useState(undefined);
   const [activeWatchlistId, setActiveWatchlistId] = useState(null);
   const [isUserSelf, setIsUserSelf] = useState(undefined);
+  const [showChangeWatchlistDropdown, setShowChangeWatchlistDropdown] = useState(false);
+  const [changeWatchlistDropdownPosition, setChangeWatchlistDropdownPosition] = useState({ top: 0, left: 0 });
+  const changeWatchlistDropdownRef = useRef(null);
 
   const user = useSelector((store) => store.session.user);
   const otherUser = useSelector((store) => store.otherUser?.user);
   const watchlists = useSelector((store) => store.watchlists);
   const dispatch = useDispatch();
   const params = useParams();
-
-
-
-
 
   useEffect(() => {
     if (user && user.id === Number(params.userId)) {
@@ -39,18 +38,14 @@ function Watchlist() {
     }
   }, [user, params.userId]);
 
-
-
-  useEffect(()=>{
+  useEffect(() => {
     if(user && user.id && user.id !== Number(params.userId)){
       dispatch(thunkLoadOtherUser(Number(params.userId)));
     }
-    return()=>{
+    return () => {
       dispatch(thunkRemoveOtherUser(Number(params.userId)))
     }
   },[user,dispatch,params.userId])
-
-
 
   useEffect(() => {
     if (
@@ -58,7 +53,6 @@ function Watchlist() {
       watchlists &&
       Object.values(watchlists).length
     ) {
-      // console.log('WATCHLISTS FROM USE EFFECT ==>   ', Object.values(watchlists));
       let watchlists_array = Object.values(watchlists);
       setWatchlistIdToView(watchlists_array[0].id);
       setWatchlistName(watchlists_array[0].name);
@@ -71,24 +65,17 @@ function Watchlist() {
     watchlists,
   ]);
 
-
-
   useEffect(() => {
     if (user && user.id && Number(params.userId) === user.id) {
       dispatch(thunkLoadAnimeToWatchlists(user.id));
-    }else if (otherUser && otherUser.id && Number(params.userId) === otherUser.id){
+    } else if (otherUser && otherUser.id && Number(params.userId) === otherUser.id){
       dispatch(thunkLoadAnimeToWatchlists(otherUser.id))
     }
   }, [params.userId,otherUser,dispatch, user]);
 
-
-
-
   useEffect(() => {
     if (animeToDeleteFromWatchlist && watchlistIdToDelete && isUserSelf) {
-      // console.log("DELETING...", animeToDeleteFromWatchlist);
-      let animeName = animeToDeleteFromWatchlist.split(" ").join("%20");
-      // console.log("FINAL ANIME NAME ==>", animeName);
+      let animeName = encodeURIComponent(animeToDeleteFromWatchlist)
 
       dispatch(
         thunkRemoveAnimeFromWatchlist(user.id, watchlistIdToDelete, animeName)
@@ -97,54 +84,67 @@ function Watchlist() {
       // Reset state after dispatching the action
       setAnimeToDeleteFromWatchlist("");
       setWatchlistIdToDelete(undefined);
-    // } else if (
-    //   animeToDeleteFromWatchlist &&
-    //   watchlistIdToDelete &&
-    //   otherUser &&
-    //   otherUser.id &&
-    //   !isUserSelf
-    // ) {
-    //   let animeName = animeToDeleteFromWatchlist.split(" ").join("%20");
-    //   // console.log("FINAL ANIME NAME ==>", animeName);
-
-    //   dispatch(
-    //     thunkRemoveAnimeFromWatchlist(
-    //       otherUser.id,
-    //       watchlistIdToDelete,
-    //       animeName
-    //     )
-    //   );
-
-    //   // Reset state after dispatching the action
-    //   setAnimeToDeleteFromWatchlist("");
-    //   setWatchlistIdToDelete(undefined);
     }
   }, [
     user,
     dispatch,
     animeToDeleteFromWatchlist,
     watchlistIdToDelete,
-    // otherUser,
     isUserSelf
   ]);
 
+  // Handle clicks outside the dropdown
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (
+        changeWatchlistDropdownRef.current &&
+        !changeWatchlistDropdownRef.current.contains(event.target)
+      ) {
+        setShowChangeWatchlistDropdown(false);
+      }
+    }
 
-
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   function handleEditClick(e) {
     e.preventDefault();
     setEdit(!edit);
   }
 
+  function handleShowChangeWatchlistDropdown(e, malId) {
+    const buttonRect = e.currentTarget.getBoundingClientRect();
+    setChangeWatchlistDropdownPosition({
+      top: buttonRect.bottom + window.scrollY,
+      left: buttonRect.left + window.scrollX
+    });
+    setAnimeMalIdToChangeWatchlists(malId);
+    setShowChangeWatchlistDropdown(true);
+  }
+
+  function handleChangeWatchlist(userId, newWatchlistId, animeMalId) {
+    // Find the current anime object from the current watchlist
+    const currentWatchlist = Object.values(watchlists).find(watchlist => watchlist.id === watchlistIdToView);
+    const animeToMove = currentWatchlist.anime.find(anime => anime.mal_id === animeMalId);
+    
+    // First remove from current watchlist
+    let animeName = encodeURIComponent(animeToMove.title)
+    dispatch(thunkRemoveAnimeFromWatchlist(userId, watchlistIdToView, animeName));
+    
+    // Then add to new watchlist
+    dispatch(thunkAddAnimeToWatchlist(userId, newWatchlistId, animeToMove));
+    
+    // Reset state
+    setAnimeMalIdToChangeWatchlists(undefined);
+    setShowChangeWatchlistDropdown(false);
+  }
+
   if (!user) {
     return <Navigate to="/login" />;
   }
-
-  // ! BUTTONS TO TOGGLE WATCH LIST TO VIEW
-  // have a button for each watchlist with the watchlist name
-  // if a new watchlist is created, a new button with that name will be added
-  // iterate through the watchlists array and display buttons for each name
-  // ! MAX 4 WATCH LISTS
 
   return (
     <div>
@@ -210,30 +210,27 @@ function Watchlist() {
                           <p>{anime.title}</p>
                         </a>
                         <div id="watchlist-update-buttons">
-
-                        {edit && (
-                          <button
-                          onClick={() => {
-                            setAnimeToDeleteFromWatchlist(anime.title);
-                            setWatchlistIdToDelete(watchlist.id);
-                          }}
-                          style={{ color: "red", cursor: "pointer" }}
-                          >
-                            Remove From Watchlist
-                          </button>
-                          
-                        )}
-                        {edit && ( //*  WORKING on this functionality to change anime to another watchlist
-                          <button
-                          onClick={() => {
-                            setAnimeMalIdToChangeWatchlists(anime.mal_id);
-                          }}
-                          style={{ color: "orange", cursor: "pointer" }}
-                          >
-                            Change Watchlist
-                          </button>
-                          
-                        )}
+                          {edit && (
+                            <button
+                              onClick={() => {
+                                setAnimeToDeleteFromWatchlist(anime.title);
+                                setWatchlistIdToDelete(watchlist.id);
+                              }}
+                              style={{ color: "red", cursor: "pointer" }}
+                            >
+                              Remove From Watchlist
+                            </button>
+                          )}
+                          {edit && (
+                            <button
+                              onClick={(e) => {
+                                handleShowChangeWatchlistDropdown(e, anime.mal_id);
+                              }}
+                              style={{ color: "orange", cursor: "pointer" }}
+                            >
+                              Change Watchlist
+                            </button>
+                          )}
                         </div>
                       </div>
                     </li>
@@ -241,6 +238,61 @@ function Watchlist() {
               })}
         </ul>
       </div>
+
+      {/* Change Watchlist Dropdown */}
+      {showChangeWatchlistDropdown && animeMalIdToChangeWatchlists && (
+        <div
+          ref={changeWatchlistDropdownRef}
+          className="watchlist-dropdown"
+          style={{
+            position: "absolute",
+            top: `${changeWatchlistDropdownPosition.top}px`,
+            left: `${changeWatchlistDropdownPosition.left}px`,
+            zIndex: 1000,
+            backgroundColor: "#fff",
+            border: "1px solid #ccc",
+            borderRadius: "4px",
+            padding: "10px",
+            boxShadow: "0 2px 10px rgba(0, 0, 0, 0.1)"
+          }}
+        >
+          <h4>Move to watchlist:</h4>
+          {watchlists && Object.values(watchlists) && Object.values(watchlists).length && Object.values(watchlists).length > 0 ? (
+            Object.values(watchlists)
+              .filter(
+                (watchlist) =>
+                  watchlist && 
+                  watchlist.id && 
+                  watchlist.name && 
+                  watchlist.id !== watchlistIdToView // Don't show current watchlist
+              )
+              .map((watchlist, index) => (
+                <div
+                  key={watchlist.id || index}
+                  onClick={() =>
+                    handleChangeWatchlist(
+                      user.id,
+                      watchlist.id,
+                      animeMalIdToChangeWatchlists
+                    )
+                  }
+                  className="watchlist-item"
+                  style={{
+                    padding: "8px",
+                    cursor: "pointer",
+                    borderBottom: "1px solid #eee"
+                  }}
+                >
+                  {watchlist.name}
+                </div>
+              ))
+          ) : (
+            <div className="no-watchlists">
+              No other watchlists found. Create one first.
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
