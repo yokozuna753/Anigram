@@ -39,43 +39,69 @@ function LoginFormPage() {
 
   const handleSignUpClick = (e) => {
     e.preventDefault();
-    navigate('/signup');
+    navigate("/signup");
+  };
+  const handleDemoLogIn = async (e) => {
+    e.preventDefault();
+    const serverResponse = await dispatch(
+      thunkLogin({
+        email: "demo@aa.io",
+        password,
+      })
+    );
+
+    // If serverResponse exists, it means there were errors
+    if (serverResponse) {
+      setErrors(serverResponse);
+    }
+    // No need for an else clause - the sessionUser check will handle redirect
   };
 
   return (
-    <>
+    <div id="log-in-root">
       <h1>Log In</h1>
       {errors.length > 0 &&
         errors.map((message) => <p key={message}>{message}</p>)}
-      <form onSubmit={handleSubmit}>
+      <form id="fields" onSubmit={handleSubmit}>
+        <div>
+
         <label>
-          Email
+          Email:
           <input
             type="text"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-          />
+            id="log-in-email"
+            />
         </label>
-        {errors.email && <p>{errors.email}</p>}
+            </div>
+        <div>
+
         <label>
-          Password
+          Password:
           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-          />
+            id="log-in-password"
+            />
         </label>
-        {errors.password && <p>{errors.password}</p>}
-        <button type="submit" style={{ cursor: "pointer" }}>
+            </div>
+        <button type="submit" style={{ cursor: "pointer" }} className="log-in-buttons">
           Log In
         </button>
       </form>
       <div>
-        <button onClick={handleSignUpClick}>Sign Up</button>
+        <button onClick={handleDemoLogIn} className="log-in-buttons">Log In As Demo</button>
       </div>
-    </>
+      <div>
+        <button onClick={handleSignUpClick} className="log-in-buttons">Sign Up</button>
+      </div>
+            {errors.email && <p style={{color: "orange"}}>* {errors.email}</p>}
+        {errors.password && <p style={{color: "orange"}}>* {errors.password}</p>}
+    </div>
   );
 }
 

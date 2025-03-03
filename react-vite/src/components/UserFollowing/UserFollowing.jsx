@@ -6,6 +6,7 @@ import {
   thunkLoadOtherUser,
   thunkRemoveOtherUser,
 } from "../../redux/otherUser";
+import './UserFollowing.css'
 
 /*
 
@@ -36,7 +37,7 @@ function UserFollowing() {
   const dispatch = useDispatch();
   const params = useParams();
 
-  console.log("PARAMS FROM FOLLOWERS ->  ", params);
+  // console.log("PARAMS FROM FOLLOWERS ->  ", params);
 
   useEffect(() => {
     if (user && user.id && user.id === Number(params.userId)) {
@@ -52,13 +53,13 @@ function UserFollowing() {
 
   return (
     <>
-      <h1>Following</h1>
+      <h1 id="following-h1">Following</h1>
       <div className="followers-container">
-        <ul style={{ listStyleType: "none" }}>
+        <ul style={{ listStyleType: "none" }} id="followers-ul">
           {follows &&
             follows["Following"] &&
             follows["Following"].map((following) => {
-              console.log("following:  ", following.followed_user_id);
+              // console.log("following:  ", following.followed_user_id);
 
               return (
                 <li key={following.id}>

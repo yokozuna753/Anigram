@@ -1,0 +1,16 @@
+#followers-ul{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    justify-items: center;
+}
+
+#followers-h1{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-self: center;
+    justify-self: center;
+    margin-left: 49px;
+}

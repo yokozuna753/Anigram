@@ -1,7 +1,11 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate, Navigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { thunkFollowOtherUser, thunkLoadFollows, thunkUnfollowOtherUser } from "../../redux/follows";
+import {
+  thunkFollowOtherUser,
+  thunkLoadFollows,
+  thunkUnfollowOtherUser,
+} from "../../redux/follows";
 import { thunkLoadAnimeToWatchlists } from "../../redux/watchlist";
 
 // 1. check th params for the user Id,
@@ -21,7 +25,7 @@ function OtherProfile() {
   const watchlists = useSelector((store) => store.watchlists);
   const follows = useSelector((store) => store.follows);
 
-  console.log('FOLLOWS HERE      ==>', follows);
+  // console.log("FOLLOWS HERE      ==>", follows);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -29,7 +33,9 @@ function OtherProfile() {
   const [hasAnimeInWatchlists, setHasAnimeInWatchlists] = useState();
   const [userFollowsOtherUser, setUserFollowsOtherUser] = useState(false);
 
-  console.log('MARNIE FOLLOWS BOBBIE? ==>  ', userFollowsOtherUser);
+  // console.log("MARNIE FOLLOWS BOBBIE? ==>  ", userFollowsOtherUser);
+
+
 
   useEffect(() => {
     if (otherUser && otherUser.id && otherUser.id === Number(params.userId)) {
@@ -56,7 +62,7 @@ function OtherProfile() {
 
   useEffect(() => {
     follows?.Followers?.forEach((follow) => {
-      console.log("Follow: =>", follow);
+      // console.log("Follow: =>", follow);
       if (follow.user_id === user.id) {
         setUserFollowsOtherUser(true);
       }
@@ -64,7 +70,7 @@ function OtherProfile() {
     return () => {
       setUserFollowsOtherUser(false);
     };
-  });
+  }, [follows, user?.id]);
 
   if (!user) {
     return <Navigate to="/login" />;
@@ -76,14 +82,26 @@ function OtherProfile() {
   }
   function handleFollowClick(e) {
     e.preventDefault();
-    dispatch(thunkFollowOtherUser(user.id,user.username, otherUser.id, otherUser.username))
+    dispatch(
+      thunkFollowOtherUser(
+        user.id,
+        user.username,
+        otherUser.id,
+        otherUser.username
+      )
+    );
   }
   function handleUnfollowClick(e) {
     e.preventDefault();
-    dispatch(thunkUnfollowOtherUser(user.id,user.username, otherUser.id, otherUser.username))
+    dispatch(
+      thunkUnfollowOtherUser(
+        user.id,
+        user.username,
+        otherUser.id,
+        otherUser.username
+      )
+    );
   }
-
-
 
   // !!!!! check the other users followers
   // state.follows.Followers
@@ -125,15 +143,26 @@ function OtherProfile() {
             <div id="user-profile-followers">
               {otherUser && follows && (
                 <>
-                  <p>{follows && follows['Followers'] && follows['Followers'].length && follows['Followers'].length}</p>
+                  <p>
+                    {follows &&
+                      follows["Followers"] &&
+                      follows["Followers"].length &&
+                      follows["Followers"].length}
+                  </p>
                   <p>
                     <a
                       href={`/user/${
                         otherUser && otherUser.id && otherUser.id
                       }/followers`}
                     >
-                      {follows && follows['Followers'] && follows['Followers'].length && follows['Followers'].length === 0 ||
-                      follows && follows['Followers'] && follows['Followers'].length && follows['Followers'].length > 1
+                      {(follows &&
+                        follows["Followers"] &&
+                        follows["Followers"].length &&
+                        follows["Followers"].length === 0) ||
+                      (follows &&
+                        follows["Followers"] &&
+                        follows["Followers"].length &&
+                        follows["Followers"].length > 1)
                         ? "Followers"
                         : "Follower"}{" "}
                     </a>
@@ -144,7 +173,12 @@ function OtherProfile() {
             <div id="user-profile-posts">
               {otherUser && (
                 <>
-                  <p>{follows && follows['Following'] && follows['Following'].length && follows['Following'].length}</p>
+                  <p>
+                    {follows &&
+                      follows["Following"] &&
+                      follows["Following"].length &&
+                      follows["Following"].length}
+                  </p>
                   <p>
                     <a
                       href={`/user/${
@@ -161,16 +195,21 @@ function OtherProfile() {
           </div>
           {user && (
             <div className="Otheruser-profile-buttons">
-
-              {userFollowsOtherUser ?
-                <button onClick={handleUnfollowClick} style={{ cursor: "pointer" }}>
-                Unfollow
-              </button>
-            :
-            <button onClick={handleFollowClick} style={{ cursor: "pointer" }}>
-                Follow
-              </button> 
-            }
+              {userFollowsOtherUser ? (
+                <button
+                  onClick={handleUnfollowClick}
+                  style={{ cursor: "pointer" }}
+                >
+                  Unfollow
+                </button>
+              ) : (
+                <button
+                  onClick={handleFollowClick}
+                  style={{ cursor: "pointer" }}
+                >
+                  Follow
+                </button>
+              )}
               <button onClick={handleClick} style={{ cursor: "pointer" }}>
                 Watchlists
               </button>
@@ -212,7 +251,9 @@ function OtherProfile() {
               }
             })
           ) : (
-            <h3>No Anime in Watchlists Yet!</h3>
+            <h3 className="watchlist-profile-message">
+              No Anime in Watchlists Yet!
+            </h3>
           )}
         </ul>
       </div>

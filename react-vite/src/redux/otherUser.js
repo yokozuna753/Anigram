@@ -13,13 +13,13 @@ const removeOtherUser = () => ({
 });
 
 export const thunkLoadOtherUser = (userId) => async (dispatch) => {
-    console.log('OTHER USER ID ==>  ', userId);
+    // console.log('OTHER USER ID ==>  ', userId);
   const response = await fetch(`/api/users/${userId}`);
 
   if (response.ok) {
-//     // console.log('RESPONSE FOR OTHER USER THUNK ==>   ', response);
+    // console.log('RESPONSE FOR OTHER USER THUNK ==>   ', response);
     const data = await response.json();
-    console.log('RESPONSE FROM OTHER USER THUNK => ', data);
+    // console.log('RESPONSE FROM OTHER USER THUNK => ', data);
     if (data.errors) {
       return data.errors;
     }
@@ -42,7 +42,7 @@ function otherUserReducer(state = initialState, action) {
     case SET_OTHER_USER: {
      
       const newState = { ...state, user: action.payload };
-      console.log("New state:", newState);
+      // console.log("New state:", newState);
       return newState;
     }
     case REMOVE_OTHER_USER:

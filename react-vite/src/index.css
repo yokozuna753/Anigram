@@ -1,1 +1,11 @@
 /* TODO: Add sitewide styles */
+#root{
+    background-color: lightslategrey;
+
+}
+
+h1,h2,h3,p{
+    color: white;
+}
+
+

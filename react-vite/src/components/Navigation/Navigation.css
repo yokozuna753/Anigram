@@ -1,3 +1,19 @@
 .profile-dropdown {
   position: absolute;
 }
+
+#nav-ul {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 169px;
+  margin-left: 11%;
+}
+
+#profile-button {
+  display: flex;
+  align-self: flex-start ;
+
+}
+
+
