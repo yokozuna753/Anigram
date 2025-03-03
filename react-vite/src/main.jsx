@@ -14,7 +14,7 @@ if (import.meta.env.MODE !== "production") {
   window.sessionActions = sessionActions;
 }
 
-console.log("Environment:", import.meta.env.MODE, "Production:", import.meta.env.PROD);
+// console.log("Environment:", import.meta.env.MODE, "Production:", import.meta.env.PROD);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
