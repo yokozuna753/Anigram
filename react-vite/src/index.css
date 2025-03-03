@@ -1,11 +1,15 @@
 /* TODO: Add sitewide styles */
-#root{
-    background-color: lightslategrey;
-
+html, #root{
+    /* background-color: #0a232a72; */
+    min-height: 100vh;
+    background: linear-gradient(45deg, #2a2a72, #009ffd);
 }
 
-h1,h2,h3,p{
+h1,h2,h3,h4,h5,a,li,p{
     color: white;
+}
+a{
+    text-decoration: none;
 }
 
 
