@@ -21,8 +21,8 @@ function UserProfile() {
   const [hasAnimeInWatchlists, setHasAnimeInWatchlists] = useState();
 
   useEffect(() => {
-    if (user) dispatch(thunkLoadAnimeToWatchlists(user.id));
-    if (!Object.keys(animeState).length) {
+    if ( user) dispatch(thunkLoadAnimeToWatchlists(user.id));
+    if (animeState && !Object.keys(animeState).length) {
       dispatch(thunkPopulateAnime());
     }
   }, [animeState, dispatch, user]);
@@ -51,7 +51,7 @@ function UserProfile() {
 
   function handleClick(e) {
     e.preventDefault();
-    navigate(`/user/${user.id}/watchlists`);
+    navigate(`/user/${user && user.id}/watchlists`);
   }
 
   return (

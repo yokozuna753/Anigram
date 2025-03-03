@@ -21,7 +21,7 @@ import { thunkLoadAnimeToWatchlists } from "../../redux/watchlist";
 
 function OtherProfile() {
   const user = useSelector((store) => store.session.user);
-  const otherUser = useSelector((store) => store.otherUser.user);
+  const otherUser = useSelector((store) => store.otherUser?.user);
   const watchlists = useSelector((store) => store.watchlists);
   const follows = useSelector((store) => store.follows);
 
@@ -84,10 +84,10 @@ function OtherProfile() {
     e.preventDefault();
     dispatch(
       thunkFollowOtherUser(
-        user.id,
-        user.username,
-        otherUser.id,
-        otherUser.username
+        user?.id,
+        user?.username,
+        otherUser?.id,
+        otherUser?.username
       )
     );
   }
@@ -95,10 +95,10 @@ function OtherProfile() {
     e.preventDefault();
     dispatch(
       thunkUnfollowOtherUser(
-        user.id,
-        user.username,
-        otherUser.id,
-        otherUser.username
+        user?.id,
+        user?.username,
+        otherUser?.id,
+        otherUser?.username
       )
     );
   }
@@ -131,9 +131,9 @@ function OtherProfile() {
             <div id="user-profile-posts">
               {watchlists && (
                 <>
-                  <p>{watchlists.posts}</p>
+                  <p>{watchlists && watchlists.posts}</p>
                   <p>
-                    {watchlists.posts === 0 || watchlists.posts > 1
+                    {watchlists && watchlists.posts === 0 ||  watchlists && watchlists.posts > 1
                       ? "Posts"
                       : "Post"}
                   </p>

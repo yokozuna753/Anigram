@@ -9,9 +9,9 @@ import { thunkPopulateAnime } from '../../redux/anime';
 import "./AnimeDetail.css";
 
 function AnimeDetail() {
-  const user = useSelector((state) => state.session.user);
-  const anime = useSelector((state) => state.anime);
-  const watchlists = useSelector((state) => state.watchlists);
+  const user = useSelector((state) => state.session?.user);
+  const anime = useSelector((state) => state?.anime);
+  const watchlists = useSelector((state) => state?.watchlists);
   const params = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -20,7 +20,7 @@ function AnimeDetail() {
   const watchlistDropdownRef = useRef(null);
   const watchlistButtonRef = useRef(null);
 
-  const anime_obj = anime[`anime_${params.mal_id}`];
+  const anime_obj = anime && anime[`anime_${params.mal_id}`];
 
   useEffect(() => {
     if (user) {
