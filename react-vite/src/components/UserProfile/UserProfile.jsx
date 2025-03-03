@@ -11,10 +11,10 @@ import "./UserProfile.css";
 // if not matches, load the friends info + "Follow" button
 
 function UserProfile() {
-  const user = useSelector((store) => store.session.user);
-  const watchlists = useSelector((store) => store.watchlists);
-  const animeState = useSelector((state) => state.anime);
-  const follows = useSelector((store) => store.follows);
+  const user = useSelector((store) => store?.session?.user);
+  const watchlists = useSelector((store) => store?.watchlists);
+  const animeState = useSelector((state) => state?.anime);
+  const follows = useSelector((store) => store?.follows);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const params = useParams();
@@ -22,7 +22,7 @@ function UserProfile() {
 
   useEffect(() => {
     if ( user) dispatch(thunkLoadAnimeToWatchlists(user.id));
-    if (animeState && !Object.keys(animeState).length) {
+    if (animeState && Object.keys(animeState).length && !Object.keys(animeState).length) {
       dispatch(thunkPopulateAnime());
     }
   }, [animeState, dispatch, user]);

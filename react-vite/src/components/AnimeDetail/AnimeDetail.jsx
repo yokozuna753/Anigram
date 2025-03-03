@@ -30,7 +30,7 @@ function AnimeDetail() {
   }, [dispatch, user]);
 
   useEffect(() => {
-    const watchlist_arr = Object.values(watchlists);
+    const watchlist_arr = watchlists && Object.values(watchlists);
     for (let watchlist of watchlist_arr) {
       if (watchlist.anime) {
         for (let anime of watchlist.anime) {
