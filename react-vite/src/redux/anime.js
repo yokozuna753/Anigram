@@ -11,11 +11,13 @@ const populateAnime = (payload) => ({
 });
 
 export const thunkLoadAnime = (anime_data) => async (dispatch) => {
-  // console.log("        IN LOAD ANIME THUNK ===> data...", anime_data);
+  console.log("        IN LOAD ANIME THUNK ===> data...", anime_data);
 
-  try {
+  // try {
 
-    const anime_name = anime_data.title_english.split(" ").join("%20");
+    // const anime_name = anime_data.title_english.split(" ").join("%20");
+    const anime_name = encodeURIComponent(anime_data.title_english)
+    console.log('ANIME NAME :    ', anime_name);
     const response = await fetch(`/api/anime/${anime_name}/load`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -31,9 +33,9 @@ export const thunkLoadAnime = (anime_data) => async (dispatch) => {
       return data;
     }
     return response;
-  } catch (error) {
-    console.error("Error loading anime:", error);
-  }
+  // } catch (error) {
+  //   console.error("Error loading anime:", error);
+  // }
 };
 
 export const thunkPopulateAnime = () => async (dispatch) => {

@@ -138,7 +138,8 @@ function SearchBar() {
 
       if (animeState[`anime_${result.mal_id}`]) {
         // console.log(animeState[`anime_${result.mal_id}`]);
-        let encoded_search_term = animeState && animeState[`anime_${result.mal_id}`]['title'].split(" ").join("%20");
+        console.log('ERROR HERE: =>   ', animeState);
+        let encoded_search_term = animeState && animeState[`anime_${result.mal_id}`] && animeState[`anime_${result.mal_id}`]['title'] && encodeURIComponent(animeState[`anime_${result.mal_id}`]['title'])
         navigate(
           `/anime/${animeState[`anime_${result.mal_id}`]['id']}/${encoded_search_term}/${
             animeState[`anime_${result.mal_id}`]['mal_id']
@@ -146,8 +147,10 @@ function SearchBar() {
         );
       } else {
         const anime = await dispatch(thunkLoadAnime(result));
+
+        console.log('ANIME FROM ERROR: ', anime);
         if (anime) {
-          let encoded_search_term = anime["title"].split(" ").join("%20");
+          let encoded_search_term = anime && anime['title'] && encodeURIComponent(anime["title"]);
           navigate(
             `/anime/${anime.id}/${encoded_search_term}/${anime["mal_id"]}`
           );

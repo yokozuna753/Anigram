@@ -6,14 +6,31 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 169px;
-  margin-left: 11%;
+  gap: 50px;
+  /* margin-left: 11%; */
+  padding: 0px;
+}
+
+#searchbar{
+  margin: 0px 150px;
 }
 
 #profile-button {
   display: flex;
-  align-self: flex-start ;
+  align-self: center ;
 
 }
+
+#logo{
+  font-family: "Lobster", serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: xx-large;
+  display: flex;
+  /* margin-right: 50px; */
+  width: fit-content;
+  justify-self: flex-start;
+}
+
 
 
