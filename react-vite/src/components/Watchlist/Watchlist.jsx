@@ -15,6 +15,8 @@ function Watchlist() {
     useState("");
   const [watchlistIdToDelete, setWatchlistIdToDelete] = useState();
   const [watchlistIdToView, setWatchlistIdToView] = useState(undefined);
+  const [watchlistIdToChange, setWatchlistIdToChangeTo] = useState(undefined);
+  const [animeMalIdToChangeWatchlists, setAnimeMalIdToChangeWatchlists] = useState(undefined);
   const [watchlistName, setWatchlistName] = useState(undefined);
   const [activeWatchlistId, setActiveWatchlistId] = useState(null);
   const [isUserSelf, setIsUserSelf] = useState(undefined);
@@ -207,17 +209,32 @@ function Watchlist() {
                           />
                           <p>{anime.title}</p>
                         </a>
+                        <div id="watchlist-update-buttons">
+
                         {edit && (
                           <button
-                            onClick={() => {
-                              setAnimeToDeleteFromWatchlist(anime.title);
-                              setWatchlistIdToDelete(watchlist.id);
-                            }}
-                            style={{ color: "red", cursor: "pointer" }}
+                          onClick={() => {
+                            setAnimeToDeleteFromWatchlist(anime.title);
+                            setWatchlistIdToDelete(watchlist.id);
+                          }}
+                          style={{ color: "red", cursor: "pointer" }}
                           >
                             Remove From Watchlist
                           </button>
+                          
                         )}
+                        {edit && ( //*  WORKING on this functionality to change anime to another watchlist
+                          <button
+                          onClick={() => {
+                            setAnimeMalIdToChangeWatchlists(anime.mal_id);
+                          }}
+                          style={{ color: "orange", cursor: "pointer" }}
+                          >
+                            Change Watchlist
+                          </button>
+                          
+                        )}
+                        </div>
                       </div>
                     </li>
                   ));

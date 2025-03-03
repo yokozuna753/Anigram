@@ -23,3 +23,10 @@ h1{
     margin: 0;
     transition: opacity 0.2s ease;
   }
+
+  #watchlist-update-buttons{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 67%;
+  }
