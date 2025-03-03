@@ -256,7 +256,7 @@ function Watchlist() {
             boxShadow: "0 2px 10px rgba(0, 0, 0, 0.1)"
           }}
         >
-          <h4>Move to watchlist:</h4>
+          <h4 style={{color: "black"}}>Move to watchlist:</h4>
           {watchlists && Object.values(watchlists) && Object.values(watchlists).length && Object.values(watchlists).length > 0 ? (
             Object.values(watchlists)
               .filter(
@@ -280,7 +280,9 @@ function Watchlist() {
                   style={{
                     padding: "8px",
                     cursor: "pointer",
-                    borderBottom: "1px solid #eee"
+                    borderBottom: "1px solid #eee",
+                    color: "black"
+                    
                   }}
                 >
                   {watchlist.name}
