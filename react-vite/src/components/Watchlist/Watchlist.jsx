@@ -20,7 +20,7 @@ function Watchlist() {
   const [isUserSelf, setIsUserSelf] = useState(undefined);
 
   const user = useSelector((store) => store.session.user);
-  const otherUser = useSelector((store) => store.otherUser.user);
+  const otherUser = useSelector((store) => store.otherUser?.user);
   const watchlists = useSelector((store) => store.watchlists);
   const dispatch = useDispatch();
   const params = useParams();
