@@ -203,6 +203,7 @@ function Watchlist() {
                             style={{ width: "200px" }}
                             src={`${anime.image_url}`}
                             alt={anime.title}
+                            className="anime-images-watchlist"
                           />
                           <p>{anime.title}</p>
                         </a>
