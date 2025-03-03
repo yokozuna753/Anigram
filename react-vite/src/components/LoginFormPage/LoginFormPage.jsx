@@ -76,7 +76,6 @@ function LoginFormPage() {
             />
         </label>
             </div>
-        {errors.email && <p>{errors.email}</p>}
         <div>
 
         <label>
@@ -90,7 +89,6 @@ function LoginFormPage() {
             />
         </label>
             </div>
-        {errors.password && <p>{errors.password}</p>}
         <button type="submit" style={{ cursor: "pointer" }} className="log-in-buttons">
           Log In
         </button>
@@ -101,6 +99,8 @@ function LoginFormPage() {
       <div>
         <button onClick={handleSignUpClick} className="log-in-buttons">Sign Up</button>
       </div>
+            {errors.email && <p style={{color: "orange"}}>* {errors.email}</p>}
+        {errors.password && <p style={{color: "orange"}}>* {errors.password}</p>}
     </div>
   );
 }

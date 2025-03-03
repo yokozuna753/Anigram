@@ -1,0 +1,56 @@
+#sign-up-root {
+  height: 50em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  flex-direction: column;
+}
+
+
+
+h1 {
+  display: flex;
+  font-size: 50px;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+}
+
+form{
+    display: flex;
+    margin-left: 10px;
+    justify-content: center;
+}
+
+#fields {
+  margin: 50px 70px;
+  font-size: 30px;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-left: 200px;
+
+}
+
+#signup-email,
+#signup-username,
+#signup-password,
+#signup-confirm-password {
+  height: 26px;
+  font-size: 20px;
+}
+
+.signup-buttons {
+  height: 50px;
+  font-size: 20px;
+  margin-top: 10px;
+  margin-left: 10px;
+}
+
+
+button:hover{
+    cursor: pointer;
+    }

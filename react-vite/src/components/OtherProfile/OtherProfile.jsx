@@ -25,7 +25,7 @@ function OtherProfile() {
   const watchlists = useSelector((store) => store.watchlists);
   const follows = useSelector((store) => store.follows);
 
-  console.log("FOLLOWS HERE      ==>", follows);
+  // console.log("FOLLOWS HERE      ==>", follows);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -33,7 +33,7 @@ function OtherProfile() {
   const [hasAnimeInWatchlists, setHasAnimeInWatchlists] = useState();
   const [userFollowsOtherUser, setUserFollowsOtherUser] = useState(false);
 
-  console.log("MARNIE FOLLOWS BOBBIE? ==>  ", userFollowsOtherUser);
+  // console.log("MARNIE FOLLOWS BOBBIE? ==>  ", userFollowsOtherUser);
 
 
 
@@ -62,7 +62,7 @@ function OtherProfile() {
 
   useEffect(() => {
     follows?.Followers?.forEach((follow) => {
-      console.log("Follow: =>", follow);
+      // console.log("Follow: =>", follow);
       if (follow.user_id === user.id) {
         setUserFollowsOtherUser(true);
       }

@@ -34,7 +34,7 @@ export const thunkLoadFollows = (userId) => async (dispatch) => {
  
 };
 export const thunkFollowOtherUser = (userId, mainUserUsername, otherUserId,otherUserUsername) => async (dispatch) => {
-console.log('IN FOLLOW OTHER USER THUNK ==>');
+// console.log('IN FOLLOW OTHER USER THUNK ==>');
 // ** GOAL: return the follows for the Other User after the main user follows them
 // ! ONLY WANT TO RETURN THE FOLLOWERS STATE TO UPDATE FOR THE OTHER USER
 const response = await fetch(`/api/follows/${userId}/${otherUserId}/follow`, {
@@ -51,7 +51,7 @@ if(data.errors){
 }
 
 if(response.ok){
-  console.log('FOLLOW DATA THUNK ==>    ', data);
+  // console.log('FOLLOW DATA THUNK ==>    ', data);
   dispatch(followOtherUserAction(data))
 }
 return response;
@@ -59,7 +59,7 @@ return response;
 
 
 export const thunkUnfollowOtherUser = (userId, mainUserUsername, otherUserId,otherUserUsername) => async (dispatch) => {
-  console.log(' IN UNFOLLOW OTHER USER THUNK ==>');
+  // console.log(' IN UNFOLLOW OTHER USER THUNK ==>');
   // ** GOAL: return the follows for the Other User after the main user unfollows them
   // ! ONLY WANT TO RETURN THE FOLLOWERS STATE TO UPDATE FOR THE OTHER USER
   const response = await fetch(`/api/follows/${userId}/${otherUserId}/unfollow`, {
@@ -77,7 +77,7 @@ export const thunkUnfollowOtherUser = (userId, mainUserUsername, otherUserId,oth
   }
 
   if(response.ok){
-    console.log('UNFOLLOW DATA THUNK ==>    ', data);
+    // console.log('UNFOLLOW DATA THUNK ==>    ', data);
     dispatch(unfollowOtherUserAction(data));
   }
 

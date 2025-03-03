@@ -37,7 +37,7 @@ function UserFollowing() {
   const dispatch = useDispatch();
   const params = useParams();
 
-  console.log("PARAMS FROM FOLLOWERS ->  ", params);
+  // console.log("PARAMS FROM FOLLOWERS ->  ", params);
 
   useEffect(() => {
     if (user && user.id && user.id === Number(params.userId)) {
@@ -59,7 +59,7 @@ function UserFollowing() {
           {follows &&
             follows["Following"] &&
             follows["Following"].map((following) => {
-              console.log("following:  ", following.followed_user_id);
+              // console.log("following:  ", following.followed_user_id);
 
               return (
                 <li key={following.id}>

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Navigate, useNavigate } from "react-router-dom";
 import { thunkSignup } from "../../redux/session";
+import './SignupForm.css'
 
 function SignupFormPage() {
   const dispatch = useDispatch();
@@ -46,10 +47,10 @@ function SignupFormPage() {
   };
 
   return (
-    <>
+    <div id="sign-up-root">
       <h1>Sign Up</h1>
       {errors.server && <p>{errors.server}</p>}
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} id="fields">
         <label>
           Email
           <input
@@ -57,6 +58,7 @@ function SignupFormPage() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            id="signup-email"
           />
         </label>
         {errors.email && <p>{errors.email}</p>}
@@ -67,6 +69,7 @@ function SignupFormPage() {
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             required
+            id="signup-username"
           />
         </label>
         {errors.username && <p>{errors.username}</p>}
@@ -77,9 +80,9 @@ function SignupFormPage() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            id="signup-password"
           />
         </label>
-        {errors.password && <p>{errors.password}</p>}
         <label>
           Confirm Password
           <input
@@ -87,15 +90,17 @@ function SignupFormPage() {
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
-          />
+            id="signup-confirm-password"
+            />
         </label>
-        {errors.confirmPassword && <p>{errors.confirmPassword}</p>}
-        <button type="submit" style={{cursor: "pointer"}}>Sign Up</button>
+        <button type="submit" style={{cursor: "pointer"}} className="signup-buttons">Sign Up</button>
       </form>
       <div>
-        <button onClick={handleLoginClick}>Log In</button>
+        <button onClick={handleLoginClick} className="signup-buttons">Log In</button>
       </div>
-    </>
+      {errors.password && <p style={{color: "orange"}}>* {errors.password}</p>}
+        {errors.confirmPassword && <p style={{color: "orange"}}>* {errors.confirmPassword}</p>}
+    </div>
   );
 }
 

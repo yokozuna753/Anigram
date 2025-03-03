@@ -50,7 +50,7 @@ export const thunkSignup = (user) => async (dispatch) => {
 
   if (response.ok) {
     const data = await response.json();
-    console.log('DATA HERE -===> ', data);
+    // console.log('DATA HERE -===> ', data);
     dispatch(setUser(data));
   } else if (response.status < 500) {
     const errorMessages = await response.json();
@@ -72,7 +72,7 @@ function sessionReducer(state = initialState, action) {
     case SET_USER: {
      
       const newState = { ...state, user: action.payload };
-      console.log("New state:", newState);
+      // console.log("New state:", newState);
       return newState;
     }
     case REMOVE_USER:
