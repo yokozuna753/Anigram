@@ -24,8 +24,8 @@ export const thunkLoadAnime = (anime_data) => async (dispatch) => {
 
     if (response.ok) {
       const data = await response.json();
-      // console.log('DATA HERE ==>  ', data);
-      localStorage.setItem(`anime_${data.mal_id}`, JSON.stringify(data));
+      console.log('DATA HERE ==>  ', data);
+      // localStorage.setItem(`anime_${data.mal_id}`, JSON.stringify(data));
 
       await dispatch(loadAnime(data));
       return data;
@@ -41,7 +41,7 @@ export const thunkPopulateAnime = () => async (dispatch) => {
 
   if(response.ok){
     const data = await response.json();
-    // console.log('LOADING ANIME... ',data);
+    console.log('POPULATING  ANIME... ',data);
     dispatch(populateAnime(data))
   }
 };
@@ -51,7 +51,8 @@ const initialState = {};
 function animeReducer(state = initialState, action) {
   switch (action.type) {
     case LOAD_ANIME: {
-      return { ...state, [action.payload.title]: action.payload };
+      const animeKey = `anime_${action.payload.mal_id}`
+      return { ...state, [animeKey]: action.payload };
     }
     case POPULATE_ANIME: {
       return { ...state, ...action.payload };
