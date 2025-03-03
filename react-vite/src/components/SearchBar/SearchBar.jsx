@@ -222,6 +222,7 @@ function SearchBar() {
                   padding: "10px",
                   cursor: "pointer",
                   borderBottom: "1px solid #eee",
+                  color: "black"
                 }}
                 onMouseOver={(e) => {
                   e.currentTarget.style.backgroundColor = "#f0f0f0";
