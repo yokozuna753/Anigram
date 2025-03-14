@@ -13,6 +13,7 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(40), nullable=False, unique=True)
     email = db.Column(db.String(255), nullable=False, unique=True)
     hashed_password = db.Column(db.String(255), nullable=False)
+    profile_pic_url = db.Column(db.String(1000), nullable=True)
 
     # Relationship to "following" (users that the user is following)
     user_is_following = db.relationship(
@@ -46,6 +47,7 @@ class User(db.Model, UserMixin):
             'id': self.id,
             'username': self.username,
             'email': self.email,
+            'profile_pic_url': self.profile_pic_url,
             'watchlists': [item.to_dict() for item in self.watchlists],
             'followers': [follower.to_dict() for follower in self.followers],
             'user_is_following': [followed_user.to_dict() for followed_user in self.user_is_following]
