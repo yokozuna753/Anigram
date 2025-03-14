@@ -5,6 +5,8 @@ import { useEffect, useState } from "react";
 import { thunkLoadAnimeToWatchlists } from "../../redux/watchlist";
 import { thunkPopulateAnime } from "../../redux/anime";
 import "./UserProfile.css";
+import ChangeProfilePicModal from "../ChangeProfilePicModal/ChangeProfilePicModal";
+import { useModal } from "../../context/Modal";
 
 // 1. check th params for the user Id,
 // if it matches, load the logged in user's info
@@ -19,15 +21,18 @@ function UserProfile() {
   const dispatch = useDispatch();
   const params = useParams();
   const [hasAnimeInWatchlists, setHasAnimeInWatchlists] = useState();
+  const { setModalContent } = useModal();
 
   useEffect(() => {
-    if ( user) dispatch(thunkLoadAnimeToWatchlists(user.id));
-    if (animeState && Object.keys(animeState).length && !Object.keys(animeState).length) {
+    if (user) dispatch(thunkLoadAnimeToWatchlists(user.id));
+    if (
+      animeState &&
+      Object.keys(animeState).length &&
+      !Object.keys(animeState).length
+    ) {
       dispatch(thunkPopulateAnime());
     }
   }, [animeState, dispatch, user]);
-
-
 
   useEffect(() => {
     if (user && user.id && user.id === Number(params.userId)) {
@@ -49,6 +54,12 @@ function UserProfile() {
     return <Navigate to="/login" />;
   }
 
+  function handlePicClick(e) {
+    e.preventDefault();
+
+    setModalContent(<ChangeProfilePicModal user={user}/>);
+  }
+
   function handleClick(e) {
     e.preventDefault();
     navigate(`/user/${user && user.id}/watchlists`);
@@ -56,7 +67,6 @@ function UserProfile() {
 
   return (
     <div id="user-profile-container">
-
       {/* 
       - user hovers over their profile pic
       - "Edit" prompt shows up on the picture 
@@ -64,9 +74,11 @@ function UserProfile() {
 
       <div id="user-info">
         <div className="pic&username">
-          <img className="user-profile-pic"></img>
+          <img className="user-profile-pic" src="" onClick={handlePicClick} />
           <p>@{user.username}</p>
         </div>
+
+
 
         <div className="follows-btns">
           <div className="user-follow-info">
@@ -107,6 +119,9 @@ function UserProfile() {
                 </>
               )}
             </div>
+            <div>
+
+        </div>
             <div id="user-profile-posts">
               {user && (
                 <>
