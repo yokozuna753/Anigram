@@ -290,8 +290,8 @@ Returns the current user's updated follows list.
 - Require Authentication: true
 - Request
 
-  - Method: GET
-  - Route path: '/api/follows/:userId'
+  - Method: POST
+  - Route path: '/api/follows/:userId/:otherUserId/follow'
   - Body: none
 
 - Successful Response
@@ -310,6 +310,54 @@ Returns the current user's updated follows list.
           "user_username": "Demo",
           "followed_user_id": 2,
           "followed_user_username": "Marnie"
+        }
+        {
+          "id": 1,
+          "user_id": 1,
+          "user_username": "Demo",
+          "followed_user_id": 3,
+          "followed_user_username": "Bobbie"
+        }
+      ],
+      "Followers": [
+        {
+          "id": 1,
+          "user_id": 3,
+          "user_username": "Bobbie",
+          "followed_user_id": 1,
+          "followed_user_username": "Demo"
+        }
+      ]
+    }
+    ```
+
+### POST - have the current user unfollow another user
+
+Returns the current user's updated follows list.
+
+- Require Authentication: true
+- Request
+
+  - Method: POST
+  - Route path: '/api/follows/:userId/:otherUserId/unfollow'
+  - Body: none
+
+- Successful Response
+
+  - Status Code: 200
+  - Headers:
+    - Content-Type: application/json
+  - Body:
+
+    ```json
+    {
+      "Following": [
+        {
+          "id": 1,
+          "user_id": 1,
+          "user_username": "Demo",
+          "followed_user_id": 3,
+          "followed_user_username": "Bobbie"
         }
       ],
       "Followers": [
@@ -332,8 +380,8 @@ Returns the watchlist of the current user by name
 - Request
 
   - Method: GET
-  - Route path: /api/:userId/watchlists/:watchlistId
   - Body: none
+  - Route path: '/api/watchlists/:userId'
 
 - Successful Response
 
