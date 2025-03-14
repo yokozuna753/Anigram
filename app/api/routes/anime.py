@@ -23,14 +23,14 @@ def add_anime(animeName):
     """
     anime_info = request.get_json()
 
-    print('         !!!!!!!!!!!           WE ARE REACHING THE BACKEND')
+    # print('         !!!!!!!!!!!           WE ARE REACHING THE BACKEND')
 
     response = Anime.query.filter(Anime.title == anime_info['title']).all()
 
-    print('             RESPONSE HERE FROM ANIME BACKEND   !!!!!!!!!   ', response)
+    # print('             RESPONSE HERE FROM ANIME BACKEND   !!!!!!!!!   ', response)
 
     if response:
-        print('   THE ANIME EXISTS FROM ANIME BACKEND   ===>    ', response)
+        # print('   THE ANIME EXISTS FROM ANIME BACKEND   ===>    ', response)
         return jsonify(response[0].to_dict())
     else:
         name = '%20'.join(anime_info['title'].split(' '))
@@ -68,5 +68,5 @@ def add_anime(animeName):
 @login_required
 def populate_anime():
     all_anime = Anime.query.all()
-    print('                 !!!!!!!!!      This is all Anime      ', all_anime)
+    # print('                 !!!!!!!!!      This is all Anime      ', all_anime)
     return jsonify({f'anime_{anime.mal_id}': anime.to_dict() for anime in all_anime})
