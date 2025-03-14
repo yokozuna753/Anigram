@@ -56,7 +56,11 @@ function UserProfile() {
 
   return (
     <div id="user-profile-container">
-      {/* {user && <h1>USER PROFILE PAGE</h1>} */}
+
+      {/* 
+      - user hovers over their profile pic
+      - "Edit" prompt shows up on the picture 
+      */}
 
       <div id="user-info">
         <div className="pic&username">
@@ -86,7 +90,7 @@ function UserProfile() {
                       follows["Followers"] &&
                       follows["Followers"].length}
                   </p>
-                  <p>
+                  <p className="follows">
                     <a href={`/user/${user && user.id && user.id}/followers`}>
                       {(follows &&
                         follows["Followers"] &&
@@ -112,7 +116,7 @@ function UserProfile() {
                       follows["Following"].length &&
                       follows["Following"].length}
                   </p>
-                  <p>
+                  <p className="follows">
                     <a href={`/user/${user && user.id && user.id}/following`}>
                       {" "}
                       Following

@@ -38,7 +38,16 @@
     background-color: #fafafa;
     border: 1px solid #dbdbdb;
     margin-bottom: 12px;
+    transition: transform .2s; /* Animation */
   }
+
+  .user-profile-pic:hover{
+    transform: scale(1.05); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
+    box-shadow: 0px 0px 40px white;
+    cursor: pointer;
+  }
+
+
   
   .pic\&username p {
     font-size: 20px;
@@ -131,11 +140,25 @@
     height: 293px;
     object-fit: cover;
     margin: 0;
-    transition: opacity 0.2s ease;
+    transition: transform 0.2s;
+    border-radius: 10px;
   }
   
   .anime-images-profile:hover {
+    opacity: .5;
+    transform: scale(1.05); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
+
+    cursor: pointer;
+  }
+
+  .follows{
+    transition: transform 0.2s;
+  }
+
+  .follows:hover{
     opacity: 0.9;
+    transform: scale(1.05); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
+    cursor: pointer;
   }
   
   /* Responsive adjustments */
