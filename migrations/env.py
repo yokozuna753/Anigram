@@ -2,9 +2,12 @@ from flask import current_app
 from alembic import context
 import logging
 from logging.config import fileConfig
+import os
+environment = os.getenv("FLASK_ENV")
+SCHEMA = os.environ.get('SCHEMA')
 
 # Import the SCHEMA configuration from the Flask app context
-SCHEMA = current_app.config.get('SCHEMA', 'anigram_schema')  # Default to 'anigram_schema' if SCHEMA isn't set
+# SCHEMA = current_app.config.get('SCHEMA', 'anigram_schema')  # Default to 'anigram_schema' if SCHEMA isn't set
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -71,7 +74,17 @@ def run_migrations_online():
             process_revision_directives=process_revision_directives,
             **current_app.extensions['migrate'].configure_args
         )
+        if environment == "production":
+            # Drop the schema if it exists
+            try:
+                logger.info(f"Dropping schema {SCHEMA} if it exists.")
+                connection.execute(f"DROP SCHEMA IF EXISTS {SCHEMA} CASCADE")  # CASCADE will drop objects within the schema
+            except Exception as e:
+                logger.error(f"Error dropping schema {SCHEMA}: {str(e)}")
 
+            # Create the schema
+            logger.info(f"Creating schema {SCHEMA} if it does not exist.")
+            connection.execute(f"CREATE SCHEMA IF NOT EXISTS {SCHEMA}")
         #! uncomment this for production
         # Set the schema before running migrations
         with connection.begin():
