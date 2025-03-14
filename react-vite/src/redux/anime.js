@@ -16,7 +16,7 @@ export const thunkLoadAnime = (anime_data) => async (dispatch) => {
   // try {
 
     // const anime_name = anime_data.title_english.split(" ").join("%20");
-    const anime_name = encodeURIComponent(anime_data.title_english)
+    const anime_name = encodeURIComponent(anime_data.title)
     console.log('ANIME NAME :    ', anime_name);
     const response = await fetch(`/api/anime/${anime_name}/load`, {
       method: "POST",

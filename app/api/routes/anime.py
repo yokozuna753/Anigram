@@ -25,7 +25,7 @@ def add_anime(animeName):
 
     print('         !!!!!!!!!!!           WE ARE REACHING THE BACKEND')
 
-    response = Anime.query.filter(Anime.title == anime_info['title_english']).all()
+    response = Anime.query.filter(Anime.title == anime_info['title']).all()
 
     print('             RESPONSE HERE FROM ANIME BACKEND   !!!!!!!!!   ', response)
 
@@ -33,7 +33,7 @@ def add_anime(animeName):
         print('   THE ANIME EXISTS FROM ANIME BACKEND   ===>    ', response)
         return jsonify(response[0].to_dict())
     else:
-        name = '%20'.join(anime_info['title_english'].split(' '))
+        name = '%20'.join(anime_info['title'].split(' '))
         # anime_response = requests.get(f'https://api.jikan.moe/v4/anime?q={name}&limit=1&page=1')
 
         # anime_data = anime_response.json()
@@ -43,7 +43,7 @@ def add_anime(animeName):
             mal_id=anime_info['mal_id'],
             watchlist_id= None,
             likes=0,
-            title=anime_info['title_english'],
+            title=anime_info['title'],
             image_url=anime_info['images']['jpg']['large_image_url'],
             producers=anime_info['producers'][0]['name'] if anime_info['producers'] and anime_info['producers'][0] else None,
             rating=anime_info['rating'],
