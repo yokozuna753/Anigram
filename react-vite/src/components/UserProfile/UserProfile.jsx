@@ -119,9 +119,6 @@ function UserProfile() {
                 </>
               )}
             </div>
-            <div>
-
-        </div>
             <div id="user-profile-posts">
               {user && (
                 <>

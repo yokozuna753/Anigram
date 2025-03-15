@@ -61,6 +61,7 @@
     display: flex;
     flex-direction: column;
     flex-grow: 1;
+
     max-width: 50%;
     justify-content: center;
     gap: 20px;
@@ -70,8 +71,9 @@
   /* Stats row (posts, followers, following) */
   .user-follow-info {
     display: flex;
-    gap: 40px;
+    gap: 70px;
     margin-bottom: 20px;
+    width: fit-content;
   }
   
   .user-follow-info div {
@@ -153,7 +155,14 @@
 
   .follows{
     transition: transform 0.2s;
+    display: flex;
+    align-self: flex-start;
+    justify-self: flex-start;
+    justify-self: flex-start;
+
   }
+
+  .follows-btns
 
   .follows:hover{
     opacity: 0.9;
