@@ -10,6 +10,7 @@ import watchlistReducer from "./watchlist";
 import animeReducer from "./anime";
 import followsReducer from "./follows";
 import otherUserReducer from "./otherUser";
+import imagesReducer from "./images";
 
 const rootReducer = combineReducers({
   session: sessionReducer,
@@ -17,6 +18,7 @@ const rootReducer = combineReducers({
   anime: animeReducer,
   follows: followsReducer,
   otherUser: otherUserReducer,
+  images: imagesReducer,
 });
 
 let enhancer;
