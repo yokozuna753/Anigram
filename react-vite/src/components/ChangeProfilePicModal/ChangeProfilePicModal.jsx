@@ -1,6 +1,6 @@
 import { useModal } from "../../context/Modal";
-import { thunkLoadImages } from "../../redux/images";
-import {useSelector} from 'react-redux';
+import { thunkDeleteImage, thunkUploadImages } from "../../redux/images";
+import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 
 function ChangeProfilePicModal() {
@@ -11,20 +11,28 @@ function ChangeProfilePicModal() {
     e.preventDefault();
     const file_info = e.target[0].files[0];
 
-
-    const data = {
-    name: file_info.name,
-    size: file_info.size,
-    type: file_info.type,      
-    };
-    user && dispatch(thunkLoadImages(data));
+    // const image = {
+    // name: file_info.name,
+    // size: file_info.size,
+    // type: file_info.type,
+    // };
+    user && dispatch(thunkUploadImages(user.id, file_info));
 
     closeModal();
   };
 
+  function handlePicDelete(e) {
+    e.preventDefault();
+    user && dispatch(thunkDeleteImage(user.id));
+    closeModal();
+  }
+
   return (
     <>
-      <h2>Choose a new profile picture</h2>
+      <h3>
+        Choose a new profile picture OR{" "}
+        <button onClick={handlePicDelete}>Delete</button>
+      </h3>
       <form onSubmit={handleSubmit}>
         <label>
           File Type
@@ -39,3 +47,12 @@ function ChangeProfilePicModal() {
 }
 
 export default ChangeProfilePicModal;
+
+/*
+!TO-DO
+- render the user profile image in the 'images' redux state
+- create redux & backend route to get all of the images from the DB 
+  - 1. REDUX - create a thunk to load all of the images onto the redux store
+  - route will load all images in images table to the redux store
+    * This route will be fetched on the following: FEED & OTHER USER PROFILE & USER PROFILE
+*/
