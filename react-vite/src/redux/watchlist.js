@@ -29,6 +29,16 @@ export const thunkAddAnimeToWatchlist =
     // );
 
     // add the anime to the watchlist
+    // First, get the CSRF token from the endpoint
+    const tokenResponse = await fetch("/api/auth/csrf-token", {
+      credentials: "include", // Important to include credentials
+    });
+
+    if (!tokenResponse.ok) {
+      return { errors: { message: "Could not fetch CSRF token" } };
+    }
+
+    const { csrf_token } = await tokenResponse.json();
     const response = await fetch(
       `/api/watchlists/${userId}/${watchlistId}/${encodeURIComponent(
         anime_obj.title
@@ -37,6 +47,7 @@ export const thunkAddAnimeToWatchlist =
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "X-CSRFToken": csrf_token,
         },
         body: JSON.stringify({
           userId,
@@ -51,22 +62,22 @@ export const thunkAddAnimeToWatchlist =
     // use that obj and set it with the mal_id to the local storage
 
     if (response.ok) {
-      let final_anime_obj;
       const data = await response.json();
-      for (let watchlist of data) {
-        for (let anime of watchlist.anime) {
-          if (anime.title === anime_obj.title) {
-            final_anime_obj = anime;
-          }
-        }
-      }
+      // let final_anime_obj;
+      // for (let watchlist of data) {
+      //   for (let anime of watchlist.anime) {
+      //     if (anime.title === anime_obj.title) {
+      //       final_anime_obj = anime;
+      //     }
+      //   }
+      // }
 
-      // console.log('WATCHLIST ADD ANIME THUNK ---->  ', final_anime_obj);
+      // // console.log('WATCHLIST ADD ANIME THUNK ---->  ', final_anime_obj);
 
-      localStorage.setItem(
-        `anime_${final_anime_obj.mal_id}`,
-        JSON.stringify(final_anime_obj)
-      );
+      // localStorage.setItem(
+      //   `anime_${final_anime_obj.mal_id}`,
+      //   JSON.stringify(final_anime_obj)
+      // );
 
       if (data.error) {
         return data.error;
@@ -79,13 +90,23 @@ export const thunkAddAnimeToWatchlist =
 
 export const thunkRemoveAnimeFromWatchlist =
   (userId, watchlistId, animeName) => async (dispatch) => {
-    // //console.log('userId ',userId, 'watchlistId', watchlistId, 'anime: ', animeName );
+    // First, get the CSRF token from the endpoint
+    const tokenResponse = await fetch("/api/auth/csrf-token", {
+      credentials: "include", // Important to include credentials
+    });
+
+    if (!tokenResponse.ok) {
+      return { errors: { message: "Could not fetch CSRF token" } };
+    }
+
+    const { csrf_token } = await tokenResponse.json();
     const response = await fetch(
       `/api/watchlists/${userId}/${watchlistId}/${animeName}`,
       {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
+          "X-CSRFToken": csrf_token,
         },
       }
     );
@@ -104,7 +125,19 @@ export const thunkRemoveAnimeFromWatchlist =
   };
 
 export const thunkLoadAnimeToWatchlists = (userId) => async (dispatch) => {
-  const response = await fetch(`/api/watchlists/${userId}/load`);
+  // First, get the CSRF token from the endpoint
+  const tokenResponse = await fetch("/api/auth/csrf-token", {
+    credentials: "include", // Important to include credentials
+  });
+
+  if (!tokenResponse.ok) {
+    return { errors: { message: "Could not fetch CSRF token" } };
+  }
+
+  const { csrf_token } = await tokenResponse.json();
+  const response = await fetch(`/api/watchlists/${userId}/load`, {
+    headers: { "Content-Type": "application/json", "X-CSRFToken": csrf_token },
+  });
 
   if (response.ok) {
     const data = await response.json();

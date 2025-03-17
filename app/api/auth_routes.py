@@ -27,6 +27,8 @@ def login():
     form = LoginForm()
     # Get the csrf_token from the request cookie and put it into the
     # form manually to validate_on_submit can be used
+    # csrf_token = request.cookies.get('csrf_token')
+    # print('       !!!!!!!!!!!     TOKEN HERE ===>   ', csrf_token
     form['csrf_token'].data = request.cookies['csrf_token']
     if form.validate_on_submit():
         # Add the user to the session, we are logged in!
@@ -34,6 +36,14 @@ def login():
         login_user(user)
         return user.to_dict()
     return form.errors, 401
+
+@auth_routes.route('/csrf-token')
+def get_csrf_token():
+    """
+    Returns the CSRF token for the current session
+    """
+    token = request.cookies.get('csrf_token')
+    return {'csrf_token': token}
 
 
 @auth_routes.route('/logout')

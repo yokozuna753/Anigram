@@ -23,7 +23,7 @@ def add_anime(animeName):
     """
     anime_info = request.get_json()
 
-    # print('         !!!!!!!!!!!           WE ARE REACHING THE BACKEND')
+    print('         !!!!!!!!!!!           WE ARE REACHING THE BACKEND')
 
     response = Anime.query.filter(Anime.title == anime_info['title']).all()
 

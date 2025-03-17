@@ -7,6 +7,7 @@ import { thunkPopulateAnime } from "../../redux/anime";
 import "./UserProfile.css";
 import ChangeProfilePicModal from "../ChangeProfilePicModal/ChangeProfilePicModal";
 import { useModal } from "../../context/Modal";
+import { thunkLoadImages } from "../../redux/images";
 
 // 1. check th params for the user Id,
 // if it matches, load the logged in user's info
@@ -14,6 +15,7 @@ import { useModal } from "../../context/Modal";
 
 function UserProfile() {
   const user = useSelector((store) => store?.session?.user);
+  const user_image = useSelector((state) => state?.images[`user_${user.id}`]);
   const watchlists = useSelector((store) => store?.watchlists);
   const animeState = useSelector((state) => state?.anime);
   const follows = useSelector((store) => store?.follows);
@@ -22,6 +24,12 @@ function UserProfile() {
   const params = useParams();
   const [hasAnimeInWatchlists, setHasAnimeInWatchlists] = useState();
   const { setModalContent } = useModal();
+
+  useEffect(() => {
+    if (user) {
+      dispatch(thunkLoadImages());
+    }
+  }, [dispatch, user]);
 
   useEffect(() => {
     if (user) dispatch(thunkLoadAnimeToWatchlists(user.id));
@@ -57,7 +65,7 @@ function UserProfile() {
   function handlePicClick(e) {
     e.preventDefault();
 
-    setModalContent(<ChangeProfilePicModal user={user}/>);
+    setModalContent(<ChangeProfilePicModal user={user} />);
   }
 
   function handleClick(e) {
@@ -74,11 +82,13 @@ function UserProfile() {
 
       <div id="user-info">
         <div className="pic&username">
-          <img className="user-profile-pic" src="" onClick={handlePicClick} />
+          <img
+            className="user-profile-pic"
+            src={user_image && user_image.image_url && user_image.image_url}
+            onClick={handlePicClick}
+          />
           <p>@{user.username}</p>
         </div>
-
-
 
         <div className="follows-btns">
           <div className="user-follow-info">

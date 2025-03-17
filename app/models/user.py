@@ -29,6 +29,12 @@ class User(db.Model, UserMixin):
         back_populates='followed_user',
     )
 
+    image = db.relationship(
+        'Image',
+        foreign_keys='Image.user_id',
+        back_populates='user'
+    )
+
     watchlists = db.relationship("Watchlist", back_populates="user", cascade="all, delete-orphan")
 
     @property
