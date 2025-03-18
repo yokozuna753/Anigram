@@ -15,7 +15,7 @@ import { thunkLoadImages } from "../../redux/images";
 
 function UserProfile() {
   const user = useSelector((store) => store?.session?.user);
-  const user_image = useSelector((state) => state?.images[`user_${user.id}`]);
+  const user_image = useSelector((state) => state?.images[`user_${user?.id}`]);
   const watchlists = useSelector((store) => store?.watchlists);
   const animeState = useSelector((state) => state?.anime);
   const follows = useSelector((store) => store?.follows);
