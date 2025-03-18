@@ -8,6 +8,7 @@ import {
 } from "../../redux/follows";
 import { thunkLoadAnimeToWatchlists } from "../../redux/watchlist";
 import { thunkLoadImages } from "../../redux/images";
+import "./OtherProfile.css";
 
 // 1. check th params for the user Id,
 //! This is for other user's profile (not the logged in user)
@@ -23,7 +24,9 @@ import { thunkLoadImages } from "../../redux/images";
 function OtherProfile() {
   const user = useSelector((store) => store.session.user);
   const otherUser = useSelector((store) => store.otherUser?.user);
-  const user_image = useSelector((state) => state?.images[`user_${otherUser?.id}`]);
+  const user_image = useSelector(
+    (state) => state?.images[`user_${otherUser?.id}`]
+  );
   const watchlists = useSelector((store) => store.watchlists);
   const follows = useSelector((store) => store.follows);
 
@@ -123,25 +126,27 @@ function OtherProfile() {
   //* remove the session user from the followers of the OTHER USER
 
   return (
-    <>
+    <div id="user-profile-container">
       {/* {user && <h1>USER PROFILE PAGE</h1>} */}
 
       <div id="user-info">
         <div className="pic&username">
-          <img className="user-profile-pic"
-          src={user_image && user_image.image_url && user_image.image_url}
+          <img
+            className="user-profile-pic"
+            src={user_image && user_image.image_url && user_image.image_url}
           ></img>
           <p>@{otherUser && otherUser.username && otherUser.username}</p>
         </div>
 
-        <div className="follows&btns">
+        <div className="follows-btns">
           <div className="user-follow-info">
             <div id="user-profile-posts">
               {watchlists && (
                 <>
                   <p>{watchlists && watchlists.posts}</p>
                   <p>
-                    {watchlists && watchlists.posts === 0 ||  watchlists && watchlists.posts > 1
+                    {(watchlists && watchlists.posts === 0) ||
+                    (watchlists && watchlists.posts > 1)
                       ? "Posts"
                       : "Post"}
                   </p>
@@ -157,7 +162,7 @@ function OtherProfile() {
                       follows["Followers"].length &&
                       follows["Followers"].length}
                   </p>
-                  <p>
+                  <p className="follows">
                     <a
                       href={`/user/${
                         otherUser && otherUser.id && otherUser.id
@@ -187,7 +192,7 @@ function OtherProfile() {
                       follows["Following"].length &&
                       follows["Following"].length}
                   </p>
-                  <p>
+                  <p className="follows">
                     <a
                       href={`/user/${
                         otherUser && otherUser.id && otherUser.id
@@ -250,6 +255,7 @@ function OtherProfile() {
                             src={`${
                               anime && anime.image_url && anime.image_url
                             }`}
+                            className="anime-images-profile"
                           />
                         </a>
                       </li>
@@ -265,18 +271,16 @@ function OtherProfile() {
           )}
         </ul>
       </div>
-    </>
+    </div>
   );
 }
 
 export default OtherProfile;
-
 
 /*
 - render the user profile image in the 'images' redux state
 - create redux & backend route to get all of the images from the DB 
 - 1. REDUX - create a thunk to load all of the images onto the redux store
 - route will load all images in images table to the redux store
-!TO-DO
     * This route will be fetched on the following: FEED & OTHER USER PROFILE & USER PROFILE
 */
