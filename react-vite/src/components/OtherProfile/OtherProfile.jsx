@@ -7,6 +7,7 @@ import {
   thunkUnfollowOtherUser,
 } from "../../redux/follows";
 import { thunkLoadAnimeToWatchlists } from "../../redux/watchlist";
+import { thunkLoadImages } from "../../redux/images";
 
 // 1. check th params for the user Id,
 //! This is for other user's profile (not the logged in user)
@@ -22,6 +23,7 @@ import { thunkLoadAnimeToWatchlists } from "../../redux/watchlist";
 function OtherProfile() {
   const user = useSelector((store) => store.session.user);
   const otherUser = useSelector((store) => store.otherUser?.user);
+  const user_image = useSelector((state) => state?.images[`user_${otherUser?.id}`]);
   const watchlists = useSelector((store) => store.watchlists);
   const follows = useSelector((store) => store.follows);
 
@@ -35,7 +37,11 @@ function OtherProfile() {
 
   // console.log("MARNIE FOLLOWS BOBBIE? ==>  ", userFollowsOtherUser);
 
-
+  useEffect(() => {
+    if (user) {
+      dispatch(thunkLoadImages());
+    }
+  }, [dispatch, user]);
 
   useEffect(() => {
     if (otherUser && otherUser.id && otherUser.id === Number(params.userId)) {
@@ -122,7 +128,9 @@ function OtherProfile() {
 
       <div id="user-info">
         <div className="pic&username">
-          <img className="user-profile-pic"></img>
+          <img className="user-profile-pic"
+          src={user_image && user_image.image_url && user_image.image_url}
+          ></img>
           <p>@{otherUser && otherUser.username && otherUser.username}</p>
         </div>
 
@@ -262,3 +270,13 @@ function OtherProfile() {
 }
 
 export default OtherProfile;
+
+
+/*
+- render the user profile image in the 'images' redux state
+- create redux & backend route to get all of the images from the DB 
+- 1. REDUX - create a thunk to load all of the images onto the redux store
+- route will load all images in images table to the redux store
+!TO-DO
+    * This route will be fetched on the following: FEED & OTHER USER PROFILE & USER PROFILE
+*/

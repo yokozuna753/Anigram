@@ -48,11 +48,4 @@ function ChangeProfilePicModal() {
 
 export default ChangeProfilePicModal;
 
-/*
-!TO-DO
-- render the user profile image in the 'images' redux state
-- create redux & backend route to get all of the images from the DB 
-  - 1. REDUX - create a thunk to load all of the images onto the redux store
-  - route will load all images in images table to the redux store
-    * This route will be fetched on the following: FEED & OTHER USER PROFILE & USER PROFILE
-*/
+
