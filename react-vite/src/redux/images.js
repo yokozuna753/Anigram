@@ -35,7 +35,7 @@ export const thunkLoadImages = () => async (dispatch) => {
 
   if (response.ok) {
     const data = await response.json();
-    console.log(" !!!!!!!    DATA - LOAD IMAGES: ", data);
+    // console.log(" !!!!!!!    DATA - LOAD IMAGES: ", data);
     await dispatch(loadImages(data));
     return data;
   }
@@ -59,9 +59,9 @@ export const thunkUploadImages =
 
     const formData = new FormData();
     formData.append("image", image_request_data);
-    for (let pair of formData.entries()) {
-      console.log(pair[0] + ": " + pair[1]);
-    }
+    // for (let pair of formData.entries()) {
+      // console.log(pair[0] + ": " + pair[1]);
+    // }
 
     const response = await fetch(`/api/images/${userId}/profile-pic/update`, {
       method: "POST",
@@ -71,7 +71,7 @@ export const thunkUploadImages =
 
     if (response.ok) {
       const data = await response.json();
-      console.log("DATA HERE ==>  ", data);
+      // console.log("DATA HERE ==>  ", data);
 
       await dispatch(uploadImages(data));
       return data;
@@ -99,7 +99,7 @@ export const thunkDeleteImage = (userId) => async (dispatch) => {
   if (response.ok) {
     try {
       const data = await response.json();
-      console.log("DATA => ", data);
+      // console.log("DATA => ", data);
       dispatch(removeImages(userId));
       return data;
     } catch (e) {
@@ -117,7 +117,7 @@ const initialState = {};
 function imagesReducer(state = initialState, action) {
   switch (action.type) {
     case LOAD_IMAGES: {
-      console.log("LOAD IMAGES REDUCER PAYLOAD =>", action.payload);
+      // console.log("LOAD IMAGES REDUCER PAYLOAD =>", action.payload);
       return {...state, ...action.payload};
     }
     case UPLOAD_IMAGES: {
@@ -128,7 +128,7 @@ function imagesReducer(state = initialState, action) {
       const newState = { ...state };
       // Delete the user's images using the correct property name
       delete newState[`user_${action.payload}`];
-      console.log("STATE AFTER REMOVE IMAGE:", newState);
+      // console.log("STATE AFTER REMOVE IMAGE:", newState);
       return newState;
     }
     default:
