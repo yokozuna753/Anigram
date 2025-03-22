@@ -7,6 +7,7 @@ import AnimeDetail from "../components/AnimeDetail/AnimeDetail";
 import UserFollowers from "../components/UserFollowers/UserFollowers";
 import UserFollowing from "../components/UserFollowing/UserFollowing";
 import ProfileType from "../components/ProfileType/ProfileType";
+import Feed from "../components/Feed/Feed";
 
 export const router = createBrowserRouter([
   {
@@ -14,7 +15,7 @@ export const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <LoginFormPage />, //! Change this to render the FEED
+        element: <Feed />, //! Change this to render the FEED
       },
       {
         path: "login",

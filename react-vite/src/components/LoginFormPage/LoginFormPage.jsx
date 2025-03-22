@@ -18,7 +18,8 @@ function LoginFormPage() {
   useEffect(() => {
     if (sessionUser) {
       dispatch(thunkLoadAnimeToWatchlists(sessionUser.id));
-      navigate(`/user/${sessionUser.id}/details`);
+      // navigate(`/user/${sessionUser.id}/details`);
+      navigate(`/`);
     }
   }, [sessionUser, navigate, dispatch]);
 
