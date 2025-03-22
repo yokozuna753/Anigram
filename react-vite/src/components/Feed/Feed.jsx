@@ -21,16 +21,16 @@ function Feed() {
     return <Navigate to="/login" />;
   }
   return (
-    <>
+    <div id="feed-container">
       <h1>Feed !!!</h1>
       <div>
-        <ul>
-          <li style={{ textDecoration: "none" }}>
+        <ul id="feed-content">
+          <li >
             <img src={feedData.anime_21.image_url} />
           </li>
         </ul>
       </div>
-    </>
+    </div>
   );
 }
 
