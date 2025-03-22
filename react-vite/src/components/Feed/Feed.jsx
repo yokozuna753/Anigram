@@ -22,7 +22,6 @@ function Feed() {
   }
   return (
     <div id="feed-container">
-      <h1>Feed !!!</h1>
       <div>
         <ul id="feed-content">
           <li >
