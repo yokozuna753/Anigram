@@ -4,11 +4,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import "./LoginForm.css";
 import { thunkLoadAnimeToWatchlists } from "../../redux/watchlist";
+import { thunkLoadImages } from "../../redux/images";
 
 function LoginFormPage() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const sessionUser = useSelector((state) => state.session.user);
+  // const user_image = useSelector((state) => state?.images[`user_${sessionUseruser?.id}`]);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
@@ -16,7 +18,8 @@ function LoginFormPage() {
   useEffect(() => {
     if (sessionUser) {
       dispatch(thunkLoadAnimeToWatchlists(sessionUser.id));
-      navigate(`/user/${sessionUser.id}/details`);
+      // navigate(`/user/${sessionUser.id}/details`);
+      navigate(`/`);
     }
   }, [sessionUser, navigate, dispatch]);
 
@@ -49,6 +52,7 @@ function LoginFormPage() {
         password: 'password',
       })
     );
+    dispatch(thunkLoadImages());
 
     // If serverResponse exists, it means there were errors
     if (serverResponse) {

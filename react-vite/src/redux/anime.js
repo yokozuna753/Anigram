@@ -11,7 +11,7 @@ const populateAnime = (payload) => ({
 });
 
 export const thunkLoadAnime = (anime_data) => async (dispatch) => {
-  console.log("        IN LOAD ANIME THUNK ===> data...", anime_data);
+  // console.log("        IN LOAD ANIME THUNK ===> data...", anime_data);
 
   // First, get the CSRF token from the endpoint
   const tokenResponse = await fetch("/api/auth/csrf-token", {
@@ -25,7 +25,7 @@ export const thunkLoadAnime = (anime_data) => async (dispatch) => {
   const { csrf_token } = await tokenResponse.json();
 
   const anime_name = encodeURIComponent(anime_data.title);
-  console.log("ANIME NAME :    ", anime_name);
+  // console.log("ANIME NAME :    ", anime_name);
   const response = await fetch(`/api/anime/${anime_name}/load`, {
     method: "POST",
     headers: { "Content-Type": "application/json", "X-CSRFToken": csrf_token },
@@ -34,7 +34,7 @@ export const thunkLoadAnime = (anime_data) => async (dispatch) => {
 
   if (response.ok) {
     const data = await response.json();
-    console.log("DATA HERE ==>  ", data);
+    // console.log("DATA HERE ==>  ", data);
     // localStorage.setItem(`anime_${data.mal_id}`, JSON.stringify(data));
 
     await dispatch(loadAnime(data));
@@ -63,7 +63,7 @@ export const thunkPopulateAnime = () => async (dispatch) => {
 
   if (response.ok) {
     const data = await response.json();
-    console.log("POPULATING  ANIME... ", data);
+    // console.log("POPULATING  ANIME... ", data);
     dispatch(populateAnime(data));
   }
 };

@@ -47,7 +47,7 @@ export const thunkLogin = (credentials) => async (dispatch) => {
 
   const { csrf_token } = await tokenResponse.json();
 
-  console.log("CSRF TOKEN FROM LOGIN THUNK:  ", csrf_token);
+  // console.log("CSRF TOKEN FROM LOGIN THUNK:  ", csrf_token);
 
   const response = await fetch("/api/auth/login", {
     method: "POST",

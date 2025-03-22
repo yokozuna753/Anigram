@@ -72,7 +72,7 @@ export const thunkAddAnimeToWatchlist =
       //   }
       // }
 
-      // // console.log('WATCHLIST ADD ANIME THUNK ---->  ', final_anime_obj);
+      // console.log('WATCHLIST ADD ANIME THUNK ---->  ', final_anime_obj);
 
       // localStorage.setItem(
       //   `anime_${final_anime_obj.mal_id}`,
@@ -113,7 +113,7 @@ export const thunkRemoveAnimeFromWatchlist =
 
     if (response.ok) {
       const data = await response.json();
-      console.log("     DATA FROM WATCHLIST REMOVE THUNK ", data);
+      // console.log("     DATA FROM WATCHLIST REMOVE THUNK ", data);
 
       if (data.error) {
         return data.error;
