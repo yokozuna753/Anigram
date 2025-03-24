@@ -7,7 +7,7 @@ const populateUsers = (payload) => {
     }
 }
 
-export const thunkPopulateUsers = () => async (dispatch) => {
+export const thunkPopulateUsers = (userId) => async (dispatch) => {
      // First, get the CSRF token from the endpoint
   const tokenResponse = await fetch("/api/auth/csrf-token", {
     credentials: "include", // Important to include credentials
@@ -18,7 +18,8 @@ export const thunkPopulateUsers = () => async (dispatch) => {
   }
 
   const { csrf_token } = await tokenResponse.json();
-  const response = await fetch("/api/feed/followed-users/anime", {
+  
+  const response = await fetch(`/api/feed/${userId}/followed-users/anime`, {
     headers: { "Content-Type": "application/json", "X-CSRFToken": csrf_token },
   });
 

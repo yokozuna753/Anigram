@@ -25,7 +25,7 @@ function Feed() {
 
   useEffect(() => {
     if (user) {
-      dispatch(thunkPopulateUsers());
+      dispatch(thunkPopulateUsers(user.id));
     }
   });
 
