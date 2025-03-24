@@ -11,6 +11,7 @@ import animeReducer from "./anime";
 import followsReducer from "./follows";
 import otherUserReducer from "./otherUser";
 import imagesReducer from "./images";
+import feedReducer from "./feed";
 
 const rootReducer = combineReducers({
   session: sessionReducer,
@@ -19,6 +20,7 @@ const rootReducer = combineReducers({
   follows: followsReducer,
   otherUser: otherUserReducer,
   images: imagesReducer,
+  feed: feedReducer,
 });
 
 let enhancer;
