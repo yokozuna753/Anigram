@@ -16,6 +16,38 @@ def users():
     return {"users": [user.to_dict() for user in users]}
 
 
+"""
+GOAL: query the backend for all users the current user follows 
+        and the anime they have in their watchlist
+
+OUTPUT: {
+    'Jujutsu Kaisen': {
+        'users':{
+            
+                user_1: {
+                    "username": 'demo',
+                    "user_id": 1,
+                    "image_url": "..."
+                }
+            
+            
+                user_2: {
+                    "username": 'marnie',
+                    "user_id": 2
+                    "image_url": "..."
+                }
+            
+        },
+        "id": 1,
+        "mal_id": 16498,
+        "image_url": "...",
+        "likes": 0,
+        "title": "Jujutsu Kaisen",
+    }
+}
+"""
+
+
 @user_routes.route("/<int:id>")
 @login_required
 def user(id):

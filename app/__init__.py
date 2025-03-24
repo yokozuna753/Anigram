@@ -11,6 +11,7 @@ from .api.routes.follows import follow
 from .api.routes.watchlists import watchlists
 from .api.routes.anime import anime
 from .api.routes.images import image_routes
+from .api.routes.feed import feed_routes
 from .seeds import seed_commands
 from .config import Config
 
@@ -37,6 +38,7 @@ app.register_blueprint(follow, url_prefix='/api/follows')
 app.register_blueprint(watchlists, url_prefix='/api/watchlists')
 app.register_blueprint(anime, url_prefix='/api/anime')
 app.register_blueprint(image_routes, url_prefix='/api/images')
+app.register_blueprint(feed_routes, url_prefix='/api/feed')
 db.init_app(app)
 Migrate(app, db)
 
