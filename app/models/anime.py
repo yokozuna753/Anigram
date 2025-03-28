@@ -38,3 +38,7 @@ class Anime(db.Model):
             'mal_url': self.mal_url,
             'synopsis':self.synopsis,
         }
+    
+    # add a users dict which will have the user id (maybe the username as well)
+        # key: user_id, val: user dict
+    # this will track the users that have this anime in their watchlist
