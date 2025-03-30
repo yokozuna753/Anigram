@@ -17,7 +17,11 @@ class UserAnime(db.Model):
     anime_id = db.Column(
         db.Integer, db.ForeignKey(add_prefix_for_prod("anime.id")), nullable=False
     )
-    
+
+    liked = db.Column(
+        db.Boolean,
+        default=True,
+    )
 
     user = db.relationship("User", back_populates="user_anime")
     anime = db.relationship("Anime", back_populates="user_anime")

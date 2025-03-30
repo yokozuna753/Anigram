@@ -1,6 +1,7 @@
 import requests
 from flask import Blueprint, jsonify
-from app.models import User, Follow
+from app.models import User, Follow, Watchlist
+from app.models.user_anime import UserAnime
 from flask_login import login_required
 
 feed_routes = Blueprint("feed", __name__)
@@ -18,7 +19,6 @@ def users_and_anime(userId):
     final_obj = {}
     all_follows = Follow.query.filter(Follow.user_id == userId).all()
 
-
     # create a dictionary to store the users the curr user follows
     user_is_following = {}
 
@@ -31,18 +31,48 @@ def users_and_anime(userId):
             "user_id": follow.followed_user_id,
         }
 
-    all_users = User.query.all()
+    all_watchlists = Watchlist.query.all()
 
-    print("ALL USERS =======>    :  ", all_users)
+    final_anime_dict = {}
 
-    anime_dict = {}
+    # loop through all the watchlists
+    for watchlist in all_watchlists:
+        # if the watchlist belongs to one of the users the curr user follows
+        if watchlist.user_id in user_is_following:
 
-    for user in all_users:
-        if user.id in user_is_following:
-            for watchlist in user.watchlists: 
-                pass
+            # and that watchlist has anime in it
+            if watchlist.anime:
+                # loop through the list of anime
+                for anime in watchlist.anime:
+                    # populate the anime dict with necessary info on anime
+                    # key: anime title, val: anime dict
+                    final_anime_dict[anime.id] = {
+                        "id": anime.id,
+                        "mal_id": anime.mal_id,
+                        "image_url": anime.image_url,
+                        "likes": anime.likes,
+                        "title": anime.title,
+                        "users": {},
+                    }
 
-    return jsonify(user_is_following)
+    users_liked_anime = UserAnime.query.filter(
+        UserAnime.anime_id.in_(final_anime_dict)
+    ).all()
+
+    for user_anime in users_liked_anime:
+        # print("LIKED: ", user_anime.user_id, user_anime.anime_id, user_anime.liked)
+
+        # check if the anime id is in the final anime dict
+        if final_anime_dict[user_anime.anime_id]:
+            # query for the user that liked the anime
+            user = User.query.filter(User.id == user_anime.user_id).first().to_dict()
+            # print("USER HERE", user)
+            # add the user to the anime's "users" dict
+            final_anime_dict[user_anime.anime_id]["users"][user["id"]] = user
+        # access the users dict of that anime
+        # display all the users that have liked that anime
+
+    return jsonify(final_anime_dict)
     # return {"message": "success reaching feed backend"}
 
 

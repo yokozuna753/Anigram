@@ -21,7 +21,7 @@ GOAL: query the backend for all users the current user follows
         and the anime they have in their watchlist
 
 OUTPUT: {
-    'Jujutsu Kaisen': {
+    1: {
         'users':{
             
                 user_1: {
