@@ -20,7 +20,7 @@ class UserAnime(db.Model):
 
     liked = db.Column(
         db.Boolean,
-        default=False,
+        default=True,
     )
 
     user = db.relationship("User", back_populates="user_anime")
