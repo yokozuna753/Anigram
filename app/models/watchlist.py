@@ -22,6 +22,6 @@ class Watchlist(db.Model):
         return {
             'id': self.id,
             'user_id': self.user_id,
-            'name': self.name,       \
+            'name': self.name,
             'anime': [item.to_dict() for item in self.anime]      
         }

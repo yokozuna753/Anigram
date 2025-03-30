@@ -37,35 +37,30 @@ img:hover{
 }
 
 .heart {
+    display: inline-block;  /* Critical for transform */
     margin-top: 10px;
-    /* transition: transform 0.2s ease-in-out; */
     font-size: 24px;
     color: gray;
+    position: relative;  /* Added to ensure transform is relative to its own position */
 }
 
 .heart:hover {
-    /* transform: scale(1.2); */
     cursor: pointer;
 }
 
-/* When liked, the heart turns red */
 .liked {
     color: red;
 }
 
-/* Temporary beat animation */
 .beating {
     animation: beat 0.3s ease-in-out;
 }
 
 @keyframes beat {
-    0% {
-        transform: scale(1);
+    0%, 100% {
+        transform: translateY(0) scale(1);
     }
     50% {
-        transform: scale(1.2);
-    }
-    100% {
-        transform: scale(1);
+        transform: translateY(-5px) scale(1.2);
     }
 }

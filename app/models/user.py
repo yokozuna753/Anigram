@@ -4,10 +4,10 @@ from flask_login import UserMixin
 
 
 class User(db.Model, UserMixin):
-    __tablename__ = 'users'
+    __tablename__ = "users"
 
     if environment == "production":
-        __table_args__ = {'schema': SCHEMA}
+        __table_args__ = {"schema": SCHEMA}
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(40), nullable=False, unique=True)
@@ -17,25 +17,27 @@ class User(db.Model, UserMixin):
 
     # Relationship to "following" (users that the user is following)
     user_is_following = db.relationship(
-        'Follow',
-        foreign_keys='Follow.user_id',  # Specify which foreign key to use
-        back_populates='user',
+        "Follow",
+        foreign_keys="Follow.user_id",  # Specify which foreign key to use
+        back_populates="user",
     )
 
     # Relationship to "followers" (users that are following the user)
     followers = db.relationship(
-        'Follow',
-        foreign_keys='Follow.followed_user_id',  # Specify which foreign key to use
-        back_populates='followed_user',
+        "Follow",
+        foreign_keys="Follow.followed_user_id",  # Specify which foreign key to use
+        back_populates="followed_user",
     )
 
     image = db.relationship(
-        'Image',
-        foreign_keys='Image.user_id',
-        back_populates='user'
+        "Image", foreign_keys="Image.user_id", back_populates="user"
     )
 
-    watchlists = db.relationship("Watchlist", back_populates="user", cascade="all, delete-orphan")
+    watchlists = db.relationship(
+        "Watchlist", back_populates="user", cascade="all, delete-orphan"
+    )
+
+    user_anime = db.relationship('UserAnime', back_populates='user')
 
     @property
     def password(self):
@@ -50,11 +52,13 @@ class User(db.Model, UserMixin):
 
     def to_dict(self):
         return {
-            'id': self.id,
-            'username': self.username,
-            'email': self.email,
-            'profile_pic_url': self.profile_pic_url,
-            'watchlists': [item.to_dict() for item in self.watchlists],
-            'followers': [follower.to_dict() for follower in self.followers],
-            'user_is_following': [followed_user.to_dict() for followed_user in self.user_is_following]
+            "id": self.id,
+            "username": self.username,
+            "email": self.email,
+            "profile_pic_url": self.profile_pic_url,
+            "watchlists": [item.to_dict() for item in self.watchlists],
+            "followers": [follower.to_dict() for follower in self.followers],
+            "user_is_following": [
+                followed_user.to_dict() for followed_user in self.user_is_following
+            ],
         }
