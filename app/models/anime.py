@@ -43,10 +43,6 @@ class Anime(db.Model):
             "trailer_url": self.trailer_url,
             "mal_url": self.mal_url,
             "synopsis": self.synopsis,
-            "users": {
-                user_anime.user.id: user_anime.user.to_dict()
-                for user_anime in self.user_anime
-            },  # User ID as key
         }
 
     # add a users dict which will have the user id (maybe the username as well)

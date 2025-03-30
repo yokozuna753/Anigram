@@ -26,16 +26,8 @@ class UserAnime(db.Model):
 def to_dict(self):
     return {
         "id": self.id,
-        "mal_id": self.mal_id,
-        "watchlist_id": self.watchlist_id,
-        "likes": self.likes,
-        "title": self.title,
-        "image_url": self.image_url,
-        "producers": self.producers,
-        "rating": self.rating,
-        "trailer_url": self.trailer_url,
-        "mal_url": self.mal_url,
-        "synopsis": self.synopsis,
+        "user_id": self.user_id,
+        "anime_id": self.anime_id,
     }
 
     # add a users dict which will have the user id (maybe the username as well)
