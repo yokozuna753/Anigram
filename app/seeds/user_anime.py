@@ -6,6 +6,8 @@ from sqlalchemy.sql import text
 # Adds a demo user, you can add other users here if you want
 def seed_user_anime():
     demo = User.query.filter_by(username="Demo").first()
+    marnie = User.query.filter_by(username="marnie").first()
+    bobbie = User.query.filter_by(username="bobbie").first()
 
     if not demo:
         print("Demo user not found! Make sure to seed users first.")
@@ -23,9 +25,23 @@ def seed_user_anime():
     ua2 = UserAnime(user_id=demo.id, anime_id=anime2.id)
     ua3 = UserAnime(user_id=demo.id, anime_id=anime3.id)
 
+    ua4 = UserAnime(user_id=marnie.id, anime_id=anime1.id)
+    ua5 = UserAnime(user_id=marnie.id, anime_id=anime2.id)
+    ua6 = UserAnime(user_id=marnie.id, anime_id=anime3.id)
+
+    ua7 = UserAnime(user_id=bobbie.id, anime_id=anime1.id)
+    ua8 = UserAnime(user_id=bobbie.id, anime_id=anime2.id)
+    ua9 = UserAnime(user_id=bobbie.id, anime_id=anime3.id)
+
     db.session.add(ua1)
     db.session.add(ua2)
     db.session.add(ua3)
+    db.session.add(ua4)
+    db.session.add(ua5)
+    db.session.add(ua6)
+    db.session.add(ua7)
+    db.session.add(ua8)
+    db.session.add(ua9)
     db.session.commit()
 
 

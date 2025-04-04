@@ -14,6 +14,9 @@ anime = Blueprint("anime", __name__)
 # - format the information as per the README
 # 4. send response back as json
 
+# !!!! TODO: Remove any anime duplicates from the database
+
+
 
 @anime.route("/<string:animeName>/load", methods=["GET", "POST"])
 @login_required

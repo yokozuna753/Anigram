@@ -46,7 +46,7 @@ def users_and_anime(userId):
                 for anime in watchlist.anime:
                     # populate the anime dict with necessary info on anime
                     # key: anime title, val: anime dict
-                    final_anime_dict[anime.id] = {
+                    final_anime_dict[anime.title] = {
                         "id": anime.id,
                         "mal_id": anime.mal_id,
                         "image_url": anime.image_url,
@@ -55,12 +55,18 @@ def users_and_anime(userId):
                         "users": {},
                     }
 
+    # grab the UserAnime
+
+    for anime_title in final_anime_dict:
+        print('ANIME TITLE: ', anime_title)
+
     users_liked_anime = UserAnime.query.filter(
         UserAnime.anime_id.in_(final_anime_dict)
     ).all()
 
+
+
     for user_anime in users_liked_anime:
-        # print("LIKED: ", user_anime.user_id, user_anime.anime_id, user_anime.liked)
 
         # check if the anime id is in the final anime dict
         if final_anime_dict[user_anime.anime_id]:
