@@ -55,26 +55,20 @@ def users_and_anime(userId):
                         "users": {},
                     }
 
-    # grab the UserAnime
+    # grab all the UserAnime
+    # 
 
-    for anime_title in final_anime_dict:
-        print('ANIME TITLE: ', anime_title)
-
-    users_liked_anime = UserAnime.query.filter(
-        UserAnime.anime_id.in_(final_anime_dict)
-    ).all()
-
-
+    users_liked_anime = UserAnime.query.all()
 
     for user_anime in users_liked_anime:
-
+        print("USER ANIME:  ", user_anime)
         # check if the anime id is in the final anime dict
-        if final_anime_dict[user_anime.anime_id]:
+        # if final_anime_dict[user_anime.anime_id]:
             # query for the user that liked the anime
-            user = User.query.filter(User.id == user_anime.user_id).first().to_dict()
+            # user = User.query.filter(User.id == user_anime.user_id).first().to_dict()
             # print("USER HERE", user)
             # add the user to the anime's "users" dict
-            final_anime_dict[user_anime.anime_id]["users"][user["id"]] = user
+            # final_anime_dict[user_anime.anime_id]["users"][user["id"]] = user
         # access the users dict of that anime
         # display all the users that have liked that anime
 
