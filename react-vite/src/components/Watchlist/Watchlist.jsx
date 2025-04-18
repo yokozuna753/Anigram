@@ -65,11 +65,11 @@ function Watchlist() {
     watchlists,
   ]);
 
-  useEffect(() => {
-    if (user && user.id && Number(params.userId) === user.id) {
-      dispatch(thunkLoadAnimeToWatchlists(user.id));
+  useEffect(() => { 
+    if (user && user.id && Number(params.userId) === user.id) { //if viewing the current user page
+      dispatch(thunkLoadAnimeToWatchlists(user.id)); // display their anime in profile
     } else if (otherUser && otherUser.id && Number(params.userId) === otherUser.id){
-      dispatch(thunkLoadAnimeToWatchlists(otherUser.id))
+      dispatch(thunkLoadAnimeToWatchlists(otherUser.id)) // else, display the other user's anime
     }
   }, [params.userId,otherUser,dispatch, user]);
 
@@ -125,14 +125,18 @@ function Watchlist() {
     setShowChangeWatchlistDropdown(true);
   }
 
-  function handleChangeWatchlist(userId, newWatchlistId, animeMalId) {
+  async function handleChangeWatchlist(userId, newWatchlistId, animeMalId) {
     // Find the current anime object from the current watchlist
     const currentWatchlist = Object.values(watchlists).find(watchlist => watchlist.id === watchlistIdToView);
+    console.log('CURRENT WATCHLIST VARIABLE: ', currentWatchlist);
     const animeToMove = currentWatchlist.anime.find(anime => anime.mal_id === animeMalId);
-    
+    console.log('ANIME TO MOVE: ', animeToMove);
+
     // First remove from current watchlist
     let animeName = encodeURIComponent(animeToMove.title)
-    dispatch(thunkRemoveAnimeFromWatchlist(userId, watchlistIdToView, animeName));
+    // dispatch(thunkRemoveAnimeFromWatchlist(userId, watchlistIdToView, animeName));
+    setWatchlistIdToDelete(watchlistIdToView)
+    setAnimeToDeleteFromWatchlist(animeName);
     
     // Then add to new watchlist
     dispatch(thunkAddAnimeToWatchlist(userId, newWatchlistId, animeToMove));

@@ -33,16 +33,21 @@ def remove_anime(userId, watchlistId, animeName):
     # Find and delete the anime
     for item in foundWatchlist.anime:
         if item.title == animeName:
+            print('ANIME TITLE: ', item.title, 'ANIME NAME: ', animeName)
             foundAnime = item
+
+            # submit the deletion in the database
             db.session.delete(foundAnime)
             break
 
     if not foundAnime:
         return jsonify({"error": "Anime not found in the watchlist"}), 404
 
+    # commit the changes (deleted anime from watchlist)
     db.session.commit()
 
-    watchlists = Watchlist.query.filter(Watchlist.id == int(watchlistId)).all()
+    # grab all the updated watchlists from the user
+    watchlists = Watchlist.query.filter(Watchlist.user_id == int(userId)).all()
 
     # Return serialized watchlists data
     watchlists_data = []

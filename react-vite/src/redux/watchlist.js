@@ -1,8 +1,9 @@
 const ADD_ANIME = "watchlists/addAnime";
 const REMOVE_ANIME = "watchlists/removeAnime";
 const LOAD_ANIME = "watchlists/loadWatchlists";
+const MOVE_ANIME = "watchlists/moveAnimeToOtherWatchlist";
 
-const addAnimeToWatchlist = (payload) => ({
+const addAnimeToOtherWatchlist = (payload) => ({
   type: ADD_ANIME,
   payload,
 });
@@ -16,6 +17,11 @@ const loadWatchlists = (payload) => ({
   type: LOAD_ANIME,
   payload,
 });
+
+const moveAnimeToOtherWatchlist = (payload) => ({
+  type: MOVE_ANIME,
+  payload
+})
 
 export const thunkAddAnimeToWatchlist =
   (userId, watchlistId, anime_obj) => async (dispatch) => {
@@ -100,6 +106,7 @@ export const thunkRemoveAnimeFromWatchlist =
     }
 
     const { csrf_token } = await tokenResponse.json();
+
     const response = await fetch(
       `/api/watchlists/${userId}/${watchlistId}/${animeName}`,
       {
@@ -177,10 +184,27 @@ function watchlistReducer(state = initialState, action) {
         });
       }
       watchlist_obj.posts = posts;
+      console.log('PAYLOAD FROM REMOVE ANIME: \n', action.payload);
 
       return { ...state, ...watchlist_obj };
     }
     case ADD_ANIME: {
+      // make a new object
+      // iterate through action.payload
+      // key - watchlist name
+      // val - watchlist
+      let watchlist_obj = {};
+      let posts = 0;
+      for (let watchlist of action.payload) {
+        watchlist_obj[watchlist.name] = watchlist;
+        watchlist.anime.forEach(() => {
+          posts += 1;
+        });
+      }
+      watchlist_obj.posts = posts;
+      return { ...state, ...watchlist_obj };
+    }
+    case MOVE_ANIME: {
       // make a new object
       // iterate through action.payload
       // key - watchlist name
