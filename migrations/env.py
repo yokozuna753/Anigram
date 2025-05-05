@@ -7,7 +7,7 @@ environment = os.getenv("FLASK_ENV")
 SCHEMA = os.environ.get('SCHEMA')
 
 # Import the SCHEMA configuration from the Flask app context
-# SCHEMA = current_app.config.get('SCHEMA', 'anigram_schema')  # Default to 'anigram_schema' if SCHEMA isn't set
+SCHEMA = current_app.config.get('SCHEMA', 'anigram_schema')  # Default to 'anigram_schema' if SCHEMA isn't set
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

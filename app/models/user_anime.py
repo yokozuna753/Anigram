@@ -10,6 +10,10 @@ from datetime import datetime
 class UserAnime(db.Model):
     __tablename__ = "user_anime"
 
+    if environment == "production":
+        __table_args__ = {"schema": SCHEMA}
+
+
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(
         db.Integer, db.ForeignKey(add_prefix_for_prod("users.id")), nullable=False
@@ -27,12 +31,12 @@ class UserAnime(db.Model):
     anime = db.relationship("Anime", back_populates="user_anime")
 
 
-def to_dict(self):
-    return {
-        "id": self.id,
-        "user_id": self.user_id,
-        "anime_id": self.anime_id,
-    }
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "user_id": self.user_id,
+            "anime_id": self.anime_id,
+        }
 
     # add a users dict which will have the user id (maybe the username as well)
     # key: user_id, val: user dict

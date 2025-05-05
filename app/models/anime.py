@@ -10,6 +10,9 @@ class Anime(db.Model):
     if environment == "production":
         __table_args__ = {"schema": SCHEMA}
 
+    if environment == "production":
+        __table_args__ = {"schema": SCHEMA}
+
     id = db.Column(db.Integer, primary_key=True)
     mal_id = db.Column(db.Integer, nullable=False)
     watchlist_id = db.Column(
