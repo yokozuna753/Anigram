@@ -3,36 +3,73 @@ const REMOVE_ANIME = "watchlists/removeAnime";
 const LOAD_ANIME = "watchlists/loadWatchlists";
 const MOVE_ANIME = "watchlists/moveAnimeToOtherWatchlist";
 
-const addAnimeToOtherWatchlist = (payload) => ({
+const addAnimeToWatchlist = (payload) => ({
   type: ADD_ANIME,
   payload,
 });
+
 
 const updateWatchlists = (payload) => ({
   type: REMOVE_ANIME,
   payload,
 });
 
+
 const loadWatchlists = (payload) => ({
   type: LOAD_ANIME,
   payload,
 });
 
+
 const moveAnimeToOtherWatchlist = (payload) => ({
   type: MOVE_ANIME,
-  payload
-})
+  payload,
+});
+
+
+export const thunkMoveAnimeToOtherWatchlist = 
+(userId, watchlistIdRemoveAnime, watchlistIdAddAnime, anime_obj) => async (dispatch) => {
+  
+  // First, get the CSRF token from the endpoint
+  const tokenResponse = await fetch("/api/auth/csrf-token", {
+    credentials: "include", // Important to include credentials
+  });
+
+  if (!tokenResponse.ok) {
+    return { errors: { message: "Could not fetch CSRF token" } };
+  }
+
+  const { csrf_token } = await tokenResponse.json();
+
+  const response = await fetch(
+    `/api/watchlists/${userId}/${watchlistIdRemoveAnime}/${watchlistIdAddAnime}`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": csrf_token,
+      },
+      body: JSON.stringify(anime_obj),
+    }
+  );
+
+  if (response.ok) {
+    const data = await response.json();
+
+    console.log('Move Anime Thunk data => ', data);
+
+    if (data.error) {
+      return data.error;
+    }
+
+    await dispatch(moveAnimeToOtherWatchlist(data));
+  }
+  return response;
+}
+
 
 export const thunkAddAnimeToWatchlist =
   (userId, watchlistId, anime_obj) => async (dispatch) => {
-    // console.log(
-    //   "userId ==>  ",
-    //   userId,
-    //   "watchlistId: ",
-    //   watchlistId,
-    //   "anime object: ",
-    //   anime_obj
-    // );
 
     // add the anime to the watchlist
     // First, get the CSRF token from the endpoint
@@ -69,21 +106,6 @@ export const thunkAddAnimeToWatchlist =
 
     if (response.ok) {
       const data = await response.json();
-      // let final_anime_obj;
-      // for (let watchlist of data) {
-      //   for (let anime of watchlist.anime) {
-      //     if (anime.title === anime_obj.title) {
-      //       final_anime_obj = anime;
-      //     }
-      //   }
-      // }
-
-      // console.log('WATCHLIST ADD ANIME THUNK ---->  ', final_anime_obj);
-
-      // localStorage.setItem(
-      //   `anime_${final_anime_obj.mal_id}`,
-      //   JSON.stringify(final_anime_obj)
-      // );
 
       if (data.error) {
         return data.error;
@@ -93,6 +115,7 @@ export const thunkAddAnimeToWatchlist =
     }
     return response;
   };
+
 
 export const thunkRemoveAnimeFromWatchlist =
   (userId, watchlistId, animeName) => async (dispatch) => {
@@ -158,7 +181,9 @@ export const thunkLoadAnimeToWatchlists = (userId) => async (dispatch) => {
   return response;
 };
 
+
 const initialState = {};
+
 
 function watchlistReducer(state = initialState, action) {
   switch (action.type) {
