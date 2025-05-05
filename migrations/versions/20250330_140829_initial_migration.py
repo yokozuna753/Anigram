@@ -26,7 +26,8 @@ def upgrade():
     sa.Column('profile_pic_url', sa.String(length=1000), nullable=True),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('email'),
-    sa.UniqueConstraint('username')
+    sa.UniqueConstraint('username'),
+    schema='anigram_schema'
     )
     op.create_table('follows',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -36,7 +37,8 @@ def upgrade():
     sa.Column('followed_user_id', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['followed_user_id'], ['users.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
-    sa.PrimaryKeyConstraint('id')
+    sa.PrimaryKeyConstraint('id'),
+    schema='anigram_schema'
     )
     op.create_table('images',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -44,7 +46,8 @@ def upgrade():
     sa.Column('user_id', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('user_id')
+    sa.UniqueConstraint('user_id'),
+    schema='anigram_schema'
     )
     op.create_table('watchlists',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -53,7 +56,8 @@ def upgrade():
     sa.Column('created_at', sa.DateTime(), nullable=True),
     sa.Column('updated_at', sa.DateTime(), nullable=True),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
-    sa.PrimaryKeyConstraint('id')
+    sa.PrimaryKeyConstraint('id'),
+    schema='anigram_schema'
     )
     op.create_table('anime',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -68,7 +72,8 @@ def upgrade():
     sa.Column('mal_url', sa.String(length=300), nullable=False),
     sa.Column('synopsis', sa.String(length=7000), nullable=True),
     sa.ForeignKeyConstraint(['watchlist_id'], ['watchlists.id'], ),
-    sa.PrimaryKeyConstraint('id')
+    sa.PrimaryKeyConstraint('id'),
+    schema='anigram_schema'
     )
     op.create_table('user_anime',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -77,7 +82,8 @@ def upgrade():
     sa.Column('liked', sa.Boolean(), nullable=True),
     sa.ForeignKeyConstraint(['anime_id'], ['anime.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
-    sa.PrimaryKeyConstraint('id')
+    sa.PrimaryKeyConstraint('id'),
+    schema='anigram_schema'
     )
     # ### end Alembic commands ###
 
