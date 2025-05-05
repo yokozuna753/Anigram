@@ -19,30 +19,31 @@ def remove_anime(userId, watchlistId, animeName):
         Watchlist.user_id == int(userId), Watchlist.id == int(watchlistId)
     ).first()
 
-    foundWatchlist = None
-    foundAnime = None
-
     # Find the specific watchlist
 
-    if watchlist.id == watchlistId:
-        foundWatchlist = watchlist
-
-    if not foundWatchlist:
+    if not watchlist or watchlist.id != watchlistId:
         return jsonify({"error": "Watchlist not found"}), 404
 
+
+    foundAnime = None
     # Find and delete the anime
-    for item in foundWatchlist.anime:
+    # ! I also need to delete the anime from the user_anime table
+    for item in watchlist.anime:
         if item.title == animeName:
+            print('ANIME TITLE: ', item.title, 'ANIME NAME: ', animeName)
             foundAnime = item
-            db.session.delete(foundAnime)
             break
 
+    print("WE MADE IT TO THE BACKEND !!!")
     if not foundAnime:
         return jsonify({"error": "Anime not found in the watchlist"}), 404
-
+    
+    foundAnime.watchlist_id = None
+    # commit the changes (deleted anime from watchlist)
     db.session.commit()
 
-    watchlists = Watchlist.query.filter(Watchlist.id == int(watchlistId)).all()
+    # grab all the updated watchlists from the user
+    watchlists = Watchlist.query.filter(Watchlist.user_id == int(userId)).all()
 
     # Return serialized watchlists data
     watchlists_data = []
@@ -177,3 +178,86 @@ def load_anime(userId):
         watchlists_data.append(watchlist_data)
 
     return jsonify(watchlists_data)
+
+
+# @watchlists.route(
+#     "/<int:userId>/<int:watchlistIdRemoveAnime>/<int:watchlistIdAddAnime>", methods=["PUT"]
+# )
+# @login_required
+# def move_anime(userId, watchlistIdRemoveAnime, watchlistIdAddAnime):
+#     """
+#     PUT: remove an anime from a specific watchlist, 
+#     add it to another watchlist,
+#     and return the updated watchlists
+#     """
+
+#     anime_obj = request.get_json()
+#     # log the variables to make sure they are correct
+#     # print("user id: ", userId,
+#     #       "\n watchlist id to remove anime: ", watchlistIdRemoveAnime,
+#     #       "\n watchlist id to add anime: ", watchlistIdAddAnime,
+#     #       "\n anime object: ", anime_obj)
+
+#     # 1. remove the anime from the current watchlist
+#     old_watchlist = Watchlist.query.filter(Watchlist.id == watchlistIdRemoveAnime).first()
+#     new_watchlist = Watchlist.query.filter(Watchlist.id == watchlistIdAddAnime).first()
+#     anime = Anime.query.get(anime_obj['id'])
+
+#     if not old_watchlist or not new_watchlist or not anime:
+#         return jsonify({"error": "Invalid watchlist or anime"}), 404
+    
+#     if anime in old_watchlist.anime:
+#         old_watchlist.anime.remove(anime)
+
+#     if anime not in new_watchlist.anime:
+#         new_watchlist.anime.append(anime)
+
+#     db.session.commit()
+
+#     updated_watchlists = Watchlist.query.filter(Watchlist.user_id == userId).all()
+
+
+#     return jsonify(
+#         [watchlist.to_dict() for watchlist in updated_watchlists]
+#     )
+
+
+@watchlists.route(
+    "/<int:userId>/<int:watchlistIdRemoveAnime>/<int:watchlistIdAddAnime>", methods=["PUT"]
+)
+@login_required
+def move_anime(userId, watchlistIdRemoveAnime, watchlistIdAddAnime):
+    """
+    PUT: remove an anime from a specific watchlist, 
+    add it to another watchlist,
+    and return the updated watchlists
+    """
+
+    anime_obj = request.get_json()
+    # log the variables to make sure they are correct
+    # print("user id: ", userId,
+    #       "\n watchlist id to remove anime: ", watchlistIdRemoveAnime,
+    #       "\n watchlist id to add anime: ", watchlistIdAddAnime,
+    #       "\n anime object: ", anime_obj)
+
+    # 1. remove the anime from the current watchlist
+    old_watchlist = Watchlist.query.filter(Watchlist.id == watchlistIdRemoveAnime).first()
+    new_watchlist = Watchlist.query.filter(Watchlist.id == watchlistIdAddAnime).first()
+    anime = Anime.query.get(anime_obj['id'])
+
+    if not old_watchlist or not new_watchlist or not anime:
+        return jsonify({"error": "Invalid watchlist or anime"}), 404
+    
+    
+    # Change the watchlist association of the anime
+    anime.watchlist_id = watchlistIdAddAnime  # This assumes you have a watchlist_id field in your Anime model
+    
+    db.session.commit()
+
+    updated_watchlists = Watchlist.query.filter(Watchlist.user_id == userId).all()
+
+
+    return jsonify(
+        [watchlist.to_dict() for watchlist in updated_watchlists]
+    )
+    

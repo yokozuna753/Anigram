@@ -4,7 +4,7 @@ import { Navigate, useParams } from "react-router-dom";
 import {
   thunkRemoveAnimeFromWatchlist,
   thunkLoadAnimeToWatchlists,
-  thunkAddAnimeToWatchlist
+  thunkMoveAnimeToOtherWatchlist
 } from "../../redux/watchlist";
 import { useDispatch } from "react-redux";
 import { thunkLoadOtherUser, thunkRemoveOtherUser } from "../../redux/otherUser";
@@ -30,6 +30,8 @@ function Watchlist() {
   const dispatch = useDispatch();
   const params = useParams();
 
+
+// ! check if the user is viewing their watchlist or another user's watchlist
   useEffect(() => {
     if (user && user.id === Number(params.userId)) {
       setIsUserSelf(true);
@@ -38,6 +40,8 @@ function Watchlist() {
     }
   }, [user, params.userId]);
 
+  
+  // ! if the watchlists dont belong to the current user, show the other user's info
   useEffect(() => {
     if(user && user.id && user.id !== Number(params.userId)){
       dispatch(thunkLoadOtherUser(Number(params.userId)));
@@ -47,6 +51,8 @@ function Watchlist() {
     }
   },[user,dispatch,params.userId])
 
+
+  // ! if no watchlist is selected, show the content of the first watchlist
   useEffect(() => {
     if (
       watchlistIdToView === undefined &&
@@ -65,14 +71,18 @@ function Watchlist() {
     watchlists,
   ]);
 
-  useEffect(() => {
-    if (user && user.id && Number(params.userId) === user.id) {
-      dispatch(thunkLoadAnimeToWatchlists(user.id));
+
+  // ! if viewing the current user page, display their anime in profile, else, display the other user's anime
+  useEffect(() => { 
+    if (user && user.id && Number(params.userId) === user.id) { 
+      dispatch(thunkLoadAnimeToWatchlists(user.id)); 
     } else if (otherUser && otherUser.id && Number(params.userId) === otherUser.id){
-      dispatch(thunkLoadAnimeToWatchlists(otherUser.id))
+      dispatch(thunkLoadAnimeToWatchlists(otherUser.id)) 
     }
   }, [params.userId,otherUser,dispatch, user]);
 
+
+  // ! delete an anime from a watchlist so the user can move it to another
   useEffect(() => {
     if (animeToDeleteFromWatchlist && watchlistIdToDelete && isUserSelf) {
       let animeName = encodeURIComponent(animeToDeleteFromWatchlist)
@@ -93,7 +103,7 @@ function Watchlist() {
     isUserSelf
   ]);
 
-  // Handle clicks outside the dropdown
+  //! Handle clicks outside the dropdown
   useEffect(() => {
     function handleClickOutside(event) {
       if (
@@ -115,6 +125,7 @@ function Watchlist() {
     setEdit(!edit);
   }
 
+  // !  show the dropdown for changing the watchlists
   function handleShowChangeWatchlistDropdown(e, malId) {
     const buttonRect = e.currentTarget.getBoundingClientRect();
     setChangeWatchlistDropdownPosition({
@@ -125,17 +136,23 @@ function Watchlist() {
     setShowChangeWatchlistDropdown(true);
   }
 
-  function handleChangeWatchlist(userId, newWatchlistId, animeMalId) {
+
+  // ! change the selected anime to another watchlist
+  async function handleChangeWatchlist(userId, newWatchlistId, animeMalId) {
     // Find the current anime object from the current watchlist
     const currentWatchlist = Object.values(watchlists).find(watchlist => watchlist.id === watchlistIdToView);
+    console.log('CURRENT WATCHLIST VARIABLE: ', currentWatchlist);
     const animeToMove = currentWatchlist.anime.find(anime => anime.mal_id === animeMalId);
-    
+    console.log('ANIME TO MOVE: ', animeToMove);
+
     // First remove from current watchlist
     let animeName = encodeURIComponent(animeToMove.title)
-    dispatch(thunkRemoveAnimeFromWatchlist(userId, watchlistIdToView, animeName));
+    // dispatch(thunkRemoveAnimeFromWatchlist(userId, watchlistIdToView, animeName));
+    setWatchlistIdToDelete(watchlistIdToView)
+    setAnimeToDeleteFromWatchlist(animeName);
     
     // Then add to new watchlist
-    dispatch(thunkAddAnimeToWatchlist(userId, newWatchlistId, animeToMove));
+    dispatch(thunkMoveAnimeToOtherWatchlist(userId, watchlistIdToView, newWatchlistId, animeToMove));
     
     // Reset state
     setAnimeMalIdToChangeWatchlists(undefined);
