@@ -40,33 +40,30 @@
   color: #333;
 }
 
-.notes-toggle-button {
-  background: #6c5ce7;
-  color: white;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 14px;
-  transition: background-color 0.2s;
-}
-
-.notes-toggle-button:hover {
-  background: #5f4dd1;
-}
-
-.note-form {
-  margin-bottom: 20px;
+.notes-content {
   display: flex;
-  gap: 12px;
+  flex-direction: column;
+  height: calc(100% - 60px); /* Subtract header height */
+  overflow: hidden;
+}
+
+.note-form-container {
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  margin-bottom: 20px;
   flex-shrink: 0;
 }
 
+.note-form {
+  display: flex;
+  gap: 12px;
+}
+
 .note-form textarea {
-  width: 80%;
+  flex: 1;
   min-height: 80px;
   padding: 12px;
-  margin-bottom: 0;
   border: 1px solid #ddd;
   border-radius: 4px;
   resize: vertical;
@@ -74,28 +71,15 @@
   line-height: 1.5;
 }
 
-.note-form textarea:focus {
-  outline: none;
-  border-color: #6c5ce7;
-  box-shadow: 0 0 0 2px rgba(108, 92, 231, 0.1);
-}
-
 .note-form button {
-  width: 20%;
-  height: 80px;
+  width: 100px;
   background-color: #6c5ce7;
   color: white;
-  padding: 0 16px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   font-size: 14px;
   transition: background-color 0.2s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  align-self: center;
-  white-space: nowrap;
 }
 
 .note-form button:hover:not(:disabled) {
@@ -107,32 +91,16 @@
   cursor: not-allowed;
 }
 
+.notes-list-container {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
 .notes-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+  height: 100%;
   overflow-y: auto;
   padding-right: 10px;
-  flex-grow: 1;
-}
-
-/* Add a custom scrollbar for better aesthetics */
-.notes-list::-webkit-scrollbar {
-  width: 8px;
-}
-
-.notes-list::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 4px;
-}
-
-.notes-list::-webkit-scrollbar-thumb {
-  background: #c5c5c5;
-  border-radius: 4px;
-}
-
-.notes-list::-webkit-scrollbar-thumb:hover {
-  background: #a8a8a8;
 }
 
 .note-item {
@@ -140,6 +108,7 @@
   padding: 15px;
   border-radius: 4px;
   border: 1px solid #eee;
+  margin-bottom: 12px;
 }
 
 .note-item p {
@@ -205,4 +174,38 @@
   bottom: 0;
   background: rgba(0, 0, 0, 0.5);
   z-index: -1;
+}
+
+/* Custom scrollbar styling */
+.notes-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.notes-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.notes-list::-webkit-scrollbar-thumb {
+  background: #c5c5c5;
+  border-radius: 4px;
+}
+
+.notes-list::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+.notes-toggle-button {
+  background: #6c5ce7;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.notes-toggle-button:hover {
+  background: #5f4dd1;
 }
