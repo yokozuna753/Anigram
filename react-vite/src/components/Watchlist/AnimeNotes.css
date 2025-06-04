@@ -43,7 +43,7 @@
 .notes-content {
   display: flex;
   flex-direction: column;
-  height: calc(100% - 60px); /* Subtract header height */
+  height: calc(100% - 60px);
   overflow: hidden;
 }
 
@@ -57,11 +57,12 @@
 
 .note-form {
   display: flex;
+  flex-direction: column;
   gap: 12px;
 }
 
 .note-form textarea {
-  flex: 1;
+  width: 100%;
   min-height: 80px;
   padding: 12px;
   border: 1px solid #ddd;
@@ -72,7 +73,8 @@
 }
 
 .note-form button {
-  width: 100px;
+  align-self: flex-end;
+  padding: 8px 16px;
   background-color: #6c5ce7;
   color: white;
   border: none;
@@ -116,42 +118,62 @@
   font-size: 14px;
   line-height: 1.5;
   color: #333;
+  white-space: pre-wrap;
 }
 
 .note-meta {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  gap: 8px;
   margin-top: 10px;
   font-size: 0.9em;
   color: #666;
 }
 
-.delete-note {
-  background-color: #ff4757;
-  color: white;
+.note-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.note-actions button {
+  padding: 6px 12px;
   border: none;
-  padding: 5px 10px;
   border-radius: 4px;
   cursor: pointer;
   font-size: 12px;
   transition: background-color 0.2s;
 }
 
-.delete-note:hover:not(:disabled) {
-  background-color: #ff3344;
+.note-actions button:first-child {
+  background-color: #28a745;
+  color: white;
 }
 
-.delete-note:disabled {
-  background-color: #cccccc;
+.note-actions button:first-child:hover:not(:disabled) {
+  background-color: #218838;
+}
+
+.note-actions button:last-child {
+  background-color: #dc3545;
+  color: white;
+}
+
+.note-actions button:last-child:hover:not(:disabled) {
+  background-color: #c82333;
+}
+
+.note-actions button:disabled {
+  opacity: 0.7;
   cursor: not-allowed;
 }
 
 .error {
-  color: #ff4757;
+  color: #dc3545;
   margin-bottom: 12px;
   padding: 10px;
-  background-color: #ffe5e7;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
   border-radius: 4px;
   font-size: 14px;
 }
@@ -162,6 +184,53 @@
   padding: 20px;
   color: #666;
   font-size: 14px;
+}
+
+.edit-form {
+  margin-top: 10px;
+}
+
+.edit-form textarea {
+  width: 100%;
+  min-height: 80px;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  resize: vertical;
+  font-size: 14px;
+}
+
+.edit-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.edit-buttons button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: background-color 0.2s;
+}
+
+.edit-buttons button:first-child {
+  background-color: #28a745;
+  color: white;
+}
+
+.edit-buttons button:first-child:hover:not(:disabled) {
+  background-color: #218838;
+}
+
+.edit-buttons button:last-child {
+  background-color: #6c757d;
+  color: white;
+}
+
+.edit-buttons button:last-child:hover:not(:disabled) {
+  background-color: #5a6268;
 }
 
 /* Add overlay when notes are open */

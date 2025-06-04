@@ -1,67 +1,66 @@
 import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import "./AnimeNotes.css";
 
-export default function AnimeNotes({ userId, animeId, animeTitle }) {
+const API_URL = "https://ubfbnk5tb4.execute-api.us-east-1.amazonaws.com/prod";
+
+const AnimeNotes = ({ animeId, animeTitle }) => {
   const [notes, setNotes] = useState([]);
   const [newNote, setNewNote] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [isAddingNote, setIsAddingNote] = useState(false);
-  const [isDeletingNote, setIsDeletingNote] = useState(false);
+  const [editingNote, setEditingNote] = useState(null);
+  const [editContent, setEditContent] = useState("");
   const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
-  const API_URL =
-    "https://durz7obem4.execute-api.us-east-1.amazonaws.com/prod/notes";
+  const sessionUser = useSelector((state) => state.session.user);
+  const userId = sessionUser?.id.toString();
 
-  useEffect(() => {
-    if (!userId || !animeId) {
-      setError("Missing required userId or animeId");
-      return;
-    }
-    if (isOpen) {
-      fetchNotes();
-    }
-  }, [userId, animeId, isOpen]);
-
+  // Fetch notes
   const fetchNotes = async () => {
-    try {
-      setIsLoading(true);
-      setError(null);
+    if (!userId || !animeId) return;
 
+    setIsLoading(true);
+    setError(null);
+
+    try {
       const response = await fetch(
-        `${API_URL}?userId=${userId}&animeId=${animeId}`
+        `${API_URL}/notes?userId=${userId}&animeId=${animeId}`,
+        {
+          headers: {
+            Origin: window.location.origin,
+          },
+        }
       );
 
       if (!response.ok) {
-        const errorData = await response.json().catch(() => null);
-        throw new Error(
-          errorData?.message || `HTTP error! status: ${response.status}`
-        );
+        throw new Error("Failed to fetch notes");
       }
 
       const data = await response.json();
-      setNotes(Array.isArray(data) ? data : []);
+      setNotes(data);
     } catch (err) {
+      setError("Failed to load notes. Please try again later.");
       console.error("Error fetching notes:", err);
-      setError(err.message || "Failed to fetch notes. Please try again.");
     } finally {
       setIsLoading(false);
     }
   };
 
-  const addNote = async (e) => {
+  // Create note
+  const createNote = async (e) => {
     e.preventDefault();
-    if (!newNote.trim()) {
-      setError("Note content cannot be empty");
-      return;
-    }
+    if (!newNote.trim() || !userId || !animeId) return;
+
+    setIsLoading(true);
+    setError(null);
 
     try {
-      setIsAddingNote(true);
-      const response = await fetch(API_URL, {
+      const response = await fetch(`${API_URL}/notes`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Origin: window.location.origin,
         },
         body: JSON.stringify({
           userId,
@@ -71,41 +70,113 @@ export default function AnimeNotes({ userId, animeId, animeTitle }) {
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Failed to add note");
+        throw new Error("Failed to create note");
       }
 
-      const addedNote = await response.json();
-      setNotes((prevNotes) => [addedNote, ...prevNotes]);
+      const data = await response.json();
+      setNotes((prev) => [...prev, data.data]);
       setNewNote("");
     } catch (err) {
-      setError(err.message);
+      setError("Failed to create note. Please try again.");
+      console.error("Error creating note:", err);
     } finally {
-      setIsAddingNote(false);
+      setIsLoading(false);
     }
   };
 
-  const deleteNote = async (noteId) => {
+  // Update note
+  const updateNote = async (noteId) => {
+    if (!editContent.trim() || !userId || !animeId) return;
+
+    setIsLoading(true);
+    setError(null);
+
     try {
-      setIsDeletingNote(true);
+      const response = await fetch(`${API_URL}/notes`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Origin: window.location.origin,
+        },
+        body: JSON.stringify({
+          userId,
+          animeId,
+          noteId,
+          content: editContent.trim(),
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update note");
+      }
+
+      const data = await response.json();
+      setNotes((prev) =>
+        prev.map((note) => (note.noteId === noteId ? data.data : note))
+      );
+      setEditingNote(null);
+      setEditContent("");
+    } catch (err) {
+      setError("Failed to update note. Please try again.");
+      console.error("Error updating note:", err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Delete note
+  const deleteNote = async (noteId) => {
+    if (!window.confirm("Are you sure you want to delete this note?")) return;
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
       const response = await fetch(
-        `${API_URL}?userId=${userId}&noteId=${noteId}`,
+        `${API_URL}/notes?userId=${userId}&animeId=${animeId}&noteId=${noteId}`,
         {
           method: "DELETE",
+          headers: {
+            Origin: window.location.origin,
+          },
         }
       );
 
-      if (!response.ok) throw new Error("Failed to delete note");
+      if (!response.ok) {
+        throw new Error("Failed to delete note");
+      }
 
-      setNotes((prevNotes) =>
-        prevNotes.filter((note) => note.noteId !== noteId)
-      );
+      setNotes((prev) => prev.filter((note) => note.noteId !== noteId));
     } catch (err) {
-      setError(err.message);
+      setError("Failed to delete note. Please try again.");
+      console.error("Error deleting note:", err);
     } finally {
-      setIsDeletingNote(false);
+      setIsLoading(false);
     }
   };
+
+  // Start editing a note
+  const startEdit = (note) => {
+    setEditingNote(note.noteId);
+    setEditContent(note.content);
+  };
+
+  // Cancel editing
+  const cancelEdit = () => {
+    setEditingNote(null);
+    setEditContent("");
+  };
+
+  // Load notes on component mount and when userId/animeId changes
+  useEffect(() => {
+    if (isOpen) {
+      fetchNotes();
+    }
+  }, [userId, animeId, isOpen]);
+
+  if (!userId) {
+    return <div className="anime-notes">Please log in to add notes.</div>;
+  }
 
   if (!isOpen) {
     return (
@@ -128,45 +199,86 @@ export default function AnimeNotes({ userId, animeId, animeTitle }) {
 
       <div className="notes-content">
         <div className="note-form-container">
-          <form onSubmit={addNote} className="note-form">
+          <form onSubmit={createNote} className="note-form">
             <textarea
               value={newNote}
               onChange={(e) => setNewNote(e.target.value)}
-              placeholder="Add a note..."
+              placeholder="Write a new note..."
+              disabled={isLoading}
               required
             />
-            <button type="submit" disabled={isAddingNote}>
-              {isAddingNote ? "Adding..." : "Add Note"}
+            <button type="submit" disabled={isLoading || !newNote.trim()}>
+              Add Note
             </button>
           </form>
         </div>
 
         <div className="notes-list-container">
-          {isLoading ? (
-            <div className="loading">Loading notes...</div>
-          ) : notes.length === 0 ? (
+          {isLoading && <div className="loading">Loading...</div>}
+
+          {!isLoading && notes.length === 0 && (
             <div className="no-notes">No notes yet</div>
-          ) : (
-            <div className="notes-list">
-              {notes.map((note) => (
-                <div key={note.noteId} className="note-item">
-                  <p>{note.content}</p>
-                  <div className="note-meta">
-                    <span>{new Date(note.createdAt).toLocaleDateString()}</span>
-                    <button
-                      onClick={() => deleteNote(note.noteId)}
-                      disabled={isDeletingNote}
-                      className="delete-note"
-                    >
-                      Delete
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
           )}
+
+          <div className="notes-list">
+            {notes.map((note) => (
+              <div key={note.noteId} className="note-item">
+                {editingNote === note.noteId ? (
+                  <div className="edit-form">
+                    <textarea
+                      value={editContent}
+                      onChange={(e) => setEditContent(e.target.value)}
+                      disabled={isLoading}
+                    />
+                    <div className="edit-buttons">
+                      <button
+                        onClick={() => updateNote(note.noteId)}
+                        disabled={isLoading || !editContent.trim()}
+                      >
+                        Save
+                      </button>
+                      <button onClick={cancelEdit} disabled={isLoading}>
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    <p>{note.content}</p>
+                    <div className="note-meta">
+                      <span>
+                        {new Date(note.createdAt).toLocaleDateString()}
+                      </span>
+                      {note.updatedAt !== note.createdAt && (
+                        <span>
+                          Updated:{" "}
+                          {new Date(note.updatedAt).toLocaleDateString()}
+                        </span>
+                      )}
+                      <div className="note-actions">
+                        <button
+                          onClick={() => startEdit(note)}
+                          disabled={isLoading}
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => deleteNote(note.noteId)}
+                          disabled={isLoading}
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </div>
+                  </>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>
   );
-}
+};
+
+export default AnimeNotes;
