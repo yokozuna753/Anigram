@@ -74,7 +74,7 @@ const AnimeNotes = ({ animeId, animeTitle }) => {
       }
 
       const data = await response.json();
-      setNotes((prev) => [...prev, data.data]);
+      setNotes((prev) => [data.data, ...prev]);
       setNewNote("");
     } catch (err) {
       setError("Failed to create note. Please try again.");
