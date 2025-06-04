@@ -1,0 +1,79 @@
+.anime-notes {
+    margin: 20px 0;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  .note-form {
+    margin-bottom: 20px;
+  }
+  
+  .note-form textarea {
+    width: 100%;
+    min-height: 80px;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    resize: vertical;
+  }
+  
+  .note-form button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .note-form button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+  }
+  
+  .notes-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .note-item {
+    background: white;
+    padding: 15px;
+    border-radius: 4px;
+    border: 1px solid #eee;
+  }
+  
+  .note-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+    font-size: 0.9em;
+    color: #666;
+  }
+  
+  .delete-note {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .delete-note:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+  }
+  
+  .error {
+    color: #dc3545;
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: #f8d7da;
+    border-radius: 4px;
+  }

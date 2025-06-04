@@ -134,23 +134,35 @@ function SearchBar() {
     if (searchType === "anime") {
       // Existing anime click handler
       //* console.log("Selected anime:", result);
-      // console.log('MAL _   ID ===>', animeState[result.mal_id]); 
+      // console.log('MAL _   ID ===>', animeState[result.mal_id]);
 
       if (animeState[`anime_${result.mal_id}`]) {
         // console.log(animeState[`anime_${result.mal_id}`]);
-        console.log('ERROR HERE: =>   ', animeState);
-        let encoded_search_term = animeState && animeState[`anime_${result.mal_id}`] && animeState[`anime_${result.mal_id}`]['title'] && encodeURIComponent(animeState[`anime_${result.mal_id}`]['title'])
+        console.log("ERROR HERE: =>   ", animeState);
+        let encoded_search_term =
+          animeState &&
+          animeState[`anime_${result.mal_id}`] &&
+          animeState[`anime_${result.mal_id}`]["title"] &&
+          encodeURIComponent(animeState[`anime_${result.mal_id}`]["title"]);
         navigate(
-          `/anime/${animeState[`anime_${result.mal_id}`]['id']}/${encoded_search_term}/${
-            animeState[`anime_${result.mal_id}`]['mal_id']
+          `/anime/${
+            animeState[`anime_${result.mal_id}`]["id"]
+          }/${encoded_search_term}/${
+            animeState[`anime_${result.mal_id}`]["mal_id"]
           }`
         );
       } else {
-        const anime = await dispatch(thunkLoadAnime(result));
+        // Prioritize English title before sending to thunk
+        const animeDataWithEnglishTitle = {
+          ...result,
+          title: result.title_english || result.title,
+        };
+        const anime = await dispatch(thunkLoadAnime(animeDataWithEnglishTitle));
 
-        console.log('ANIME FROM ERROR: ', anime);
+        console.log("ANIME FROM ERROR: ", anime);
         if (anime) {
-          let encoded_search_term = anime && anime['title'] && encodeURIComponent(anime["title"]);
+          let encoded_search_term =
+            anime && anime["title"] && encodeURIComponent(anime["title"]);
           navigate(
             `/anime/${anime.id}/${encoded_search_term}/${anime["mal_id"]}`
           );
@@ -222,7 +234,7 @@ function SearchBar() {
                   padding: "10px",
                   cursor: "pointer",
                   borderBottom: "1px solid #eee",
-                  color: "black"
+                  color: "black",
                 }}
                 onMouseOver={(e) => {
                   e.currentTarget.style.backgroundColor = "#f0f0f0";
@@ -247,7 +259,7 @@ function SearchBar() {
                     />
                     <div>
                       <div style={{ fontWeight: "bold" }}>
-                        {result.title_english}
+                        {result.title_english || result.title}
                       </div>
                       <div style={{ fontSize: "0.8rem", color: "#666" }}>
                         {result.year ? `${result.year} • ` : ""}
