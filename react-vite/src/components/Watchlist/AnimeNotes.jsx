@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useSelector } from "react-redux";
 import "./AnimeNotes.css";
 
@@ -17,7 +17,7 @@ const AnimeNotes = ({ animeId, animeTitle }) => {
   const userId = sessionUser?.id.toString();
 
   // Fetch notes
-  const fetchNotes = async () => {
+  const fetchNotes = useCallback(async () => {
     if (!userId || !animeId) return;
 
     setIsLoading(true);
@@ -45,7 +45,7 @@ const AnimeNotes = ({ animeId, animeTitle }) => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [userId, animeId]);
 
   // Create note
   const createNote = async (e) => {
@@ -172,7 +172,7 @@ const AnimeNotes = ({ animeId, animeTitle }) => {
     if (isOpen) {
       fetchNotes();
     }
-  }, [userId, animeId, isOpen]);
+  }, [fetchNotes, isOpen]);
 
   if (!userId) {
     return <div className="anime-notes">Please log in to add notes.</div>;

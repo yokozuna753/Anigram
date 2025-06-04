@@ -11,37 +11,38 @@ export default function AnimeNotes({ userId, animeId, animeTitle }) {
 
     // Add validation for required props
     useEffect(() => {
-        if (!userId || !animeId) {
-          setError('Missing required userId or animeId');
-          return;
-        }
-        console.log('Fetching notes for:', { userId, animeId, animeTitle });
-        fetchNotes();
-      }, [userId, animeId]);
-
-  const fetchNotes = async () => {
-    try {
-      setIsLoading(true);
-      setError(null); // Clear any previous errors
-      
-      const response = await fetch(`${API_URL}?userId=${userId}&animeId=${animeId}`);
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => null);
-        throw new Error(
-          errorData?.message || `HTTP error! status: ${response.status}`
-        );
+      if (!userId || !animeId) {
+        setError('Missing required userId or animeId');
+        return;
       }
-
-      const data = await response.json();
-      setNotes(Array.isArray(data) ? data : []);
-    } catch (err) {
-        console.error('Error fetching notes:', err);
-        setError(err.message || 'Failed to fetch notes. Please try again.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    
+      async function fetchNotes() {
+        try {
+          setIsLoading(true);
+          setError(null);
+    
+          const response = await fetch(`${API_URL}?userId=${userId}&animeId=${animeId}`);
+          if (!response.ok) {
+            const errorData = await response.json().catch(() => null);
+            throw new Error(
+              errorData?.message || `HTTP error! status: ${response.status}`
+            );
+          }
+    
+          const data = await response.json();
+          setNotes(Array.isArray(data) ? data : []);
+        } catch (err) {
+          console.error('Error fetching notes:', err);
+          setError(err.message || 'Failed to fetch notes. Please try again.');
+        } finally {
+          setIsLoading(false);
+        }
+      }
+    
+      console.log('Fetching notes for:', { userId, animeId, animeTitle });
+      fetchNotes();
+    }, [animeTitle, userId, animeId]);
+    
 
   const addNote = async (e) => {
     e.preventDefault();
