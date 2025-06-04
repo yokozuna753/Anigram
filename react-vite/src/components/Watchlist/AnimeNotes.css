@@ -1,0 +1,292 @@
+.anime-notes {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 95%;
+  max-width: 800px;
+  height: 80vh;
+  margin: 0;
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.notes-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+  margin-bottom: 20px;
+  flex-shrink: 0;
+}
+
+.close-notes-button {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #666;
+  cursor: pointer;
+  padding: 0 8px;
+  line-height: 1;
+}
+
+.close-notes-button:hover {
+  color: #333;
+}
+
+.notes-content {
+  display: flex;
+  flex-direction: column;
+  height: calc(100% - 60px);
+  overflow: hidden;
+  padding: 0 10px;
+}
+
+.note-form-container {
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  flex-shrink: 0;
+  width: calc(100% - 30px);
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  justify-content: center;
+}
+
+.note-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+  width: 100%;
+  max-width: 95%;
+}
+
+.note-form textarea {
+  width: 100%;
+  min-height: 80px;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  resize: vertical;
+  font-size: 14px;
+  line-height: 1.5;
+  box-sizing: border-box;
+}
+
+.note-form button {
+  width: 120px;
+  padding: 8px 16px;
+  background-color: #6c5ce7;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+  margin: 0 auto;
+}
+
+.note-form button:hover:not(:disabled) {
+  background-color: #5f4dd1;
+}
+
+.note-form button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.notes-list-container {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+.notes-list {
+  height: 100%;
+  overflow-y: auto;
+  padding-right: 10px;
+}
+
+.note-item {
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 4px;
+  border: 1px solid #eee;
+  margin-bottom: 12px;
+}
+
+.note-item p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #333;
+  white-space: pre-wrap;
+}
+
+.note-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 10px;
+  font-size: 0.9em;
+  color: #666;
+}
+
+.note-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.note-actions button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: background-color 0.2s;
+}
+
+.note-actions button:first-child {
+  background-color: #28a745;
+  color: white;
+}
+
+.note-actions button:first-child:hover:not(:disabled) {
+  background-color: #218838;
+}
+
+.note-actions button:last-child {
+  background-color: #dc3545;
+  color: white;
+}
+
+.note-actions button:last-child:hover:not(:disabled) {
+  background-color: #c82333;
+}
+
+.note-actions button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.error {
+  color: #dc3545;
+  margin-bottom: 12px;
+  padding: 10px;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.loading,
+.no-notes {
+  text-align: center;
+  padding: 20px;
+  color: #666;
+  font-size: 14px;
+}
+
+.edit-form {
+  margin-top: 10px;
+}
+
+.edit-form textarea {
+  width: 100%;
+  min-height: 80px;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  resize: vertical;
+  font-size: 14px;
+}
+
+.edit-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.edit-buttons button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: background-color 0.2s;
+}
+
+.edit-buttons button:first-child {
+  background-color: #28a745;
+  color: white;
+}
+
+.edit-buttons button:first-child:hover:not(:disabled) {
+  background-color: #218838;
+}
+
+.edit-buttons button:last-child {
+  background-color: #6c757d;
+  color: white;
+}
+
+.edit-buttons button:last-child:hover:not(:disabled) {
+  background-color: #5a6268;
+}
+
+/* Add overlay when notes are open */
+.anime-notes::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: -1;
+}
+
+/* Custom scrollbar styling */
+.notes-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.notes-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.notes-list::-webkit-scrollbar-thumb {
+  background: #c5c5c5;
+  border-radius: 4px;
+}
+
+.notes-list::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+.notes-toggle-button {
+  background: #6c5ce7;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.notes-toggle-button:hover {
+  background: #5f4dd1;
+}
