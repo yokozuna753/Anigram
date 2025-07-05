@@ -3,6 +3,7 @@ from .users import seed_users, undo_users
 from .follows import seed_follows, undo_follows
 from .watchlist import seed_watchlists, undo_watchlists
 from .anime import seed_anime, undo_anime
+from .anime_genres import seed_genres, undo_genres
 from .user_anime import seed_user_anime, undo_user_anime
 
 from app.models.db import db, environment, SCHEMA
@@ -25,11 +26,13 @@ def seed():
         undo_watchlists()
         undo_anime()
         undo_user_anime()
+        undo_genres()
     seed_users()
     seed_follows()
     seed_watchlists()
     seed_anime()
     seed_user_anime()
+    seed_genres()
     # Add other seed functions here
 
 
@@ -41,4 +44,5 @@ def undo():
     undo_watchlists()
     undo_anime()
     undo_user_anime()
+    undo_genres()
     # Add other undo functions here
